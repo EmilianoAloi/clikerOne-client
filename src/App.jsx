@@ -1,40 +1,40 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
 
-// SupplierES CONTEXTS
-import { SupplierInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
-import { SupplierPaymentsProvider } from "@/contexts/ProveedorOPContext";
-import { SupplierComprasProvider } from "@/contexts/ProveedorOCContext";
+// ProveedorES CONTEXTS
+import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
+import { ProveedorPaymentsProvider } from "@/contexts/ProveedorOPContext";
+import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
 import { ProveedorProvider } from "./contexts/ProveedorContext";
-import SupplieresEditPage from "./page/Supplieres/SupplieresID/SupplieresEditPage";
+import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEditPage";
 import { ArticlesProvider } from "./contexts/ProveedorArticlesContext";
-import SupplieresIDPage from "./page/Supplieres/SupplieresID/SupplieresIDPage";
-import SupplieresPage from "./page/Supplieres/SupplieresPage";
+import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
+import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 
 function App() {
   return (
     <ProveedorProvider>
-      <SupplierInvoicesProvider>
-        <SupplierPaymentsProvider>
-          <SupplierComprasProvider>
+      <ProveedorInvoicesProvider>
+        <ProveedorPaymentsProvider>
+          <ProveedorComprasProvider>
             <ArticlesProvider>
               <BrowserRouter>
                 <MainLayout>
                   <Routes>
                     <Route
                       path="/"
-                      element={<Navigate to="/Supplieres" replace />}
+                      element={<Navigate to="/Proveedores" replace />}
                     />
 
-                    <Route path="/Supplieres" element={<SupplieresPage />} />
+                    <Route path="/Proveedores" element={<ProveedoresPage />} />
                     <Route
-                      path="/Supplieres/:id"
-                      element={<SupplieresIDPage />}
+                      path="/Proveedores/:id"
+                      element={<ProveedoresIDPage />}
                     />
 
                     <Route
-                      path="/Supplieres/:id/editar"
-                      element={<SupplieresEditPage />}
+                      path="/Proveedores/:id/editar"
+                      element={<ProveedoresEditPage />}
                     />
 
                     {/* otras rutas */}
@@ -42,9 +42,9 @@ function App() {
                 </MainLayout>
               </BrowserRouter>
             </ArticlesProvider>
-          </SupplierComprasProvider>
-        </SupplierPaymentsProvider>
-      </SupplierInvoicesProvider>
+          </ProveedorComprasProvider>
+        </ProveedorPaymentsProvider>
+      </ProveedorInvoicesProvider>
     </ProveedorProvider>
   );
 }

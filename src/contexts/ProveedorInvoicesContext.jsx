@@ -3,17 +3,17 @@ import { toast } from "sonner";
 
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/facturas`;
 
-const SupplierInvoicesContext = createContext(undefined);
+const ProveedorInvoicesContext = createContext(undefined);
 
-export const SupplierInvoicesProvider = ({ children }) => {
+export const ProveedorInvoicesProvider = ({ children }) => {
   const [invoicesByProveedor, setInvoicesByProveedor] = useState({});
 
   const getInvoicesForProveedor = (idProveedor) =>
     invoicesByProveedor[idProveedor] || [];
 
-  const refreshSupplierInvoices = async (idProveedor, force = false) => {
+  const refreshProveedorInvoices = async (idProveedor, force = false) => {
     if (!idProveedor) {
-      console.warn("refreshSupplierInvoices: idProveedor no válido");
+      console.warn("refreshProveedorInvoices: idProveedor no válido");
       return;
     }
     if (invoicesByProveedor[idProveedor] && !force) return;
@@ -36,23 +36,23 @@ export const SupplierInvoicesProvider = ({ children }) => {
   };
 
   return (
-    <SupplierInvoicesContext.Provider
+    <ProveedorInvoicesContext.Provider
       value={{
         invoicesByProveedor,
         getInvoicesForProveedor,
-        refreshSupplierInvoices,
+        refreshProveedorInvoices,
       }}
     >
       {children}
-    </SupplierInvoicesContext.Provider>
+    </ProveedorInvoicesContext.Provider>
   );
 };
 
-export const useSupplierInvoices = () => {
-  const context = useContext(SupplierInvoicesContext);
+export const useProveedorInvoices = () => {
+  const context = useContext(ProveedorInvoicesContext);
   if (!context)
     throw new Error(
-      "useSupplierInvoices debe usarse dentro de un SupplierInvoicesProvider"
+      "useProveedorInvoices debe usarse dentro de un ProveedorInvoicesProvider"
     );
   return context;
 };

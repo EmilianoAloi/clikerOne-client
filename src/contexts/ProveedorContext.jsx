@@ -5,13 +5,13 @@ import { toast } from "sonner";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
-const SuppliersContext = createContext(undefined);
+const ProveedorsContext = createContext(undefined);
 
-export const SuppliersProvider = ({ children }) => {
-  const [suppliers, setSuppliers] = useState([]);
+export const ProveedorsProvider = ({ children }) => {
+  const [Proveedors, setProveedors] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const refreshSuppliers = async (force = false) => {
+  const refreshProveedors = async (force = false) => {
     if (isLoaded && !force) return;
     try {
       const response = await fetch(API_URL);
@@ -34,7 +34,7 @@ export const SuppliersProvider = ({ children }) => {
               : `- $${Math.abs(saldo).toLocaleString("es-AR")}`,
         };
       });
-      setSuppliers(enriched);
+      setProveedors(enriched);
       setIsLoaded(true);
     } catch (error) {
       console.error("Error al obtener los proveedores:", error);
@@ -43,12 +43,12 @@ export const SuppliersProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    refreshSuppliers();
+    refreshProveedors();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getSupplierByID = async (id) => {
-    const local = suppliers.find((s) => s.id_proveedor === id);
+  const getProveedorByID = async (id) => {
+    const local = Proveedors.find((s) => s.id_proveedor === id);
     if (local) return local;
     try {
       const response = await fetch(`${API_URL}/${id}`);
@@ -61,12 +61,12 @@ export const SuppliersProvider = ({ children }) => {
     }
   };
 
-  const createSupplier = async (supplier) => {
+  const createProveedor = async (Proveedor) => {
     try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(supplier),
+        body: JSON.stringify(Proveedor),
       });
 
       if (!response.ok) {
@@ -76,7 +76,7 @@ export const SuppliersProvider = ({ children }) => {
       }
 
       toast.success("Proveedor agregado con éxito.");
-      await refreshSuppliers(true);
+      await refreshProveedors(true);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Error desconocido";
@@ -85,7 +85,7 @@ export const SuppliersProvider = ({ children }) => {
     }
   };
 
-  const editSupplier = async (
+  const editProveedor = async (
     id,
     proveedor,
     articulos = [],
@@ -122,14 +122,14 @@ export const SuppliersProvider = ({ children }) => {
         toast.success(`Proveedor "${proveedor.nombre}" actualizado con éxito.`);
       }
 
-      await refreshSuppliers(true);
+      await refreshProveedors(true);
     } catch (error) {
       console.error("Error editando proveedor:", error);
       toast.error("Hubo un problema al actualizar el proveedor.");
     }
   };
 
-  const removeSupplier = async (id, nombre) => {
+  const removeProveedor = async (id, nombre) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       if (!response.ok) {
@@ -138,14 +138,14 @@ export const SuppliersProvider = ({ children }) => {
         return;
       }
       toast.error(`Proveedor "${nombre}" eliminado con éxito.`);
-      await refreshSuppliers(true);
+      await refreshProveedors(true);
     } catch (error) {
       console.error("Error eliminando proveedor:", error);
       toast.error("Hubo un problema al eliminar el proveedor.");
     }
   };
 
-  const createSupplierWithArticles = async (proveedorData, articulos) => {
+  const createProveedorWithArticles = async (proveedorData, articulos) => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/proveedores/con-articulos`,
@@ -176,16 +176,16 @@ export const SuppliersProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      console.error("createSupplierWithArticles error:", error);
+      console.error("createProveedorWithArticles error:", error);
       throw error;
     }
   };
 
-  const activateSupplier = async (id, nombre) => {
+  const activateProveedor = async (id, nombre) => {
     try {
-      await editSupplier(id, { estado_logico: true }, [], [], true);
+      await editProveedor(id, { estado_logico: true }, [], [], true);
       toast.success(`Proveedor "${nombre}" activado con éxito.`);
-      await refreshSuppliers(true);
+      await refreshProveedors(true);
     } catch (error) {
       console.error("Error activando proveedor:", error);
       toast.error("Hubo un problema al activar el proveedor.");
@@ -193,27 +193,29 @@ export const SuppliersProvider = ({ children }) => {
   };
 
   return (
-    <SuppliersContext.Provider
+    <ProveedorsContext.Provider
       value={{
-        suppliers,
-        refreshSuppliers,
-        createSupplier,
-        createSupplierWithArticles,
-        editSupplier,
-        removeSupplier,
-        getSupplierByID,
-        activateSupplier,
+        Proveedors,
+        refreshProveedors,
+        createProveedor,
+        createProveedorWithArticles,
+        editProveedor,
+        removeProveedor,
+        getProveedorByID,
+        activateProveedor,
       }}
     >
       {children}
-    </SuppliersContext.Provider>
+    </ProveedorsContext.Provider>
   );
 };
 
-export const useSuppliers = () => {
-  const context = useContext(SuppliersContext);
+export const useProveedors = () => {
+  const context = useContext(ProveedorsContext);
   if (!context) {
-    throw new Error("useSuppliers debe usarse dentro de un SuppliersProvider");
+    throw new Error(
+      "useProveedors debe usarse dentro de un ProveedorsProvider"
+    );
   }
   return context;
 };

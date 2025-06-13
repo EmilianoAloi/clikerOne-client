@@ -1,7 +1,7 @@
-import SuppliersContainer from "@/components/proveedores/ProveedorContainer";
+import ProveedorsContainer from "@/components/proveedores/ProveedorContainer";
 
 const ProveedoresPage = () => {
-  return <SuppliersContainer />;
+  return <ProveedorsContainer />;
 };
 
 export default ProveedoresPage;

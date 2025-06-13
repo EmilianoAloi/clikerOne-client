@@ -3,9 +3,9 @@ import { toast } from "sonner";
 
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`;
 
-const SuppliersOPContext = createContext(undefined);
+const ProveedorsOPContext = createContext(undefined);
 
-export const SupplierPaymentsProvider = ({ children }) => {
+export const ProveedorPaymentsProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
   const [paymentItemsByProveedor, setPaymentItemsByProveedor] = useState({});
 
@@ -14,7 +14,7 @@ export const SupplierPaymentsProvider = ({ children }) => {
   const getPaymentItemsForProveedor = (idProveedor) =>
     paymentItemsByProveedor[idProveedor] || [];
 
-  const refreshSupplierPayments = async (idProveedor, force = false) => {
+  const refreshProveedorPayments = async (idProveedor, force = false) => {
     if (!idProveedor) return;
     if (paymentsByProveedor[idProveedor] && !force) return;
     try {
@@ -50,26 +50,26 @@ export const SupplierPaymentsProvider = ({ children }) => {
   };
 
   return (
-    <SuppliersOPContext.Provider
+    <ProveedorsOPContext.Provider
       value={{
         paymentsByProveedor,
         paymentItemsByProveedor,
         getPaymentsForProveedor,
         getPaymentItemsForProveedor,
-        refreshSupplierPayments,
+        refreshProveedorPayments,
         // Agregá más funciones CRUD si lo necesitás
       }}
     >
       {children}
-    </SuppliersOPContext.Provider>
+    </ProveedorsOPContext.Provider>
   );
 };
 
-export const useSupplierPayments = () => {
-  const context = useContext(SuppliersOPContext);
+export const useProveedorPayments = () => {
+  const context = useContext(ProveedorsOPContext);
   if (!context)
     throw new Error(
-      "useSupplierPayments debe usarse dentro de un SupplierPaymentsProvider"
+      "useProveedorPayments debe usarse dentro de un ProveedorPaymentsProvider"
     );
   return context;
 };

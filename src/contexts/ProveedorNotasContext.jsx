@@ -1,7 +1,7 @@
 import React from "react";
 
-const SuppliersNotasContext = () => {
-  return <div>SuppliersNotasContext</div>;
+const ProveedorNotasContext = () => {
+  return <div>ProveedorNotasContext</div>;
 };
 
-export default SuppliersNotasContext;
+export default ProveedorNotasContext;

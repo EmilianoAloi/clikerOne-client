@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
-const SuppliersArticlesContext = createContext(undefined);
+const ProveedorsArticlesContext = createContext(undefined);
 
 export const ArticlesProvider = ({ children }) => {
   const [articlesByProveedor, setArticlesByProveedor] = useState({});
@@ -36,7 +36,7 @@ export const ArticlesProvider = ({ children }) => {
     articlesByProveedor[idProveedor] || [];
 
   return (
-    <SuppliersArticlesContext.Provider
+    <ProveedorsArticlesContext.Provider
       value={{
         articlesByProveedor,
         loadArticlesByProveedor,
@@ -44,12 +44,12 @@ export const ArticlesProvider = ({ children }) => {
       }}
     >
       {children}
-    </SuppliersArticlesContext.Provider>
+    </ProveedorsArticlesContext.Provider>
   );
 };
 
 export const useArticles = () => {
-  const context = useContext(SuppliersArticlesContext);
+  const context = useContext(ProveedorsArticlesContext);
   if (!context) {
     throw new Error("useArticles debe usarse dentro de un ArticlesProvider");
   }

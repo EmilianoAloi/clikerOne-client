@@ -1,23 +1,25 @@
 import { useParams } from "react-router-dom";
 import ProveedorEditContainer from "@/components/proveedores/proveedor-edit/ProveedorEditContainer";
-import { useSuppliers } from "@/contexts/ProveedorContext";
+import { useProveedors } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresEditPage() {
   const { id } = useParams();
-  const { suppliers } = useSuppliers();
+  const { Proveedors } = useProveedors();
 
-  if (suppliers && suppliers[0]) {
+  if (Proveedors && Proveedors[0]) {
   }
 
   // La búsqueda proveedor by id
-  const supplier = suppliers.find((s) => String(s.id_proveedor) === String(id));
+  const Proveedor = Proveedors.find(
+    (s) => String(s.id_proveedor) === String(id)
+  );
 
-  if (!suppliers || suppliers.length === 0) {
+  if (!Proveedors || Proveedors.length === 0) {
     return <div>Cargando proveedores...</div>;
   }
-  if (!supplier) {
+  if (!Proveedor) {
     return <div>Proveedor no encontrado.</div>;
   }
 
-  return <ProveedorEditContainer supplier={supplier} />;
+  return <ProveedorEditContainer Proveedor={Proveedor} />;
 }

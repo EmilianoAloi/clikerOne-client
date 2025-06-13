@@ -1,29 +1,29 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom"; // Usar react-router-dom en vez de next/navigation
 
-import { useSupplierInvoices } from "@/contexts/ProveedorInvoicesContext";
-import { useSupplierPayments } from "@/contexts/ProveedorOPContext";
-import { useSupplierCompras } from "@/contexts/ProveedorOCContext";
-import { useSuppliers } from "@/contexts/ProveedorContext";
+import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
+import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
+import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
+import { useProveedors } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresIDPage() {
   const params = useParams();
   const idProveedor = Number(params.id);
 
   // Contextos
-  const { suppliers, refreshSuppliers } = useSuppliers();
-  const { getInvoicesForProveedor, refreshSupplierInvoices } =
-    useSupplierInvoices();
+  const { Proveedors, refreshProveedors } = useProveedors();
+  const { getInvoicesForProveedor, refreshProveedorInvoices } =
+    useProveedorInvoices();
   const {
     getPaymentsForProveedor,
     getPaymentItemsForProveedor,
-    refreshSupplierPayments,
-  } = useSupplierPayments();
-  const { getComprasForProveedor, refreshSupplierCompras } =
-    useSupplierCompras();
+    refreshProveedorPayments,
+  } = useProveedorPayments();
+  const { getComprasForProveedor, refreshProveedorCompras } =
+    useProveedorCompras();
 
   useEffect(() => {
-    if (idProveedor) refreshSupplierPayments(idProveedor);
+    if (idProveedor) refreshProveedorPayments(idProveedor);
   }, [idProveedor]);
 
   const payments = getPaymentsForProveedor(idProveedor);
@@ -31,9 +31,9 @@ export default function ProveedoresIDPage() {
   const compras = getComprasForProveedor(idProveedor);
 
   // Buscar proveedor en el contexto primero
-  const supplier = useMemo(
-    () => suppliers.find((s) => s.id_proveedor === idProveedor),
-    [suppliers, idProveedor]
+  const Proveedor = useMemo(
+    () => Proveedors.find((s) => s.id_proveedor === idProveedor),
+    [Proveedors, idProveedor]
   );
 
   // Facturas y pagos de este proveedor
@@ -44,7 +44,7 @@ export default function ProveedoresIDPage() {
 
   // LOG para entender el ciclo de vida
   useEffect(() => {
-    if (supplier) {
+    if (Proveedor) {
       console.log(`✅ Proveedor ${idProveedor} encontrado en contexto.`);
     } else {
       console.log(`🔍 Proveedor ${idProveedor} NO encontrado en contexto.`);
@@ -59,33 +59,33 @@ export default function ProveedoresIDPage() {
       console.log(
         `❌ No hay compras en contexto para proveedor ${idProveedor}`
       );
-  }, [supplier, invoices, payments, compras, idProveedor]);
+  }, [Proveedor, invoices, payments, compras, idProveedor]);
 
   // Refrescar si no hay datos
   useEffect(() => {
-    if (!supplier) {
+    if (!Proveedor) {
       console.log("➡️ Haciendo fetch de proveedores...");
-      refreshSuppliers();
+      refreshProveedors();
     }
     if (invoices.length === 0) {
       console.log("➡️ Haciendo fetch de facturas...");
-      refreshSupplierInvoices(idProveedor);
+      refreshProveedorInvoices(idProveedor);
     }
     if (payments.length === 0) {
       console.log("➡️ Haciendo fetch de pagos...");
-      refreshSupplierPayments(idProveedor);
+      refreshProveedorPayments(idProveedor);
     }
     if (!compras.length) {
       console.log("➡️ Haciendo fetch de compras...");
-      refreshSupplierCompras(idProveedor);
+      refreshProveedorCompras(idProveedor);
     }
     return () => {
-      console.log("♻️ SupplierDetailPage UNMOUNTED");
+      console.log("♻️ ProveedorDetailPage UNMOUNTED");
     };
   }, [idProveedor]);
 
-  // Validar que supplier exista
-  if (!supplier) return <div className="p-6">Proveedor no encontrado.</div>;
+  // Validar que Proveedor exista
+  if (!Proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
 
   // Filtra sólo los items válidos
   const paymentItemsValidos = paymentItems.filter(
@@ -94,7 +94,7 @@ export default function ProveedoresIDPage() {
 
   return (
     <ProveedoresIDPage
-      supplier={supplier}
+      Proveedor={Proveedor}
       invoices={invoices}
       payments={payments}
       paymentItems={paymentItemsValidos}

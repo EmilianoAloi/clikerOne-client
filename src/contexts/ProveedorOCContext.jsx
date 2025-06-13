@@ -5,12 +5,12 @@ const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
 const ProveedorOCContext = createContext(undefined);
 
-export const SupplierComprasProvider = ({ children }) => {
+export const ProveedorComprasProvider = ({ children }) => {
   const [comprasByProveedor, setComprasByProveedor] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const refreshSupplierCompras = useCallback(
+  const refreshProveedorCompras = useCallback(
     async (id_proveedor, force = false) => {
       setLoading(true);
       setError(null);
@@ -51,7 +51,7 @@ export const SupplierComprasProvider = ({ children }) => {
         getComprasForProveedor,
         loading,
         error,
-        refreshSupplierCompras,
+        refreshProveedorCompras,
       }}
     >
       {children}
@@ -59,11 +59,11 @@ export const SupplierComprasProvider = ({ children }) => {
   );
 };
 
-export const useSupplierCompras = () => {
+export const useProveedorCompras = () => {
   const ctx = useContext(ProveedorOCContext);
   if (!ctx)
     throw new Error(
-      "useSupplierCompras debe usarse dentro de SupplierComprasProvider"
+      "useProveedorCompras debe usarse dentro de ProveedorComprasProvider"
     );
   return ctx;
 };
