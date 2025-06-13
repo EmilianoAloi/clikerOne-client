@@ -1,0 +1,61 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleConfirmDelete = () => {
+    onDelete();
+    setOpen(false);
+    navigate("/proveedores");
+  };
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="ghost"
+          className="w-fit cursor-pointer flex items-center justify-start text-red-500 hover:text-red-600 hover:bg-red-100 !px-3 !py-1"
+        >
+          <Trash2 className="h-4 w-4 mr-0 text-red-500" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Eliminar Proveedor</AlertDialogTitle>
+          <AlertDialogDescription>
+            ¿Seguro que desea eliminar al proveedor{" "}
+            <strong>{supplier.nombre}</strong>?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="cursor-pointer">
+            Cancelar
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className="cursor-pointer bg-red-500 hover:bg-red-400 text-white"
+            onClick={handleConfirmDelete}
+          >
+            Eliminar
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+export default SuppliersDeleteDialog;
