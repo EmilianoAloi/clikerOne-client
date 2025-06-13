@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
-const SuppliersOCContext = createContext(undefined);
+const ProveedorOCContext = createContext(undefined);
 
 export const SupplierComprasProvider = ({ children }) => {
   const [comprasByProveedor, setComprasByProveedor] = useState({});
@@ -45,7 +45,7 @@ export const SupplierComprasProvider = ({ children }) => {
     comprasByProveedor[id_proveedor] || [];
 
   return (
-    <SuppliersOCContext.Provider
+    <ProveedorOCContext.Provider
       value={{
         comprasByProveedor,
         getComprasForProveedor,
@@ -55,12 +55,12 @@ export const SupplierComprasProvider = ({ children }) => {
       }}
     >
       {children}
-    </SuppliersOCContext.Provider>
+    </ProveedorOCContext.Provider>
   );
 };
 
 export const useSupplierCompras = () => {
-  const ctx = useContext(SuppliersOCContext);
+  const ctx = useContext(ProveedorOCContext);
   if (!ctx)
     throw new Error(
       "useSupplierCompras debe usarse dentro de SupplierComprasProvider"

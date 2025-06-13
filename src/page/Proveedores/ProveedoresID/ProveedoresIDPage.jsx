@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"; // Usar react-router-dom en vez de
 
 import { useSupplierInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useSupplierPayments } from "@/contexts/ProveedorOPContext";
-import { useSupplierCompras } from "@/contexts/SuppliersOCContext";
+import { useSupplierCompras } from "@/contexts/ProveedorOCContext";
 import { useSuppliers } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresIDPage() {
