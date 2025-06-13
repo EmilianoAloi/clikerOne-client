@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
-import ProveedoresPage from "./pages/Proveedores/ProveedoresPage";
-import ProveedoresDetailPage from "./pages/Proveedores/ProveedoresDetailPage";
+import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 
 // PROVEEDORES CONTEXTS
 import { SupplierInvoicesProvider } from "@/contexts/SuppliersInvoicesContext";
 import { SupplierPaymentsProvider } from "@/contexts/SuppliersOPContext";
 import { SupplierComprasProvider } from "@/contexts/SuppliersOCContext";
 import { SuppliersProvider } from "./contexts/SuppliersContext";
-import ProveedoresEditPage from "./pages/Proveedores/ProveedoresEditPage";
+import ProveedoresEditPage from "./page/Proveedores/ProveedoresEditPage";
 import { ArticlesProvider } from "./contexts/SuppliersArticlesContext";
+import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
                     <Route path="/proveedores" element={<ProveedoresPage />} />
                     <Route
                       path="/proveedores/:id"
-                      element={<ProveedoresDetailPage />}
+                      element={<ProveedoresIDPage />}
                     />
 
                     <Route

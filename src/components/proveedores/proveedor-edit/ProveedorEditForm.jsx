@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,24 +28,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useNavigate } from "react-router-dom";
+import { useSuppliers } from "@/components/contexts/suppliers-context";
+import { useRouter } from "next/navigation";
+import { SupplierAddArticles } from "../supplier-add/supplier-add-articles";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useSuppliers } from "@/contexts/SuppliersContext";
-import ProveedorAddArticles from "../proveedor-add/ProveedorAddArticles";
 
-const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
+const ProveedorEditForm = () => {
   const { editSupplier, refreshSuppliers } = useSuppliers();
-  const [formData, setFormData] = useState({ ...proveedor });
-  const [articulos, setArticulos] = useState(
-    (initialArticulos || []).map((a) => ({
-      ...a,
-      id: a.id_articulo
-        ? String(a.id_articulo)
-        : `${Date.now()}-${Math.random()}`,
-    }))
-  );
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({}); // Removing TypeScript types
+  const [articulos, setArticulos] = useState([]);
+  const router = useRouter();
   const [deletedArticles, setDeletedArticles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -109,7 +104,7 @@ const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
       );
 
       refreshSuppliers();
-      navigate(`/proveedores/${formData.id_proveedor}`);
+      router.push(`/proveedores/${formData.id_proveedor}`);
     } catch (error) {
       toast.error("Error al actualizar proveedor");
       console.error("❌ Error en edición:", error);
@@ -134,10 +129,7 @@ const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 4xl:grid-cols-6 gap-x-6 gap-y-6 py-4">
           {/* Nombre */}
           <div className="col-span-1">
-            <Label
-              htmlFor="nombre"
-              className="flex items-center gap-2 font-semibold text-sm"
-            >
+            <Label htmlFor="nombre">
               <UserCog className="h-4 w-4 text-slate-500" /> Nombre
             </Label>
             <Input
@@ -351,7 +343,7 @@ const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
               </SelectContent>
             </Select>
           </div>
-          {/* Iva predeterminado */}
+          {/* IVA Predeterminado */}
           <div className="col-span-1">
             <Label
               htmlFor="categoria"
@@ -399,7 +391,7 @@ const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
       <Separator className="mb-6" />
 
       <div>
-        <ProveedorAddArticles
+        <SupplierAddArticles
           items={articulos}
           handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}
@@ -412,7 +404,7 @@ const ProveedorEditForm = ({ proveedor, articulos: initialArticulos }) => {
           variant="outline"
           type="button"
           className="text-slate-700 cursor-pointer font-semibold py-5"
-          onClick={() => navigate(-1)}
+          onClick={() => router.back()}
         >
           Cancelar
         </Button>

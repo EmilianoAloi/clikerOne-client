@@ -5,9 +5,8 @@ import { useSupplierInvoices } from "@/contexts/SuppliersInvoicesContext";
 import { useSupplierPayments } from "@/contexts/SuppliersOPContext";
 import { useSupplierCompras } from "@/contexts/SuppliersOCContext";
 import { useSuppliers } from "@/contexts/SuppliersContext";
-import SuppliersDetailContainer from "@/components/proveedores/proveedor/SupplierDetailContainer";
 
-export default function SupplierDetailPage() {
+export default function ProveedoresIDPage() {
   const params = useParams();
   const idProveedor = Number(params.id);
 
@@ -94,7 +93,7 @@ export default function SupplierDetailPage() {
   );
 
   return (
-    <SuppliersDetailContainer
+    <ProveedoresIDPage
       supplier={supplier}
       invoices={invoices}
       payments={payments}
