@@ -7,7 +7,7 @@ import { SupplierInvoicesProvider } from "@/contexts/SuppliersInvoicesContext";
 import { SupplierPaymentsProvider } from "@/contexts/SuppliersOPContext";
 import { SupplierComprasProvider } from "@/contexts/SuppliersOCContext";
 import { SuppliersProvider } from "./contexts/SuppliersContext";
-import ProveedoresEditPage from "./page/proveedores/ProveedoresEditPage";
+import ProveedoresEditPage from "./page/proveedores/proveedoresID/ProveedoresEditPage";
 import { ArticlesProvider } from "./contexts/SuppliersArticlesContext";
 import ProveedoresIDPage from "./page/proveedores/proveedoresID/ProveedoresIDPage";
 
