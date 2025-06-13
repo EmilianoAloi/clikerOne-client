@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
-import ProveedoresPage from "./page/proveedores/ProveedoresPage";
 
 // PROVEEDORES CONTEXTS
 import { SupplierInvoicesProvider } from "@/contexts/SuppliersInvoicesContext";
@@ -10,6 +9,7 @@ import { SuppliersProvider } from "./contexts/SuppliersContext";
 import ProveedoresEditPage from "./page/proveedores/proveedoresID/ProveedoresEditPage";
 import { ArticlesProvider } from "./contexts/SuppliersArticlesContext";
 import ProveedoresIDPage from "./page/proveedores/proveedoresID/ProveedoresIDPage";
+import ProveedoresPage from "./page/proveedores/ProveedoresPage";
 
 function App() {
   return (

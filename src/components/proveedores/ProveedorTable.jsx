@@ -6,8 +6,8 @@ import { useSuppliers } from "@/contexts/SuppliersContext";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom"; // Cambia este import
-import { SuppliersTableSkeleton } from "./SuppliersTableSkeleton";
-import { SupppliersColumns } from "./SuppliersColumns";
+import { SuppliersTableSkeleton } from "./ProveedorTableSkeleton";
+import { SupppliersColumns } from "./ProveedorColumns";
 
 export default function SuppliersTable() {
   const [searchTerm, setSearchTerm] = useState("");

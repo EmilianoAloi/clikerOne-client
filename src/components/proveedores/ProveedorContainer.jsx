@@ -1,8 +1,8 @@
-import SuppliersTitle from "./SuppliersTitle";
-import SuppliersTable from "./SuppliersTable";
+import SuppliersTitle from "./Proveedor";
+import SuppliersTable from "./ProveedorTable";
 import { Separator } from "@/components/ui/separator";
 
-const SuppliersContainer = () => {
+const ProveedorContainer = () => {
   return (
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 my-2 !mb-30 p-6 space-y-6">
       <SuppliersTitle />
@@ -14,4 +14,4 @@ const SuppliersContainer = () => {
   );
 };
 
-export default SuppliersContainer;
+export default ProveedorContainer;

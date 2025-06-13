@@ -10,8 +10,8 @@ import {
 } from "../ui/dropdown-menu";
 import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import React, { useState } from "react";
-import SuppliersDeleteDialog from "./SuppliersDeleteDialog";
-import SuppliersActivateDialog from "./SuppliersActivateDialog";
+import SuppliersDeleteDialog from "./ProveedorDeleteDialog";
+import SuppliersActivateDialog from "./ProveedorActivateDialog";
 import { Link, useNavigate } from "react-router-dom";
 
 const SuppliersTableActions = ({ supplier }) => {

@@ -1,4 +1,4 @@
-import SuppliersTableActions from "./SuppliersTableActions";
+import SuppliersTableActions from "./ProveedorTableActions";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

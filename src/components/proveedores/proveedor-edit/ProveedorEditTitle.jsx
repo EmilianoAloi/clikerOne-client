@@ -1,7 +1,7 @@
 import BackButton from "@/components/ui/back-button";
 import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-const SupplierEditTitle = () => {
+const ProveedorEditTitle = () => {
   return (
     <>
       <CardHeader className=" rounded-t-lg border-b pt-4 mb-3">
@@ -17,4 +17,4 @@ const SupplierEditTitle = () => {
   );
 };
 
-export default SupplierEditTitle;
+export default ProveedorEditTitle;

@@ -1,4 +1,4 @@
-import SuppliersContainer from "@/components/proveedores/SuppliersContainer";
+import SuppliersContainer from "@/components/proveedores/ProveedorContainer";
 
 const ProveedoresPage = () => {
   return <SuppliersContainer />;
