@@ -1,11 +1,9 @@
-import { Suspense, lazy } from "react";
+import ProveedorEditForm from "./ProveedorEditForm";
 
 const ProveedorEditContainer = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <SupplierEditForm />
-      </Suspense>
+      <ProveedorEditForm />
     </div>
   );
 };
