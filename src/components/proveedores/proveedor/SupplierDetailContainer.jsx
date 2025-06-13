@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom"; // Cambiado de next/navigation a r
 import BackButton from "@/components/ui/back-button";
 import SupplierDetailInfo from "./SupplierDetailInfo";
 import { useSuppliers } from "@/contexts/SuppliersContext";
+import SupplierCC from "./SupplierCC";
 // import SupplierCurrentAccount from "./supplier-accordions/supplier-accordion-cc";
 // import {
 // SupplierPayment,
@@ -57,7 +58,7 @@ const SuppliersDetailContainer = ({
         <SupplierDetailInfo supplier={currentSupplier} />
       </div>
 
-      {/* <SupplierCurrentAccount
+      <SupplierCC
         currentSupplier={currentSupplier}
         paymentItems={paymentItems}
         invoices={invoices}
@@ -65,6 +66,7 @@ const SuppliersDetailContainer = ({
         compras={compras}
       />
 
+      {/*
       <SupplieDetailAccordionsContainer
         currentSupplier={currentSupplier}
         invoices={invoices}
