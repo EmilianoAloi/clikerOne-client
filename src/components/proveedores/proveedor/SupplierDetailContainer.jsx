@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // Cambiado de next/navigation a react-router-dom
+import { useParams } from "react-router-dom";
 
-// import SupplieDetailAccordionsContainer from "./supplier-accordions/supplier-accordions-container";
 import BackButton from "@/components/ui/back-button";
 import SupplierDetailInfo from "./SupplierDetailInfo";
 import { useSuppliers } from "@/contexts/SuppliersContext";
 import SupplierCC from "./SupplierCC";
-// import SupplierCurrentAccount from "./supplier-accordions/supplier-accordion-cc";
-// import {
-// SupplierPayment,
-// SupplierPaymentItem,
-// } from "@/types/supplier-payments";
-// import { SupplierCompra } from "@/types/supplier-compras";
 
 const SuppliersDetailContainer = ({
   supplier: initialSupplier,
@@ -21,7 +14,7 @@ const SuppliersDetailContainer = ({
   compras,
 }) => {
   const { suppliers } = useSuppliers();
-  const { id } = useParams(); // Usando react-router-dom
+  const { id } = useParams();
   const [currentSupplier, setCurrentSupplier] = useState(initialSupplier);
 
   // Buscar el proveedor actualizado desde suppliers
@@ -58,6 +51,7 @@ const SuppliersDetailContainer = ({
         <SupplierDetailInfo supplier={currentSupplier} />
       </div>
 
+      {/* Cuenta corriente Proveedor */}
       <SupplierCC
         currentSupplier={currentSupplier}
         paymentItems={paymentItems}
@@ -65,6 +59,8 @@ const SuppliersDetailContainer = ({
         payments={payments}
         compras={compras}
       />
+
+      {/* Tablas Documentos */}
 
       {/*
       <SupplieDetailAccordionsContainer

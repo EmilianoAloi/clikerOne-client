@@ -8,7 +8,8 @@ import { SupplierInvoicesProvider } from "@/contexts/SuppliersInvoicesContext";
 import { SupplierPaymentsProvider } from "@/contexts/SuppliersOPContext";
 import { SupplierComprasProvider } from "@/contexts/SuppliersOCContext";
 import { SuppliersProvider } from "./contexts/SuppliersContext";
-// import { ArticlesProvider } from "@/contexts/SuppliersArticlesContext"; // cuando lo uses
+import ProveedoresEditPage from "./pages/Proveedores/ProveedoresEditPage";
+import { ArticlesProvider } from "./contexts/SuppliersArticlesContext";
 
 function App() {
   return (
@@ -16,24 +17,31 @@ function App() {
       <SupplierInvoicesProvider>
         <SupplierPaymentsProvider>
           <SupplierComprasProvider>
-            {/* <ArticlesProvider> */}
-            <BrowserRouter>
-              <MainLayout>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={<Navigate to="/proveedores" replace />}
-                  />
-                  <Route path="/proveedores" element={<ProveedoresPage />} />
-                  <Route
-                    path="/proveedores/:id"
-                    element={<ProveedoresDetailPage />}
-                  />
-                  {/* otras rutas */}
-                </Routes>
-              </MainLayout>
-            </BrowserRouter>
-            {/* </ArticlesProvider> */}
+            <ArticlesProvider>
+              <BrowserRouter>
+                <MainLayout>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={<Navigate to="/proveedores" replace />}
+                    />
+
+                    <Route path="/proveedores" element={<ProveedoresPage />} />
+                    <Route
+                      path="/proveedores/:id"
+                      element={<ProveedoresDetailPage />}
+                    />
+
+                    <Route
+                      path="/proveedores/:id/editar"
+                      element={<ProveedoresEditPage />}
+                    />
+
+                    {/* otras rutas */}
+                  </Routes>
+                </MainLayout>
+              </BrowserRouter>
+            </ArticlesProvider>
           </SupplierComprasProvider>
         </SupplierPaymentsProvider>
       </SupplierInvoicesProvider>
