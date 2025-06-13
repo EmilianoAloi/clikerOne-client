@@ -107,18 +107,51 @@
 // }
 
 // export default DynamicBreadcrumbs;
-
 import React from "react";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"; // Asegurate que estos imports existen
+  BreadcrumbLink,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+
+const breadcrumbNames = {
+  home: "Inicio",
+  inventory: "Inventario",
+  sales: "Ventas",
+  customers: "Clientes",
+  proveedores: "Proveedores",
+  reports: "Reportes",
+  settings: "Ajustes",
+  facturacion: "Facturación",
+  pagos: "Ordenes de Pago",
+  nuevopago: "Nueva OP",
+  agregar: "Agregar Nuevo Proveedor",
+  editar: "Modificar Proveedor",
+  nuevafactura: "Nueva Factura",
+  notacredito: "Nota de Crédito",
+  notadebito: "Nota de Débito",
+  nuevanotadebito: "Nueva",
+  nuevanotacredito: "Nueva ",
+  ordencompra: "Ordenes de Compra",
+  "nueva-oc": "Nueva OC",
+  "oc-edit": "Editar",
+  "editar-nd": "Editar",
+  "editar-nc": "Editar",
+  "editar-factura": "Editar",
+};
 
 export default function DynamicBreadcrumbs() {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const pathSegments = pathname.split("/").filter(Boolean);
+
+  // Acumular el path para cada segmento
+  let accumulatedPath = "";
+
   return (
     <Breadcrumb className="print:hidden">
       <BreadcrumbList>
@@ -127,12 +160,26 @@ export default function DynamicBreadcrumbs() {
             <Link to="/proveedores">Inicio</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/proveedores/[id]">Proveedores</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
+        {pathSegments.slice(1).map((segment, index) => {
+          accumulatedPath += `/${segment}`;
+          const isLast = index === pathSegments.slice(1).length - 1;
+          const label = breadcrumbNames[segment] || segment;
+
+          return (
+            <React.Fragment key={accumulatedPath}>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={accumulatedPath}>{label}</Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );
