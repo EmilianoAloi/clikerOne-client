@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import SupplierEditTitle from "./ProveedorEditTitle";
-import { useSuppliers } from "@/contexts/SuppliersContext";
+import { useSuppliers } from "@/contexts/ProveedorContext";
 
 const ProveedorEditContainer = () => {
   const { getSupplierByID } = useSuppliers();

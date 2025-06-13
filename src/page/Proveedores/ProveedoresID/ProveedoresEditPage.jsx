@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import ProveedorEditContainer from "@/components/proveedores/proveedor-edit/ProveedorEditContainer";
-import { useSuppliers } from "@/contexts/SuppliersContext";
+import { useSuppliers } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresEditPage() {
   const { id } = useParams();

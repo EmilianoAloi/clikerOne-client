@@ -15,11 +15,11 @@ import {
   Pencil,
 } from "lucide-react";
 
-import DetailItem from "./SupplierDetailItem";
-import { useSuppliers } from "@/contexts/SuppliersContext";
+import DetailItem from "./ProveedorDetailItem";
+import { useSuppliers } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import SuppliersDeleteDialog from "./SuppliersDeleteDialog";
+import SuppliersDeleteDialog from "./ProveedorDeleteDialog";
 
 const SupplierDetailInfo = ({ supplier }) => {
   const { suppliers, removeSupplier } = useSuppliers();

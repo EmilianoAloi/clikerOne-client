@@ -8,7 +8,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { useSuppliers } from "@/contexts/SuppliersContext";
+import { useSuppliers } from "@/contexts/ProveedorContext";
 
 const breadcrumbNames = {
   home: "Inicio",

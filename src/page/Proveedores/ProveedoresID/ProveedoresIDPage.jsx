@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom"; // Usar react-router-dom en vez de next/navigation
 
-import { useSupplierInvoices } from "@/contexts/SuppliersInvoicesContext";
-import { useSupplierPayments } from "@/contexts/SuppliersOPContext";
+import { useSupplierInvoices } from "@/contexts/ProveedorInvoicesContext";
+import { useSupplierPayments } from "@/contexts/ProveedorOPContext";
 import { useSupplierCompras } from "@/contexts/SuppliersOCContext";
-import { useSuppliers } from "@/contexts/SuppliersContext";
+import { useSuppliers } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresIDPage() {
   const params = useParams();
