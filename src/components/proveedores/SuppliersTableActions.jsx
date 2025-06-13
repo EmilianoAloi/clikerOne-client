@@ -1,4 +1,4 @@
-import { useSuppliers } from "../../contexts/suppliers-context";
+import { useSuppliers } from "../../contexts/SuppliersContext";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,

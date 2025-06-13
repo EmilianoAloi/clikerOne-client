@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { useSuppliers } from "@/contexts/suppliers-context";
+import { useSuppliers } from "@/contexts/SuppliersContext";
 import { SupppliersColumns } from "./SupppliersColumns";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";

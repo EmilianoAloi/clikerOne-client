@@ -1,5 +1,3 @@
-// import SuppliersTable from "./suppliers-table";
-
 import SuppliersTitle from "./SuppliersTitle";
 import SuppliersTable from "./SuppliersTable";
 import { Separator } from "@/components/ui/separator";
