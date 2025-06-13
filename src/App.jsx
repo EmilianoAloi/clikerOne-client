@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
-import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
+import ProveedoresPage from "./page/proveedores/ProveedoresPage";
 
 // PROVEEDORES CONTEXTS
 import { SupplierInvoicesProvider } from "@/contexts/SuppliersInvoicesContext";
 import { SupplierPaymentsProvider } from "@/contexts/SuppliersOPContext";
 import { SupplierComprasProvider } from "@/contexts/SuppliersOCContext";
 import { SuppliersProvider } from "./contexts/SuppliersContext";
-import ProveedoresEditPage from "./page/Proveedores/ProveedoresEditPage";
+import ProveedoresEditPage from "./page/proveedores/ProveedoresEditPage";
 import { ArticlesProvider } from "./contexts/SuppliersArticlesContext";
-import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
+import ProveedoresIDPage from "./page/proveedores/proveedoresID/ProveedoresIDPage";
 
 function App() {
   return (
