@@ -1,7 +1,7 @@
 // import SuppliersTable from "./suppliers-table";
 
 import SuppliersTitle from "./SuppliersTitle";
-
+import SuppliersTable from "./SuppliersTable";
 import { Separator } from "@/components/ui/separator";
 
 const SuppliersContainer = () => {
@@ -11,7 +11,7 @@ const SuppliersContainer = () => {
 
       <Separator className="space-y-8 !container mx-auto" />
 
-      {/* <SuppliersTable />  */}
+      <SuppliersTable />
     </div>
   );
 };
