@@ -1,19 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import "./index.css";
+import MainLayout from "./layout/MainLayout";
+import ProveedoresPage from "./pages/Proveedores/ProveedoresPage";
+import ProveedoresDetailPage from "./pages/Proveedores/ProveedoresDetailPage";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <MainLayout>
+        <Routes>
+          <Route path="/proveedores" element={<ProveedoresPage />} />
+          <Route path="/proveedores/[id]" element={<ProveedoresDetailPage />} />
+
+          {/* más rutas */}
+        </Routes>
+      </MainLayout>
     </BrowserRouter>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;
