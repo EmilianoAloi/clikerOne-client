@@ -28,14 +28,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useSuppliers } from "@/components/contexts/suppliers-context";
+import { useProveedoress } from "@/components/contexts/Proveedor-context";
 import { useRouter } from "next/navigation";
-import { SupplierAddArticles } from "../supplier-add/supplier-add-articles";
+import { ProveedoresAddArticles } from "../Proveedor-add/Proveedor-add-articles";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
 const ProveedorEditForm = () => {
-  const { editSupplier, refreshSuppliers } = useSuppliers();
+  const { editProveedores, refreshProveedoress } = useProveedoress();
   const [formData, setFormData] = useState({}); // Removing TypeScript types
   const [articulos, setArticulos] = useState([]);
   const router = useRouter();
@@ -96,14 +96,14 @@ const ProveedorEditForm = () => {
         return;
       }
 
-      await editSupplier(
+      await editProveedores(
         formData.id_proveedor,
         formData,
         articulos,
         deletedArticles
       );
 
-      refreshSuppliers();
+      refreshProveedoress();
       router.push(`/proveedores/${formData.id_proveedor}`);
     } catch (error) {
       toast.error("Error al actualizar proveedor");
@@ -391,7 +391,7 @@ const ProveedorEditForm = () => {
       <Separator className="mb-6" />
 
       <div>
-        <SupplierAddArticles
+        <ProveedoresAddArticles
           items={articulos}
           handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}

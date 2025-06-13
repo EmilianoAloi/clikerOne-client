@@ -14,7 +14,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
+const ProveedoresDeleteDialog = ({ Proveedor, onDelete }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
           <AlertDialogTitle>Eliminar Proveedor</AlertDialogTitle>
           <AlertDialogDescription>
             ¿Seguro que desea eliminar al proveedor{" "}
-            <strong>{supplier.nombre}</strong>?
+            <strong>{Proveedor.nombre}</strong>?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -58,4 +58,4 @@ const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
   );
 };
 
-export default SuppliersDeleteDialog;
+export default ProveedoresDeleteDialog;

@@ -13,7 +13,7 @@ import {
 import { CheckCircle } from "lucide-react";
 import { Button } from "../ui/button"; // Cambia según tu carpeta real
 
-const SuppliersActivateDialog = ({ supplier, onActivate }) => {
+const ProveedoresActivateDialog = ({ Proveedor, onActivate }) => {
   const [open, setOpen] = useState(false);
 
   const handleConfirmActivate = () => {
@@ -37,7 +37,7 @@ const SuppliersActivateDialog = ({ supplier, onActivate }) => {
           <AlertDialogTitle>Activar Proveedor</AlertDialogTitle>
           <AlertDialogDescription>
             ¿Seguro que desea activar al proveedor{" "}
-            <strong>{supplier.nombre}</strong>?
+            <strong>{Proveedor.nombre}</strong>?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -56,4 +56,4 @@ const SuppliersActivateDialog = ({ supplier, onActivate }) => {
   );
 };
 
-export default SuppliersActivateDialog;
+export default ProveedoresActivateDialog;

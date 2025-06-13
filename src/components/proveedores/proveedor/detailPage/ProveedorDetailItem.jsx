@@ -1,4 +1,4 @@
-const SupplierDetailItem = ({ icon: Icon, label, value }) => {
+const ProveedoresDetailItem = ({ icon: Icon, label, value }) => {
   return (
     <div className="flex items-start space-x-3">
       {Icon && <Icon className="h-5 w-5 text-muted-foreground mt-0.5" />}
@@ -10,4 +10,4 @@ const SupplierDetailItem = ({ icon: Icon, label, value }) => {
   );
 };
 
-export default SupplierDetailItem;
+export default ProveedoresDetailItem;

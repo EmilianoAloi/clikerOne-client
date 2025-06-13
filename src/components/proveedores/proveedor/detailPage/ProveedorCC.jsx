@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Link, useNavigate } from "react-router-dom";
-import { SaldoActual } from "./SaldoActual";
+import { SaldoActual } from "./ProveedorSaldoActual";
 import { columnsCC } from "./ColumnsCC";
 
-export default function SupplierCC({
-  currentSupplier,
+export default function ProveedoresCC({
+  currentProveedores,
   paymentItems,
   invoices,
   payments,
@@ -20,7 +20,7 @@ export default function SupplierCC({
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    if (!currentSupplier?.id_proveedor) return;
+    if (!currentProveedores?.id_proveedor) return;
 
     // Helper para adjuntos
     const getFileNameFromUrl = (url) => {
@@ -56,7 +56,8 @@ export default function SupplierCC({
         comprobante: f.numero_factura
           ? `#${f.numero_factura}`
           : `#${f.id_factura}`,
-        razon_social: f.razon_social_proveedor || currentSupplier.nombre || "-",
+        razon_social:
+          f.razon_social_proveedor || currentProveedores.nombre || "-",
         estado: f.estado_saldo || f.estado || "pendiente",
         amount,
         balance: 0,
@@ -77,7 +78,7 @@ export default function SupplierCC({
       .filter(
         (p) =>
           p.estado_logico === 1 &&
-          p.id_proveedor === currentSupplier.id_proveedor
+          p.id_proveedor === currentProveedores.id_proveedor
       )
       .map((p) => {
         const montoAplicado = paymentItems
@@ -97,7 +98,7 @@ export default function SupplierCC({
           type: "Orden de pago",
           date: p.fecha_pago || p.fecha_creada || "",
           comprobante: p.numero_pago ? `#${p.numero_pago}` : `#${p.id_pago}`,
-          razon_social: currentSupplier.nombre || "-",
+          razon_social: currentProveedores.nombre || "-",
           estado: p.estado_pago || p.estado || "pendiente",
           amount: -Math.abs(totalPagado), // Pagos siempre restan
           balance: 0,
@@ -124,7 +125,7 @@ export default function SupplierCC({
     setMovements(movimientosOrdenados);
 
     setFinalBalance(movimientosOrdenados[0]?.balance || 0);
-  }, [currentSupplier, invoices, payments, paymentItems]);
+  }, [currentProveedores, invoices, payments, paymentItems]);
 
   const filteredMovements = movements.filter(
     (m) =>
@@ -166,7 +167,7 @@ export default function SupplierCC({
         <div className="flex gap-2">
           <Link
             className="flex !items-center"
-            href={`/proveedores/${currentSupplier.id_proveedor}/ordencompra/nueva-oc`}
+            href={`/proveedores/${currentProveedores.id_proveedor}/ordencompra/nueva-oc`}
           >
             <Button
               variant="default"
@@ -178,7 +179,7 @@ export default function SupplierCC({
           </Link>
           <Link
             className="flex !items-center"
-            href={`/proveedores/${currentSupplier.id_proveedor}/facturacion/nueva-factura`}
+            href={`/proveedores/${currentProveedores.id_proveedor}/facturacion/nueva-factura`}
           >
             <Button
               variant="outline"
@@ -189,7 +190,7 @@ export default function SupplierCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentSupplier.id_proveedor}/pagos/nuevopago`}
+            href={`/proveedores/${currentProveedores.id_proveedor}/pagos/nuevopago`}
           >
             <Button
               variant="outline"
@@ -200,7 +201,7 @@ export default function SupplierCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentSupplier.id_proveedor}/notacredito/nuevanotacredito`}
+            href={`/proveedores/${currentProveedores.id_proveedor}/notacredito/nuevanotacredito`}
           >
             <Button
               variant="outline"
@@ -211,7 +212,7 @@ export default function SupplierCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentSupplier.id_proveedor}/notadebito/nuevanotadebito`}
+            href={`/proveedores/${currentProveedores.id_proveedor}/notadebito/nuevanotadebito`}
           >
             <Button
               variant="outline"
@@ -227,29 +228,29 @@ export default function SupplierCC({
       {/* Tabla */}
       <DataTable
         idField="id"
-        columns={columnsCC(currentSupplier)}
+        columns={columnsCC(currentProveedores)}
         data={filteredMovements}
         enableRowClick={true}
         onRowClick={(row) => {
           if (row.type === "Factura") {
             const id = row.id.replace("factura-", "");
             navigate(
-              `/proveedores/${currentSupplier.id_proveedor}/facturacion/${id}`
+              `/proveedores/${currentProveedores.id_proveedor}/facturacion/${id}`
             );
           } else if (row.type === "Nota de Crédito") {
             const id = row.id.replace("nc-", "");
             navigate(
-              `/proveedores/${currentSupplier.id_proveedor}/notacredito/${id}`
+              `/proveedores/${currentProveedores.id_proveedor}/notacredito/${id}`
             );
           } else if (row.type === "Orden de pago") {
             const id = row.id.replace("pago-", "");
             navigate(
-              `/proveedores/${currentSupplier.id_proveedor}/pagos/${id}`
+              `/proveedores/${currentProveedores.id_proveedor}/pagos/${id}`
             );
           } else if (row.type === "Nota de Débito") {
             const id = row.id.replace("nd-", "");
             navigate(
-              `/proveedores/${currentSupplier.id_proveedor}/notadebito/${id}`
+              `/proveedores/${currentProveedores.id_proveedor}/notadebito/${id}`
             );
           }
         }}

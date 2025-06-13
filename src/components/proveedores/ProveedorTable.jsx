@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { useSuppliers } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/contexts/ProveedorContext";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom"; // Cambia este import
-import { SuppliersTableSkeleton } from "./ProveedorTableSkeleton";
+import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
 
-export default function SuppliersTable() {
+export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { suppliers } = useSuppliers();
+  const { Proveedor } = useProveedores();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (suppliers.length > 0) setIsLoading(false);
-  }, [suppliers]);
+    if (Proveedor.length > 0) setIsLoading(false);
+  }, [Proveedor]);
 
-  const filteredSuppliers = suppliers.filter((s) => {
+  const filteredProveedores = Proveedor.filter((s) => {
     const query = searchTerm.toLowerCase().trim();
 
     return (
@@ -52,12 +52,12 @@ export default function SuppliersTable() {
       </div>
 
       {isLoading ? (
-        <SuppliersTableSkeleton />
+        <ProveedoresTableSkeleton />
       ) : (
         <DataTable
           idField="id_proveedor"
           columns={SupppliersColumns}
-          data={filteredSuppliers}
+          data={filteredProveedores}
           enableRowClick={true}
         />
       )}

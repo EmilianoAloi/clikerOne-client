@@ -1,4 +1,4 @@
-import { useSuppliers } from "../../contexts/ProveedorContext";
+import { useProveedores } from "../../contexts/ProveedorContext";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -10,16 +10,16 @@ import {
 } from "../ui/dropdown-menu";
 import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import React, { useState } from "react";
-import SuppliersDeleteDialog from "./ProveedorDeleteDialog";
-import SuppliersActivateDialog from "./ProveedorActivateDialog";
+import ProveedoresDeleteDialog from "./ProveedorDeleteDialog";
+import ProveedoresActivateDialog from "./ProveedorActivateDialog";
 import { Link, useNavigate } from "react-router-dom";
 
-const SuppliersTableActions = ({ supplier }) => {
-  const { removeSupplier, activateSupplier } = useSuppliers();
+const ProveedoresTableActions = ({ Proveedor }) => {
+  const { removeProveedores, activateProveedores } = useProveedores();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // Estado para controlar el Dropdown
 
-  const isInactivo = !supplier.estado_logico;
+  const isInactivo = !Proveedor.estado_logico;
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
@@ -36,7 +36,7 @@ const SuppliersTableActions = ({ supplier }) => {
         <DropdownMenuLabel className="font-bold">Acciones</DropdownMenuLabel>
         <DropdownMenuItem asChild>
           <Link
-            to={`/proveedores/${supplier.id_proveedor}`}
+            to={`/proveedores/${Proveedor.id_proveedor}`}
             className="flex items-center gap-2 text-sm"
             onClick={() => setIsOpen(false)}
           >
@@ -48,7 +48,7 @@ const SuppliersTableActions = ({ supplier }) => {
         <DropdownMenuItem
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/proveedores/${supplier.id_proveedor}/editar`);
+            navigate(`/proveedores/${Proveedor.id_proveedor}/editar`);
             setIsOpen(false);
           }}
           className="flex items-center gap-2 text-sm cursor-pointer"
@@ -59,23 +59,23 @@ const SuppliersTableActions = ({ supplier }) => {
 
         <DropdownMenuSeparator />
         {isInactivo ? (
-          <SuppliersActivateDialog
-            supplier={supplier}
+          <ProveedoresActivateDialog
+            Proveedor={Proveedor}
             onActivate={async () => {
-              await activateSupplier(
-                supplier.id_proveedor,
-                supplier.nombre || "Proveedor"
+              await activateProveedores(
+                Proveedor.id_proveedor,
+                Proveedor.nombre || "Proveedor"
               );
               setIsOpen(false);
             }}
           />
         ) : (
-          <SuppliersDeleteDialog
-            supplier={supplier}
+          <ProveedoresDeleteDialog
+            Proveedor={Proveedor}
             onDelete={() => {
-              removeSupplier(
-                supplier.id_proveedor,
-                supplier.nombre || "Desconocido"
+              removeProveedores(
+                Proveedor.id_proveedor,
+                Proveedor.nombre || "Desconocido"
               );
               setIsOpen(false);
             }}
@@ -86,4 +86,4 @@ const SuppliersTableActions = ({ supplier }) => {
   );
 };
 
-export default SuppliersTableActions;
+export default ProveedoresTableActions;

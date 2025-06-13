@@ -8,7 +8,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { useSuppliers } from "@/contexts/ProveedorContext";
+import { useProveedoress } from "@/contexts/ProveedorContext";
 
 const breadcrumbNames = {
   home: "Inicio",
@@ -39,7 +39,7 @@ const breadcrumbNames = {
 export default function DynamicBreadcrumbs() {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
-  const { suppliers } = useSuppliers();
+  const { Proveedor } = useProveedoress();
 
   let accumulatedPath = "";
 
@@ -63,12 +63,12 @@ export default function DynamicBreadcrumbs() {
           if (
             pathSegments[0] === "proveedores" &&
             index === 1 &&
-            suppliers.length > 0
+            Proveedor.length > 0
           ) {
-            const foundSupplier = suppliers.find(
+            const foundProveedores = Proveedor.find(
               (s) => s.id_proveedor.toString() === segment
             );
-            if (foundSupplier) label = foundSupplier.nombre;
+            if (foundProveedores) label = foundProveedores.nombre;
           }
 
           return (

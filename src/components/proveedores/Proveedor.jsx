@@ -1,4 +1,4 @@
-const SuppliersTitle = () => {
+const ProveedoresTitle = () => {
   return (
     <>
       <div className="flex justify-between items-start !w-full">
@@ -7,7 +7,7 @@ const SuppliersTitle = () => {
             <h3 className="text-2xl font-semibold leading-none tracking-tight">
               Gestión de Proveedores
             </h3>
-            {/* <Link href="/suppliers/agregar">
+            {/* <Link href="/Proveedor/agregar">
               <Button className=" text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
                 <Plus className="h-4 w-4 mr-2" />
                 Agregar Proveedor
@@ -27,4 +27,4 @@ const SuppliersTitle = () => {
   );
 };
 
-export default SuppliersTitle;
+export default ProveedoresTitle;

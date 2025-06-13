@@ -1,7 +1,7 @@
-import SupplierAccContainer from "@/components/proveedores/proveedor/detailPage/SupplierAccContainer";
+import ProveedoresAccContainer from "@/components/proveedores/proveedor/detailPage/ProveedoresAccContainer";
 
 const ProveedoresAccordionSections = () => {
-  return <SupplierAccContainer />;
+  return <ProveedoresAccContainer />;
 };
 
 export default ProveedoresAccordionSections;

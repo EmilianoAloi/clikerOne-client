@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import SuppliersContainer from "../pages/suppliers/suppliers-container";
+import ProveedoresContainer from "../pages/Proveedor/Proveedor-container";
 
 const Header = () => {
   return (
@@ -35,7 +35,7 @@ const Header = () => {
       </header>
 
       {/* // Contenido de la seccion */}
-      <SuppliersContainer />
+      <ProveedoresContainer />
     </SidebarInset>
   );
 };

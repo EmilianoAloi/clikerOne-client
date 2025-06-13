@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const SuppliersTableSkeleton = () => {
+export const ProveedoressTableSkeleton = () => {
   const fakeRows = Array.from({ length: 8 });
 
   return (

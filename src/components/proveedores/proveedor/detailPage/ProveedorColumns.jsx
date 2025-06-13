@@ -1,6 +1,6 @@
 // import { ColumnDef } from "@tanstack/react-table";
 // import { ArrowDownRight, ArrowUpRight, Calendar, Info } from "lucide-react";
-// import CcActionCell from "./supplier-accordion-cc-ActionCell";
+// import CcActionCell from "./Proveedor-accordion-cc-ActionCell";
 // import {
 //   Tooltip,
 //   TooltipContent,
@@ -11,7 +11,7 @@
 // import { AdjuntosBadgePopover } from "@/components/ui/adjuntos-badge-popover";
 
 // // `Movement` type no necesario, ya que estamos usando JSX
-// export const SupppliersColumns = (currentSupplier) => [
+// export const SupppliersColumns = (currentProveedores) => [
 //   {
 //     accessorKey: "date",
 //     header: "Fecha Movimiento",
@@ -163,7 +163,7 @@
 //     id: "actions",
 //     header: () => <span className="block text-center px-2">Acciones</span>,
 //     cell: ({ row }) => (
-//       <CcActionCell movement={row.original} currentSupplier={currentSupplier} />
+//       <CcActionCell movement={row.original} currentProveedores={currentProveedores} />
 //     ),
 //     meta: {
 //       className: "text-center",

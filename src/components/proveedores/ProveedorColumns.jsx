@@ -1,4 +1,4 @@
-import SuppliersTableActions from "./ProveedorTableActions";
+import ProveedoresTableActions from "./ProveedorTableActions";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -229,7 +229,7 @@ export const SupppliersColumns = [
     header: () => <span className="block text-right px-2">Acciones</span>,
     cell: ({ row }) => (
       <div className="flex justify-end pr-2">
-        <SuppliersTableActions supplier={row.original} />
+        <ProveedoresTableActions Proveedor={row.original} />
       </div>
     ),
     meta: {

@@ -14,7 +14,7 @@ import { Trash } from "lucide-react";
 import { Button } from "../ui/button"; // Ruta relativa desde 'proveedores'
 
 // No más typescript, solo props JS
-const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
+const ProveedoressDeleteDialog = ({ Proveedor, onDelete }) => {
   const [open, setOpen] = useState(false);
 
   const handleConfirmDelete = () => {
@@ -37,7 +37,7 @@ const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
           <AlertDialogTitle>Eliminar Proveedor</AlertDialogTitle>
           <AlertDialogDescription>
             ¿Seguro que desea eliminar al proveedor{" "}
-            <strong>{supplier.nombre}</strong>?
+            <strong>{Proveedor.nombre}</strong>?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -56,4 +56,4 @@ const SuppliersDeleteDialog = ({ supplier, onDelete }) => {
   );
 };
 
-export default SuppliersDeleteDialog;
+export default ProveedoressDeleteDialog;

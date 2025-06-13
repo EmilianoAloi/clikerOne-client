@@ -11,7 +11,7 @@ import {
 import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function ActionCell({ movement, currentSupplier }) {
+export default function ActionCell({ movement, currentProveedores }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,25 +21,25 @@ export default function ActionCell({ movement, currentSupplier }) {
     if (movement.type === "Factura") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/facturacion/${movement.id.replace("factura-", "")}`
       );
     } else if (movement.type === "Nota de Crédito") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/notacredito/${movement.id.replace("nc-", "")}`
       );
     } else if (movement.type === "Nota de Débito") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/notadebito/${movement.id.replace("nd-", "")}`
       );
     } else if (movement.type === "Orden de pago") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/pagos/${movement.id.replace("pago-", "")}`
       );
     }
@@ -50,25 +50,25 @@ export default function ActionCell({ movement, currentSupplier }) {
     if (movement.type === "Factura") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/facturacion/${movement.id.replace("factura-", "")}/editar`
       );
     } else if (movement.type === "Nota de Crédito") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/notacredito/${movement.id.replace("nc-", "")}/editar`
       );
     } else if (movement.type === "Nota de Débito") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/notadebito/${movement.id.replace("nd-", "")}/editar`
       );
     } else if (movement.type === "Orden de pago") {
       navigate(
         `/proveedores/${
-          currentSupplier.id_proveedor
+          currentProveedores.id_proveedor
         }/pagos/${movement.id.replace("pago-", "")}/editar`
       );
     }

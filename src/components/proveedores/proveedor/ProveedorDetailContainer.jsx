@@ -1,7 +1,7 @@
 import { Accordion } from "@/components/ui/accordion";
 
-const SupplierDetailContainer = ({
-  currentSupplier,
+const ProveedoresDetailContainer = ({
+  currentProveedores,
   invoices,
   payments,
   paymentItems = [],
@@ -13,22 +13,22 @@ const SupplierDetailContainer = ({
       className="space-y-4 mb-12"
       defaultValue={["cuentacorriente"]}
     >
-      <SupplierDetailAccordionOc currentSupplier={currentSupplier} />
-      <SupplierDetailAccordionFacturacion
-        currentSupplier={currentSupplier}
+      <ProveedoresDetailAccordionOc currentProveedores={currentProveedores} />
+      <ProveedoresDetailAccordionFacturacion
+        currentProveedores={currentProveedores}
         invoices={invoices || []}
       />
-      <SupplierDetailAccordionOp
-        currentSupplier={currentSupplier}
-        supplierPayments={payments || []}
+      <ProveedoresDetailAccordionOp
+        currentProveedores={currentProveedores}
+        ProveedoresPayments={payments || []}
         paymentItems={paymentItems || []}
       />
-      <SupplierDetailAccordionArticulos
-        currentSupplier={currentSupplier}
+      <ProveedoresDetailAccordionArticulos
+        currentProveedores={currentProveedores}
         articles={articles || []}
       />
     </Accordion>
   );
 };
 
-export default SupplierDetailContainer;
+export default ProveedoresDetailContainer;

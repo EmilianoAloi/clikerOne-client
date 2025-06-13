@@ -16,15 +16,16 @@ import {
 } from "lucide-react";
 
 import DetailItem from "./ProveedorDetailItem";
-import { useSuppliers } from "@/contexts/ProveedorContext";
+import { useProveedoress } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import SuppliersDeleteDialog from "./ProveedorDeleteDialog";
+import ProveedoressDeleteDialog from "./ProveedorDeleteDialog";
 
-const SupplierDetailInfo = ({ supplier }) => {
-  const { suppliers, removeSupplier } = useSuppliers();
-  const currentSupplier =
-    suppliers.find((s) => s.id_proveedor === supplier.id_proveedor) || supplier;
+const ProveedoresDetailInfo = ({ Proveedor }) => {
+  const { Proveedor, removeProveedores } = useProveedoress();
+  const currentProveedores =
+    Proveedor.find((s) => s.id_proveedor === Proveedor.id_proveedor) ||
+    Proveedor;
   const navigate = useNavigate();
 
   function esFechaMovimientoValida(fecha) {
@@ -61,70 +62,72 @@ const SupplierDetailInfo = ({ supplier }) => {
         <DetailItem
           icon={UserCog}
           label="Nombre"
-          value={currentSupplier.nombre}
+          value={currentProveedores.nombre}
         />
         <DetailItem
           icon={User}
           label="Persona de Contacto"
-          value={currentSupplier.contacto}
+          value={currentProveedores.contacto}
         />
         <DetailItem
           icon={Phone}
           label="Teléfono"
-          value={currentSupplier.telefono}
+          value={currentProveedores.telefono}
         />
         <DetailItem
           icon={MapPin}
           label="Dirección"
-          value={currentSupplier.direccion}
+          value={currentProveedores.direccion}
         />
         <DetailItem
           icon={Globe}
           label="Sitio Web"
-          value={currentSupplier.web}
+          value={currentProveedores.web}
         />
         <DetailItem
           icon={Mail}
           label="Correo electrónico"
-          value={currentSupplier.email}
+          value={currentProveedores.email}
         />
         <DetailItem
           icon={Boxes}
           label="Artículos"
           value={
-            Array.isArray(currentSupplier.articulos) &&
-            currentSupplier.articulos.length > 0
-              ? `${currentSupplier.articulos.length} artículo(s)`
+            Array.isArray(currentProveedores.articulos) &&
+            currentProveedores.articulos.length > 0
+              ? `${currentProveedores.articulos.length} artículo(s)`
               : "Sin Artículos"
           }
         />
         <DetailItem
           icon={Landmark}
           label="Razón Social"
-          value={currentSupplier.razon_social}
+          value={currentProveedores.razon_social}
         />
         <DetailItem
           icon={Fingerprint}
           label="CUIT"
-          value={mostrarCampo(currentSupplier.cuit)}
+          value={mostrarCampo(currentProveedores.cuit)}
         />
         <DetailItem
           icon={Info}
           label="Condición IVA"
-          value={currentSupplier.iva_condicion}
+          value={currentProveedores.iva_condicion}
         />
         <DetailItem
           icon={Percent}
           label="IVA predeterminado"
-          value={mostrarIvaPredeterminado(currentSupplier.iva_predeterminado)}
+          value={mostrarIvaPredeterminado(
+            currentProveedores.iva_predeterminado
+          )}
         />
         <DetailItem
           icon={Calendar1}
           label="Último movimiento"
           value={
-            esFechaMovimientoValida(currentSupplier.fecha_ultimo_movimiento)
+            esFechaMovimientoValida(currentProveedores.fecha_ultimo_movimiento)
               ? new Date(
-                  currentSupplier.fecha_ultimo_movimiento
+                  currentProveedores.fecha_ultimo_movimiento
                 ).toLocaleDateString("es-AR", {
                   day: "2-digit",
                   month: "2-digit",
@@ -142,7 +145,7 @@ const SupplierDetailInfo = ({ supplier }) => {
           <div>
             <h3 className="text-lg font-medium ">Observaciones</h3>
             <p className="text-sm text-muted-foreground xl:max-w-xl break-words">
-              {currentSupplier.observaciones}
+              {currentProveedores.observaciones}
             </p>
           </div>
           <div className="flex items-center  mb-[-6px]">
@@ -150,19 +153,21 @@ const SupplierDetailInfo = ({ supplier }) => {
               size="sm"
               variant="ghost"
               onClick={() =>
-                navigate(`/proveedores/${currentSupplier.id_proveedor}/editar`)
+                navigate(
+                  `/proveedores/${currentProveedores.id_proveedor}/editar`
+                )
               }
               className="text-sm cursor-pointer pe-0"
             >
               <Pencil className="w-4 h-4 " />
             </Button>
 
-            <SuppliersDeleteDialog
-              supplier={currentSupplier}
+            <ProveedoressDeleteDialog
+              Proveedor={currentProveedores}
               onDelete={() =>
-                removeSupplier(
-                  currentSupplier.id_proveedor,
-                  currentSupplier.nombre || "Proveedor"
+                removeProveedores(
+                  currentProveedores.id_proveedor,
+                  currentProveedores.nombre || "Proveedor"
                 )
               }
             />
@@ -173,4 +178,4 @@ const SupplierDetailInfo = ({ supplier }) => {
   );
 };
 
-export default SupplierDetailInfo;
+export default ProveedoresDetailInfo;
