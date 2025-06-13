@@ -6,20 +6,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
-// import DynamicBreadcrumbs from "@/components/layout/dynamicBreadcrumbs";
-// import { SuppliersProvider } from "@/components/contexts/suppliers-context";
-// import { SupplierInvoicesProvider } from "@/components/contexts/supplier-invoices-context";
-// import { SupplierPaymentsProvider } from "@/components/contexts/supplier-payments-context";
-// import { ArticlesProvider } from "@/components/contexts/supplier-articles-context";
-// import { SupplierComprasProvider } from "@/components/contexts/supplier-compras-context";
+import DynamicBreadcrumbs from "@/components/ui/dynamicBreadcrumbs";
 
 const MainLayout = ({ children }) => (
   <SidebarProvider>
-    {/* <SuppliersProvider>
-      <ArticlesProvider>
-        <SupplierComprasProvider>
-          <SupplierInvoicesProvider>
-            <SupplierPaymentsProvider> */}
+    {/* <SuppliersProvider> */}
     <AppSidebar />
     <SidebarInset>
       <header className="flex h-16 shrink-0 items-center justify-between px-4">
@@ -29,17 +20,13 @@ const MainLayout = ({ children }) => (
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
           />
-          {/* <DynamicBreadcrumbs /> */}
+          <DynamicBreadcrumbs />
         </div>
       </header>
       {/* Contenido de la sección */}
       {children}
     </SidebarInset>
-    {/* </SupplierPaymentsProvider>
-          </SupplierInvoicesProvider>
-        </SupplierComprasProvider>
-      </ArticlesProvider>
-    </SuppliersProvider> */}
+    {/* </SuppliersProvider> */}
     <Toaster position="top-right" richColors />
   </SidebarProvider>
 );

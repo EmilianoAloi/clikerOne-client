@@ -22,6 +22,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import SidebarHead from "./sidebar-head";
 
 // This is sample data.
 const data = {
