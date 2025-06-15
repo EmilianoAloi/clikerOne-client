@@ -1,4 +1,4 @@
-const SuppliersTitle = () => {
+const ProveedorTitle = () => {
   return (
     <>
       <div className="flex justify-between items-start !w-full">
@@ -27,4 +27,4 @@ const SuppliersTitle = () => {
   );
 };
 
-export default SuppliersTitle;
+export default ProveedorTitle;

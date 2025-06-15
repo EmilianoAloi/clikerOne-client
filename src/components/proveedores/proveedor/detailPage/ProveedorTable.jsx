@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { useProveedor } from "@/contexts/ProveedorContext"; // Cambiado a tu contexto actual
-import { ProveedorColumns } from "./ProveedorColumns"; // Cambia al nombre y ruta real de tus columns
+import { useProveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Link } from "react-router-dom"; // Usá react-router-dom
+import { Link } from "react-router-dom";
+import { ProveedorColumns } from "./ProveedorColumns";
 
-export default function ProveedoresTable() {
+export default function ProveedorTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const { proveedores } = useProveedor();
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +52,7 @@ export default function ProveedoresTable() {
       ) : (
         <DataTable
           idField="id_proveedor"
-          columns={ProveedorColumns}
+          columns={ProveedorColumns(currentProveedores)}
           data={filteredProveedores}
           enableRowClick={true}
         />

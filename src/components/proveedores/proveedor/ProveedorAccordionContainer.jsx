@@ -3,21 +3,23 @@ import ProveedoresDetailAccordionOc from "./provedoresaccordions/ProveedoresDeta
 import ProveedoresDetailAccordionFacturacion from "./provedoresaccordions/ProveedoresDetailAccordionFacturacion";
 import ProveedoresDetailAccordionOp from "./provedoresaccordions/ProveedoresDetailAccordionOp";
 import ProveedoresDetailAccordionArticulos from "./provedoresaccordions/ProveedoresDetailAccordionArticulos";
-import SuppliersTitle from "./detailPage/ProveedorTitle";
+import ProveedorTitle from "./detailPage/ProveedorTitle";
 import { Separator } from "@/components/ui/separator";
+import ProveedorTable from "./detailPage/ProveedorTable";
 
 const ProveedorAccordionContainer = ({
   currentProveedores,
   invoices,
   payments,
+
   paymentItems = [],
   articles,
 }) => {
   return (
     <>
-      <SuppliersTitle />
+      <ProveedorTitle />
       <Separator className="space-y-8 !container mx-auto" />
-      <SuppliersTable />
+      <ProveedorTable />
       <Accordion
         type="multiple"
         className="space-y-4 mb-12"

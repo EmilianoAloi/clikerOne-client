@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SaldoActual } from "./ProveedorSaldoActual";
 import { columnsCC } from "./ColumnsCC";
 
-export default function ProveedoresCC({
+export default function ProveedorCC({
   currentProveedores,
   paymentItems,
   invoices,
@@ -19,6 +17,7 @@ export default function ProveedoresCC({
   const [finalBalance, setFinalBalance] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!currentProveedores?.id_proveedor) return;
 
@@ -167,7 +166,7 @@ export default function ProveedoresCC({
         <div className="flex gap-2">
           <Link
             className="flex !items-center"
-            href={`/proveedores/${currentProveedores.id_proveedor}/ordencompra/nueva-oc`}
+            to={`/proveedores/${currentProveedores.id_proveedor}/ordencompra/nueva-oc`}
           >
             <Button
               variant="default"
@@ -179,7 +178,7 @@ export default function ProveedoresCC({
           </Link>
           <Link
             className="flex !items-center"
-            href={`/proveedores/${currentProveedores.id_proveedor}/facturacion/nueva-factura`}
+            to={`/proveedores/${currentProveedores.id_proveedor}/facturacion/nueva-factura`}
           >
             <Button
               variant="outline"
@@ -190,7 +189,7 @@ export default function ProveedoresCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentProveedores.id_proveedor}/pagos/nuevopago`}
+            to={`/proveedores/${currentProveedores.id_proveedor}/pagos/nuevopago`}
           >
             <Button
               variant="outline"
@@ -201,7 +200,7 @@ export default function ProveedoresCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentProveedores.id_proveedor}/notacredito/nuevanotacredito`}
+            to={`/proveedores/${currentProveedores.id_proveedor}/notacredito/nuevanotacredito`}
           >
             <Button
               variant="outline"
@@ -212,7 +211,7 @@ export default function ProveedoresCC({
             </Button>
           </Link>
           <Link
-            href={`/proveedores/${currentProveedores.id_proveedor}/notadebito/nuevanotadebito`}
+            to={`/proveedores/${currentProveedores.id_proveedor}/notadebito/nuevanotadebito`}
           >
             <Button
               variant="outline"
