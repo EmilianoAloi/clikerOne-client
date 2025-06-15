@@ -1,17 +1,17 @@
 import { useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom"; // Usar react-router-dom en vez de next/navigation
+import { useParams } from "react-router-dom";
 
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
 import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
-import { useProveedors } from "@/contexts/ProveedorContext";
+import { useProveedor } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresIDPage() {
   const params = useParams();
   const idProveedor = Number(params.id);
 
   // Contextos
-  const { Proveedors, refreshProveedors } = useProveedors();
+  const { Proveedors, refreshProveedors } = useProveedor();
   const { getInvoicesForProveedor, refreshProveedorInvoices } =
     useProveedorInvoices();
   const {

@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
-const ProveedorsArticlesContext = createContext(undefined);
+const ProveedorArticlesContext = createContext(undefined);
 
-export const ArticlesProvider = ({ children }) => {
+export const ProveedorArticlesProvider = ({ children }) => {
   const [articlesByProveedor, setArticlesByProveedor] = useState({});
 
   const loadArticlesByProveedor = async (idProveedor, force = false) => {
@@ -14,6 +14,7 @@ export const ArticlesProvider = ({ children }) => {
           import.meta.env.VITE_API_URL
         }/api/proveedores/articulos/proveedor/${idProveedor}`
       );
+
       if (!response.ok) {
         if (response.status === 404) {
           setArticlesByProveedor((prev) => ({ ...prev, [idProveedor]: [] }));
@@ -21,6 +22,7 @@ export const ArticlesProvider = ({ children }) => {
         }
         throw new Error("Error al obtener artículos del proveedor");
       }
+
       const data = await response.json();
       setArticlesByProveedor((prev) => ({
         ...prev,
@@ -36,7 +38,7 @@ export const ArticlesProvider = ({ children }) => {
     articlesByProveedor[idProveedor] || [];
 
   return (
-    <ProveedorsArticlesContext.Provider
+    <ProveedorArticlesContext.Provider
       value={{
         articlesByProveedor,
         loadArticlesByProveedor,
@@ -44,14 +46,16 @@ export const ArticlesProvider = ({ children }) => {
       }}
     >
       {children}
-    </ProveedorsArticlesContext.Provider>
+    </ProveedorArticlesContext.Provider>
   );
 };
 
-export const useArticles = () => {
-  const context = useContext(ProveedorsArticlesContext);
+export const useProveedorArticles = () => {
+  const context = useContext(ProveedorArticlesContext);
   if (!context) {
-    throw new Error("useArticles debe usarse dentro de un ArticlesProvider");
+    throw new Error(
+      "useProveedorArticles debe usarse dentro de un ProveedorArticlesProvider"
+    );
   }
   return context;
 };

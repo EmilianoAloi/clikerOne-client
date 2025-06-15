@@ -16,13 +16,13 @@ import {
 } from "lucide-react";
 
 import DetailItem from "./ProveedorDetailItem";
-import { useProveedoress } from "@/contexts/ProveedorContext";
+import { Proveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import ProveedoressDeleteDialog from "./ProveedorDeleteDialog";
 
 const ProveedoresDetailInfo = ({ Proveedor }) => {
-  const { Proveedor, removeProveedores } = useProveedoress();
+  const { Proveedor, removeProveedores } = Proveedor();
   const currentProveedores =
     Proveedor.find((s) => s.id_proveedor === Proveedor.id_proveedor) ||
     Proveedor;

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`;
 
-const ProveedorsOPContext = createContext(undefined);
+const ProveedorPaymentsContext = createContext(undefined);
 
 export const ProveedorPaymentsProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
@@ -11,12 +11,14 @@ export const ProveedorPaymentsProvider = ({ children }) => {
 
   const getPaymentsForProveedor = (idProveedor) =>
     paymentsByProveedor[idProveedor] || [];
+
   const getPaymentItemsForProveedor = (idProveedor) =>
     paymentItemsByProveedor[idProveedor] || [];
 
   const refreshProveedorPayments = async (idProveedor, force = false) => {
     if (!idProveedor) return;
     if (paymentsByProveedor[idProveedor] && !force) return;
+
     try {
       const pagosRes = await fetch(`${API_BASE}/proveedor/${idProveedor}`);
       if (!pagosRes.ok) throw new Error("Error al obtener pagos");
@@ -30,7 +32,9 @@ export const ProveedorPaymentsProvider = ({ children }) => {
       const itemsRes = await fetch(
         `${API_BASE}/proveedor/${idProveedor}/items`
       );
+      if (!itemsRes.ok) throw new Error("Error al obtener items de pago");
       const itemsData = await itemsRes.json();
+
       setPaymentItemsByProveedor((prev) => ({
         ...prev,
         [idProveedor]: itemsData,
@@ -50,26 +54,26 @@ export const ProveedorPaymentsProvider = ({ children }) => {
   };
 
   return (
-    <ProveedorsOPContext.Provider
+    <ProveedorPaymentsContext.Provider
       value={{
         paymentsByProveedor,
         paymentItemsByProveedor,
         getPaymentsForProveedor,
         getPaymentItemsForProveedor,
         refreshProveedorPayments,
-        // Agregá más funciones CRUD si lo necesitás
       }}
     >
       {children}
-    </ProveedorsOPContext.Provider>
+    </ProveedorPaymentsContext.Provider>
   );
 };
 
 export const useProveedorPayments = () => {
-  const context = useContext(ProveedorsOPContext);
-  if (!context)
+  const context = useContext(ProveedorPaymentsContext);
+  if (!context) {
     throw new Error(
       "useProveedorPayments debe usarse dentro de un ProveedorPaymentsProvider"
     );
+  }
   return context;
 };

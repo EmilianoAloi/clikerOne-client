@@ -7,7 +7,7 @@ import { ProveedorPaymentsProvider } from "@/contexts/ProveedorOPContext";
 import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
 import { ProveedorProvider } from "./contexts/ProveedorContext";
 import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEditPage";
-import { ArticlesProvider } from "./contexts/ProveedorArticlesContext";
+import { ProveedorArticlesProvider } from "./contexts/ProveedorArticlesContext";
 import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
 import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 
@@ -17,7 +17,7 @@ function App() {
       <ProveedorInvoicesProvider>
         <ProveedorPaymentsProvider>
           <ProveedorComprasProvider>
-            <ArticlesProvider>
+            <ProveedorArticlesProvider>
               <BrowserRouter>
                 <MainLayout>
                   <Routes>
@@ -41,7 +41,7 @@ function App() {
                   </Routes>
                 </MainLayout>
               </BrowserRouter>
-            </ArticlesProvider>
+            </ProveedorArticlesProvider>
           </ProveedorComprasProvider>
         </ProveedorPaymentsProvider>
       </ProveedorInvoicesProvider>

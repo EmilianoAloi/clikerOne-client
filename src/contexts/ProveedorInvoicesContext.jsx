@@ -13,10 +13,12 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
   const refreshProveedorInvoices = async (idProveedor, force = false) => {
     if (!idProveedor) {
-      console.warn("refreshProveedorInvoices: idProveedor no válido");
+      console.warn("⚠️ refreshProveedorInvoices: idProveedor no válido");
       return;
     }
+
     if (invoicesByProveedor[idProveedor] && !force) return;
+
     try {
       const response = await fetch(`${API_BASE}/proveedor/${idProveedor}`);
       if (!response.ok) throw new Error("Error al obtener facturas");
@@ -26,7 +28,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
         [idProveedor]: data,
       }));
     } catch (error) {
-      console.error("Error al obtener facturas:", error);
+      console.error("❌ Error al obtener facturas:", error);
       toast.error("Error al obtener las facturas del proveedor.");
       setInvoicesByProveedor((prev) => ({
         ...prev,
@@ -50,9 +52,10 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
 export const useProveedorInvoices = () => {
   const context = useContext(ProveedorInvoicesContext);
-  if (!context)
+  if (!context) {
     throw new Error(
       "useProveedorInvoices debe usarse dentro de un ProveedorInvoicesProvider"
     );
+  }
   return context;
 };

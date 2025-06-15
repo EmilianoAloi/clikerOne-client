@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
-const ProveedorOCContext = createContext(undefined);
+const ProveedorComprasContext = createContext(undefined);
 
 export const ProveedorComprasProvider = ({ children }) => {
   const [comprasByProveedor, setComprasByProveedor] = useState({});
@@ -11,28 +11,33 @@ export const ProveedorComprasProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const refreshProveedorCompras = useCallback(
-    async (id_proveedor, force = false) => {
+    async (idProveedor, force = false) => {
       setLoading(true);
       setError(null);
-      if (comprasByProveedor[id_proveedor] && !force) {
+
+      if (comprasByProveedor[idProveedor] && !force) {
         setLoading(false);
         return;
       }
+
       try {
-        const res = await fetch(`${API_URL}/compras/proveedor/${id_proveedor}`);
+        const res = await fetch(`${API_URL}/compras/proveedor/${idProveedor}`);
         if (!res.ok) throw new Error("No se pudieron cargar las compras");
+
         const data = await res.json();
         setComprasByProveedor((prev) => ({
           ...prev,
-          [id_proveedor]: data,
+          [idProveedor]: data,
         }));
       } catch (e) {
-        const errorMsg =
+        const message =
           e instanceof Error ? e.message : "Error al buscar compras";
-        setError(errorMsg);
+        console.error("❌ Error en refreshProveedorCompras:", e);
+        toast.error(message);
+        setError(message);
         setComprasByProveedor((prev) => ({
           ...prev,
-          [id_proveedor]: [],
+          [idProveedor]: [],
         }));
       } finally {
         setLoading(false);
@@ -41,29 +46,30 @@ export const ProveedorComprasProvider = ({ children }) => {
     [comprasByProveedor]
   );
 
-  const getComprasForProveedor = (id_proveedor) =>
-    comprasByProveedor[id_proveedor] || [];
+  const getComprasForProveedor = (idProveedor) =>
+    comprasByProveedor[idProveedor] || [];
 
   return (
-    <ProveedorOCContext.Provider
+    <ProveedorComprasContext.Provider
       value={{
         comprasByProveedor,
         getComprasForProveedor,
+        refreshProveedorCompras,
         loading,
         error,
-        refreshProveedorCompras,
       }}
     >
       {children}
-    </ProveedorOCContext.Provider>
+    </ProveedorComprasContext.Provider>
   );
 };
 
 export const useProveedorCompras = () => {
-  const ctx = useContext(ProveedorOCContext);
-  if (!ctx)
+  const context = useContext(ProveedorComprasContext);
+  if (!context) {
     throw new Error(
-      "useProveedorCompras debe usarse dentro de ProveedorComprasProvider"
+      "useProveedorCompras debe usarse dentro de un ProveedorComprasProvider"
     );
-  return ctx;
+  }
+  return context;
 };
