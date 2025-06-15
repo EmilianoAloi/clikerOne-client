@@ -26,8 +26,7 @@ import CcActionCell from "./CcActionCell";
  * @property {{ url: string, nombre: string }[]=} adjuntos
  */
 
-// NOTA: Si tu contexto ahora se llama Provider (no Supplier), corregí también eso.
-export const columnsCC = (currentSupplier) => [
+export const columnsCC = (currentProveedor) => [
   {
     accessorKey: "date",
     header: "Fecha Movimiento",
@@ -169,7 +168,10 @@ export const columnsCC = (currentSupplier) => [
     id: "actions",
     header: () => <span className="block text-center px-2">Acciones</span>,
     cell: ({ row }) => (
-      <CcActionCell movement={row.original} currentSupplier={currentSupplier} />
+      <CcActionCell
+        movement={row.original}
+        currentProveedor={currentProveedor}
+      />
     ),
     meta: {
       className: "text-center",

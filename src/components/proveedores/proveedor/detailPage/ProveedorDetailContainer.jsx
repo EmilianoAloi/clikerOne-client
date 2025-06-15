@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ProveedorDetailInfo from "./ProveedorDetailInfo";
 import { useProveedor } from "@/contexts/ProveedorContext";
 import BackButton from "@/components/ui/back-button";
-import ProveedorCurrentAccountContainer from "./ProveedorCurrentAccountContainer";
+import ProveedorCurrentAccountContainer from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccountContainer";
 import ProveedorAccordionContainer from "../ProveedorAccordionContainer";
 
 const ProveedorDetailContainer = ({
@@ -12,7 +12,7 @@ const ProveedorDetailContainer = ({
   payments,
   paymentItems,
   articles,
-  // compras, // si lo usás en algún lado (por ahora no)
+  compras,
 }) => {
   // ProveedorDetailContainer.jsx
   const { proveedores = [] } = useProveedor() || {}; // USÁ useProveedores acá, no useProveedor
@@ -28,7 +28,7 @@ const ProveedorDetailContainer = ({
   }, [proveedores, id]);
 
   // Defensa: si no hay proveedor, mostramos mensaje amigable
-  if (!currentProveedor) return <p className="p-4">Proveedor no encontrado.</p>;
+  // if (!currentProveedor) return <p className="p-4">Proveedor no encontrado.</p>;
 
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8">
@@ -49,14 +49,21 @@ const ProveedorDetailContainer = ({
             <BackButton />
           </span>
         </div>
-        {/* Acá pasamos el prop correctamente */}
         <ProveedorDetailInfo proveedor={currentProveedor} />
       </div>
-      <ProveedorCurrentAccountContainer
+      {/* <ProveedorCurrentAccountContainer
         currentProveedores={currentProveedor}
         invoices={invoices}
         payments={payments}
         paymentItems={paymentItems}
+      /> */}
+
+      <ProveedorCurrentAccountContainer
+        currentProveedor={currentProveedor}
+        paymentItems={paymentItems}
+        invoices={invoices}
+        payments={payments}
+        compras={compras}
       />
 
       <ProveedorAccordionContainer

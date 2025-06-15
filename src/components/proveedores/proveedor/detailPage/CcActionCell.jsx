@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
+import CcDeleteDialog from "./CcDeleteDialog";
 
 // Utilidad para limpiar el prefijo del ID
 function getIdLimpio(movement) {
@@ -26,7 +27,7 @@ function getIdLimpio(movement) {
   return movement.id;
 }
 
-const CcActionCell = ({ movement, currentProveedores }) => {
+const CcActionCell = ({ movement, currentProveedor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { refreshProveedorInvoices } = useProveedorInvoices();
   const { refreshProveedorPayments } = useProveedorPayments();
@@ -37,21 +38,21 @@ const CcActionCell = ({ movement, currentProveedores }) => {
   // Ajustá las rutas según tu sistema
   const viewHref =
     movement.type === "Factura"
-      ? `/proveedores/${currentProveedores.id_proveedor}/facturacion/${id}`
+      ? `/proveedores/${currentProveedor.id_proveedor}/facturacion/${id}`
       : movement.type === "Nota de Crédito"
-      ? `/proveedores/${currentProveedores.id_proveedor}/notacredito/${id}`
+      ? `/proveedores/${currentProveedor.id_proveedor}/notacredito/${id}`
       : movement.type === "Nota de Débito"
-      ? `/proveedores/${currentProveedores.id_proveedor}/notadebito/${id}`
-      : `/proveedores/${currentProveedores.id_proveedor}/pagos/${id}`;
+      ? `/proveedores/${currentProveedor.id_proveedor}/notadebito/${id}`
+      : `/proveedores/${currentProveedor.id_proveedor}/pagos/${id}`;
 
   const editHref =
     movement.type === "Factura"
-      ? `/proveedores/${currentProveedores.id_proveedor}/facturacion/${id}/editar-factura`
+      ? `/proveedores/${currentProveedor.id_proveedor}/facturacion/${id}/editar-factura`
       : movement.type === "Nota de Crédito"
-      ? `/proveedores/${currentProveedores.id_proveedor}/notacredito/editar-nc/${id}`
+      ? `/proveedores/${currentProveedor.id_proveedor}/notacredito/editar-nc/${id}`
       : movement.type === "Nota de Débito"
-      ? `/proveedores/${currentProveedores.id_proveedor}/notadebito/editar-nd/${id}`
-      : `/proveedores/${currentProveedores.id_proveedor}/pagos/${id}/editar-pago`;
+      ? `/proveedores/${currentProveedor.id_proveedor}/notadebito/editar-nd/${id}`
+      : `/proveedores/${currentProveedor.id_proveedor}/pagos/${id}/editar-pago`;
 
   const handleDelete = async () => {
     setIsOpen(false);
@@ -76,10 +77,10 @@ const CcActionCell = ({ movement, currentProveedores }) => {
         movement.type === "Nota de Crédito" ||
         movement.type === "Nota de Débito"
       ) {
-        await refreshProveedorInvoices(currentProveedores.id_proveedor);
+        await refreshProveedorInvoices(currentProveedor.id_proveedor);
       } else {
-        await refreshProveedorPayments(currentProveedores.id_proveedor);
-        await refreshProveedorInvoices(currentProveedores.id_proveedor);
+        await refreshProveedorPayments(currentProveedor.id_proveedor);
+        await refreshProveedorInvoices(currentProveedor.id_proveedor);
       }
 
       toast.error(`${movement.type} eliminada correctamente`, {

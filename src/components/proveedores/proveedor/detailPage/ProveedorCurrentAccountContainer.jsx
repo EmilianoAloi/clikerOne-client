@@ -8,7 +8,7 @@ import { SaldoActual } from "./ProveedorSaldoActual";
 import { columnsCC } from "./ProveedorColumns";
 
 export default function ProveedorCurrentAccountContainer({
-  currentProveedor, // <-- en singular para consistencia
+  currentProveedor,
   paymentItems,
   invoices,
   payments,
