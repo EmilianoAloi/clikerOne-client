@@ -15,17 +15,24 @@ import {
   Pencil,
 } from "lucide-react";
 
-import DetailItem from "./ProveedorDetailItem";
-import { Proveedor } from "@/contexts/ProveedorContext";
+import ProveedorDetailItem from "./ProveedorDetailItem";
+import { useProveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import ProveedoressDeleteDialog from "./ProveedorDeleteDialog";
+import ProveedorDeleteDialog from "./ProveedorDeleteDialog";
 
-const ProveedoresDetailInfo = ({ Proveedor }) => {
-  const { Proveedor, removeProveedores } = Proveedor();
-  const currentProveedores =
-    Proveedor.find((s) => s.id_proveedor === Proveedor.id_proveedor) ||
-    Proveedor;
+const ProveedorDetailInfo = ({ proveedor }) => {
+  const { proveedores = [], removeProveedor } = useProveedor() || {};
+
+  // Busca el proveedor actualizado (si cambia en el contexto), si no, usa la prop
+  const currentProveedor =
+    proveedores.find((p) => p.id_proveedor === proveedor.id_proveedor) ||
+    proveedor;
+
+  if (!currentProveedor) {
+    return <div className="p-6">Proveedor no encontrado.</div>;
+  }
+
   const navigate = useNavigate();
 
   function esFechaMovimientoValida(fecha) {
@@ -59,75 +66,73 @@ const ProveedoresDetailInfo = ({ Proveedor }) => {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <DetailItem
+        <ProveedorDetailItem
           icon={UserCog}
           label="Nombre"
-          value={currentProveedores.nombre}
+          value={currentProveedor.nombre}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={User}
           label="Persona de Contacto"
-          value={currentProveedores.contacto}
+          value={currentProveedor.contacto}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Phone}
           label="Teléfono"
-          value={currentProveedores.telefono}
+          value={currentProveedor.telefono}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={MapPin}
           label="Dirección"
-          value={currentProveedores.direccion}
+          value={currentProveedor.direccion}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Globe}
           label="Sitio Web"
-          value={currentProveedores.web}
+          value={currentProveedor.web}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Mail}
           label="Correo electrónico"
-          value={currentProveedores.email}
+          value={currentProveedor.email}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Boxes}
           label="Artículos"
           value={
-            Array.isArray(currentProveedores.articulos) &&
-            currentProveedores.articulos.length > 0
-              ? `${currentProveedores.articulos.length} artículo(s)`
+            Array.isArray(currentProveedor.articulos) &&
+            currentProveedor.articulos.length > 0
+              ? `${currentProveedor.articulos.length} artículo(s)`
               : "Sin Artículos"
           }
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Landmark}
           label="Razón Social"
-          value={currentProveedores.razon_social}
+          value={currentProveedor.razon_social}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Fingerprint}
           label="CUIT"
-          value={mostrarCampo(currentProveedores.cuit)}
+          value={mostrarCampo(currentProveedor.cuit)}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Info}
           label="Condición IVA"
-          value={currentProveedores.iva_condicion}
+          value={currentProveedor.iva_condicion}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Percent}
           label="IVA predeterminado"
-          value={mostrarIvaPredeterminado(
-            currentProveedores.iva_predeterminado
-          )}
+          value={mostrarIvaPredeterminado(currentProveedor.iva_predeterminado)}
         />
-        <DetailItem
+        <ProveedorDetailItem
           icon={Calendar1}
           label="Último movimiento"
           value={
-            esFechaMovimientoValida(currentProveedores.fecha_ultimo_movimiento)
+            esFechaMovimientoValida(currentProveedor.fecha_ultimo_movimiento)
               ? new Date(
-                  currentProveedores.fecha_ultimo_movimiento
+                  currentProveedor.fecha_ultimo_movimiento
                 ).toLocaleDateString("es-AR", {
                   day: "2-digit",
                   month: "2-digit",
@@ -140,12 +145,12 @@ const ProveedoresDetailInfo = ({ Proveedor }) => {
 
       <Separator className="mt-7 mb-4" />
 
-      <div className="">
+      <div>
         <div className="w-full flex justify-between items-end">
           <div>
             <h3 className="text-lg font-medium ">Observaciones</h3>
             <p className="text-sm text-muted-foreground xl:max-w-xl break-words">
-              {currentProveedores.observaciones}
+              {currentProveedor.observaciones}
             </p>
           </div>
           <div className="flex items-center  mb-[-6px]">
@@ -153,21 +158,19 @@ const ProveedoresDetailInfo = ({ Proveedor }) => {
               size="sm"
               variant="ghost"
               onClick={() =>
-                navigate(
-                  `/proveedores/${currentProveedores.id_proveedor}/editar`
-                )
+                navigate(`/proveedores/${currentProveedor.id_proveedor}/editar`)
               }
               className="text-sm cursor-pointer pe-0"
             >
               <Pencil className="w-4 h-4 " />
             </Button>
 
-            <ProveedoressDeleteDialog
-              Proveedor={currentProveedores}
+            <ProveedorDeleteDialog
+              proveedor={currentProveedor}
               onDelete={() =>
-                removeProveedores(
-                  currentProveedores.id_proveedor,
-                  currentProveedores.nombre || "Proveedor"
+                removeProveedor(
+                  currentProveedor.id_proveedor,
+                  currentProveedor.nombre || "Proveedor"
                 )
               }
             />
@@ -178,4 +181,4 @@ const ProveedoresDetailInfo = ({ Proveedor }) => {
   );
 };
 
-export default ProveedoresDetailInfo;
+export default ProveedorDetailInfo;

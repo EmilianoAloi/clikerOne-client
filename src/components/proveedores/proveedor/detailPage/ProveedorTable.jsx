@@ -5,8 +5,8 @@ import { useProveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ProveedorColumns } from "./ProveedorColumns";
-
+import { columnsCC } from "./ProveedorColumns";
+import TableSkeleton from "@/components/ui/TableSkeleton";
 export default function ProveedorTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const { proveedores } = useProveedor();
@@ -48,11 +48,11 @@ export default function ProveedorTable() {
       </div>
 
       {isLoading ? (
-        <ProveedorTableSkeleton />
+        <TableSkeleton />
       ) : (
         <DataTable
           idField="id_proveedor"
-          columns={ProveedorColumns(currentProveedores)}
+          columns={columnsCC(currentProveedores)}
           data={filteredProveedores}
           enableRowClick={true}
         />

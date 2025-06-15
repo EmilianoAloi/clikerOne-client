@@ -6,11 +6,28 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import BadgeEstado from "@/components/ui/badge-custom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
+import BadgeEstado from "@/components/ui/badge-custom";
 import CcActionCell from "./CcActionCell";
 
-export const ProveedorColumns = (currentProveedores) => [
+/**
+ * @typedef {Object} Movement
+ * @property {string} id
+ * @property {"Factura" | "Orden de pago" | "Nota de Crédito" | "Nota de Débito"} type
+ * @property {string} date
+ * @property {string} comprobante
+ * @property {string} razon_social
+ * @property {"pendiente" | "pendiente de pago" | "parcial" | "pagada" | "vencida" | "sobrada" | "en_discusion" | "anulada" | "con_nota_credito" | "retenida" | "completo" | "ejecutada"} estado
+ * @property {number} amount
+ * @property {number} balance
+ * @property {string} observaciones
+ * @property {number=} id_proveedor
+ * @property {string=} url_factura_comprobante
+ * @property {{ url: string, nombre: string }[]=} adjuntos
+ */
+
+// NOTA: Si tu contexto ahora se llama Provider (no Supplier), corregí también eso.
+export const columnsCC = (currentSupplier) => [
   {
     accessorKey: "date",
     header: "Fecha Movimiento",
@@ -31,9 +48,7 @@ export const ProveedorColumns = (currentProveedores) => [
           ? "font-semibold bg-stone-100 text-stone-700"
           : "font-semibold bg-slate-100 text-slate-700";
       return (
-        <span className={`text-xs  px-2.5 py-1 rounded ${bgColor}`}>
-          {tipo}
-        </span>
+        <span className={`text-xs px-2.5 py-1 rounded ${bgColor}`}>{tipo}</span>
       );
     },
   },
@@ -55,7 +70,6 @@ export const ProveedorColumns = (currentProveedores) => [
         (row.original.type === "Factura" &&
           row.original.estado !== "con_nota_credito") ||
         row.original.type === "Nota de Débito";
-
       return (
         <div className="flex items-center gap-1 text-left">
           {isIngreso ? (
@@ -83,7 +97,6 @@ export const ProveedorColumns = (currentProveedores) => [
     cell: ({ row }) => {
       const value = row.original.balance;
       const isNegative = value < 0;
-
       return (
         <div className="flex items-center gap-1 text-left">
           {isNegative ? (
@@ -101,9 +114,6 @@ export const ProveedorColumns = (currentProveedores) => [
         </div>
       );
     },
-    meta: {
-      className: "",
-    },
   },
   {
     accessorKey: "estado",
@@ -115,10 +125,8 @@ export const ProveedorColumns = (currentProveedores) => [
     header: () => <span className="block text-center">Notas</span>,
     cell: ({ row }) => {
       const obs = row.original.observaciones;
-
       return (
         <div className="flex justify-center">
-          {" "}
           {obs ? (
             <TooltipProvider>
               <Tooltip>
@@ -147,7 +155,6 @@ export const ProveedorColumns = (currentProveedores) => [
     header: () => <span className="block text-center">Adjuntos</span>,
     cell: ({ row }) => {
       const adjuntos = row.original.adjuntos;
-
       return Array.isArray(adjuntos) && adjuntos.length > 0 ? (
         <AdjuntosBadgePopover adjuntos={adjuntos} />
       ) : (
@@ -162,10 +169,7 @@ export const ProveedorColumns = (currentProveedores) => [
     id: "actions",
     header: () => <span className="block text-center px-2">Acciones</span>,
     cell: ({ row }) => (
-      <CcActionCell
-        movement={row.original}
-        currentProveedores={currentProveedores}
-      />
+      <CcActionCell movement={row.original} currentSupplier={currentSupplier} />
     ),
     meta: {
       className: "text-center",

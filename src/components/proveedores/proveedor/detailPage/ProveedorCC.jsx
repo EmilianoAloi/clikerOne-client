@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Link, useNavigate } from "react-router-dom";
 import { SaldoActual } from "./ProveedorSaldoActual";
-import { columnsCC } from "./ColumnsCC";
+import { columnsCC } from "./ProveedorColumns";
 
 export default function ProveedorCC({
   currentProveedores,
