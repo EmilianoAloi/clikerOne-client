@@ -4,6 +4,7 @@ import ProveedoresDetailAccordionFacturacion from "./provedoresaccordions/Provee
 import ProveedoresDetailAccordionOp from "./provedoresaccordions/ProveedoresDetailAccordionOp";
 import ProveedoresDetailAccordionArticulos from "./provedoresaccordions/ProveedoresDetailAccordionArticulos";
 import SuppliersTitle from "./detailPage/ProveedorTitle";
+import { Separator } from "@/components/ui/separator";
 
 const ProveedorAccordionContainer = ({
   currentProveedores,
