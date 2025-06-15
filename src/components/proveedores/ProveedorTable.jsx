@@ -11,14 +11,14 @@ import { SupppliersColumns } from "./ProveedorColumns";
 
 export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { Proveedor } = useProveedores();
+  const { proveedores } = useProveedores();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (Proveedor.length > 0) setIsLoading(false);
-  }, [Proveedor]);
+    if (proveedores.length > 0) setIsLoading(false);
+  }, [proveedores]);
 
-  const filteredProveedores = Proveedor.filter((s) => {
+  const filteredProveedores = proveedores.filter((s) => {
     const query = searchTerm.toLowerCase().trim();
 
     return (

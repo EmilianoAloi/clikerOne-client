@@ -1,0 +1,211 @@
+"use client";
+
+import {
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import BadgeEstado from "@/components/ui/badge-custom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  FileText,
+  Info,
+  Calendar,
+  BadgeDollarSign,
+  Paperclip,
+  HandCoins,
+  Hash,
+} from "lucide-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
+import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
+import { toast } from "sonner";
+import ActionCell from "../detailPage/ActionCell";
+
+const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
+  const navigate = useNavigate();
+
+  const {
+    getComprasForProveedor,
+    refreshProveedorCompras,
+    deleteCompra,
+    loading,
+  } = useProveedorCompras();
+
+  const supplierOrders = getComprasForProveedor(
+    currentProveedores.id_proveedor
+  );
+
+  useEffect(() => {
+    if (currentProveedores.id_proveedor) {
+      refreshProveedorCompras(currentProveedores.id_proveedor);
+    }
+  }, [currentProveedores.id_proveedor]);
+
+  const handleDeleteOc = async (id_orden_compra) => {
+    const ok = await deleteCompra(id_orden_compra);
+    if (ok) {
+      toast.error(`Orden de compra #${id_orden_compra} eliminada`);
+      refreshProveedorCompras(currentProveedores.id_proveedor);
+    } else {
+      toast.error("No se pudo eliminar la orden de compra");
+    }
+  };
+
+  return (
+    <AccordionItem
+      value="ordenescompra"
+      className="border rounded-lg shadow-sm overflow-hidden bg-white"
+    >
+      <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
+        <div className="flex items-center">
+          <FileText className="mr-2 h-5 w-5 text-blue-500 group-hover:text-blue-600 transition-colors" />
+          <span className="font-semibold text-lg">Órdenes de Compra</span>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="px-6 pb-6 pt-2">
+        <div className="border rounded-lg overflow-hidden shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50">
+                {[
+                  { icon: Hash, label: "N° OC" },
+                  { icon: Calendar, label: "Emisión" },
+                  { icon: Calendar, label: "Entrega" },
+                  { icon: BadgeDollarSign, label: "Monto" },
+                  { icon: HandCoins, label: "Condición Pago" },
+                  { icon: FileText, label: "Estado" },
+                  { icon: Info, label: "Notas", className: "text-center" },
+                  {
+                    icon: Paperclip,
+                    label: "Adjuntos",
+                    className: "text-center w-[120px]",
+                  },
+                  { label: "Acciones", className: "text-center w-[80px]" },
+                ].map(({ icon: Icon, label, className = "" }, i) => (
+                  <TableHead
+                    key={i}
+                    className={`font-semibold text-slate-700 ${className}`}
+                  >
+                    <span className="flex items-center gap-1 justify-center">
+                      {Icon && <Icon className="w-4 h-4 mr-1" />} {label}
+                    </span>
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-4">
+                    Cargando órdenes...
+                  </TableCell>
+                </TableRow>
+              ) : supplierOrders.length > 0 ? (
+                supplierOrders.map((oc) => (
+                  <TableRow
+                    key={oc.id_orden_compra}
+                    className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/proveedores/${currentProveedores.id_proveedor}/ordencompra/${oc.id_orden_compra}`
+                      )
+                    }
+                  >
+                    <TableCell className="py-3 font-medium">
+                      #{oc.id_orden_compra}
+                    </TableCell>
+                    <TableCell className="py-3">
+                      {oc.fecha_emision
+                        ? new Date(oc.fecha_emision).toLocaleDateString("es-AR")
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="py-3">
+                      {oc.fecha_entrega
+                        ? new Date(oc.fecha_entrega).toLocaleDateString("es-AR")
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right font-medium">
+                      $
+                      {oc.monto_total?.toLocaleString("es-AR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </TableCell>
+                    <TableCell className="py-3">
+                      {oc.condicion_pago || "-"}
+                    </TableCell>
+                    <TableCell className="py-3">
+                      <BadgeEstado estado={oc.estado_compra ?? ""} />
+                    </TableCell>
+                    <TableCell className="py-3 text-center">
+                      {oc.observaciones ? (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex justify-center">
+                                <Info className="w-4 h-4 text-slate-500 hover:text-slate-700" />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[250px] break-words border shadow-md p-3 text-sm">
+                              {oc.observaciones}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ) : (
+                        "-"
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3 text-center w-[100px]">
+                      <AdjuntosBadgePopover
+                        adjuntos={
+                          oc.url_orden_compra_comprobante
+                            ? [
+                                {
+                                  url: oc.url_orden_compra_comprobante,
+                                  nombre: "Comprobante OC",
+                                },
+                              ]
+                            : []
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="py-3 text-center">
+                      <ActionCell
+                        idOrdenCompra={oc.id_orden_compra}
+                        idProveedor={currentProveedores.id_proveedor}
+                        onDelete={handleDeleteOc}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-4">
+                    No hay órdenes de compra para este proveedor.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+};
+
+export default ProveedoresDetailAccordionOc;

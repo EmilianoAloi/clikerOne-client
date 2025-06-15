@@ -3,13 +3,12 @@ import { ArrowDownRight, ArrowUpRight, Calendar, Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
-  
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import BadgeEstado from "@/components/ui/badge-custom";
 import ActionCell from "./ActionCell";
-import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
+import { AdjuntosBadgePopover } from "@/components/ui/adjuntos-badge-popover";
 
 // NOTA: No se usa ColumnDef, así que eliminé el import de "@tanstack/react-table"
 
@@ -167,7 +166,10 @@ export const columnsCC = (currentProveedores) => [
     id: "actions",
     header: () => <span className="block text-center px-2">Acciones</span>,
     cell: ({ row }) => (
-      <ActionCell movement={row.original} currentProveedores={currentProveedores} />
+      <ActionCell
+        movement={row.original}
+        currentProveedores={currentProveedores}
+      />
     ),
     meta: {
       className: "text-center",

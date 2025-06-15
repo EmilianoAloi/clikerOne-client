@@ -5,13 +5,17 @@ import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
 import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 import { useProveedor } from "@/contexts/ProveedorContext";
+import { useProveedorArticles } from "@/contexts/ProveedorArticlesContext";
 
+import ProveedorAccordionContainer from "@/components/proveedores/proveedor/ProveedorAccordionContainer";
 export default function ProveedoresIDPage() {
   const params = useParams();
   const idProveedor = Number(params.id);
 
-  // Contextos
-  const { Proveedors, refreshProveedors } = useProveedor();
+  // Obtener proveedor individual (del contexto o vía fetch si no está)
+  const { proveedor, loading } = useProveedor(idProveedor);
+
+  // Otros contextos
   const { getInvoicesForProveedor, refreshProveedorInvoices } =
     useProveedorInvoices();
   const {
@@ -21,84 +25,53 @@ export default function ProveedoresIDPage() {
   } = useProveedorPayments();
   const { getComprasForProveedor, refreshProveedorCompras } =
     useProveedorCompras();
+  const { getArticlesForProveedor, loadArticlesByProveedor } =
+    useProveedorArticles();
 
+  // Cargar artículos y pagos al montar
   useEffect(() => {
-    if (idProveedor) refreshProveedorPayments(idProveedor);
+    if (idProveedor) {
+      refreshProveedorPayments(idProveedor);
+      loadArticlesByProveedor(idProveedor);
+    }
   }, [idProveedor]);
 
-  const payments = getPaymentsForProveedor(idProveedor);
-  const paymentItems = getPaymentItemsForProveedor(idProveedor);
-  const compras = getComprasForProveedor(idProveedor);
-
-  // Buscar proveedor en el contexto primero
-  const Proveedor = useMemo(
-    () => Proveedors.find((s) => s.id_proveedor === idProveedor),
-    [Proveedors, idProveedor]
-  );
-
-  // Facturas y pagos de este proveedor
   const invoices = useMemo(
     () => getInvoicesForProveedor(idProveedor),
     [getInvoicesForProveedor, idProveedor]
   );
 
-  // LOG para entender el ciclo de vida
-  useEffect(() => {
-    if (Proveedor) {
-      console.log(`✅ Proveedor ${idProveedor} encontrado en contexto.`);
-    } else {
-      console.log(`🔍 Proveedor ${idProveedor} NO encontrado en contexto.`);
-    }
-    if (invoices.length === 0)
-      console.log(
-        `❌ No hay facturas en contexto para proveedor ${idProveedor}`
-      );
-    if (payments.length === 0)
-      console.log(`❌ No hay pagos en contexto para proveedor ${idProveedor}`);
-    if (!compras.length)
-      console.log(
-        `❌ No hay compras en contexto para proveedor ${idProveedor}`
-      );
-  }, [Proveedor, invoices, payments, compras, idProveedor]);
+  const payments = getPaymentsForProveedor(idProveedor);
+  const paymentItems = getPaymentItemsForProveedor(idProveedor);
+  const compras = getComprasForProveedor(idProveedor);
+  const articles = getArticlesForProveedor(idProveedor);
 
-  // Refrescar si no hay datos
   useEffect(() => {
-    if (!Proveedor) {
-      console.log("➡️ Haciendo fetch de proveedores...");
-      refreshProveedors();
-    }
     if (invoices.length === 0) {
-      console.log("➡️ Haciendo fetch de facturas...");
       refreshProveedorInvoices(idProveedor);
     }
     if (payments.length === 0) {
-      console.log("➡️ Haciendo fetch de pagos...");
       refreshProveedorPayments(idProveedor);
     }
     if (!compras.length) {
-      console.log("➡️ Haciendo fetch de compras...");
       refreshProveedorCompras(idProveedor);
     }
-    return () => {
-      console.log("♻️ ProveedorDetailPage UNMOUNTED");
-    };
   }, [idProveedor]);
 
-  // Validar que Proveedor exista
-  if (!Proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
+  if (loading) return <div className="p-6">Cargando proveedor...</div>;
+  if (!proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
 
-  // Filtra sólo los items válidos
   const paymentItemsValidos = paymentItems.filter(
     (item) => typeof item.id_pago === "number"
   );
 
   return (
-    <ProveedoresIDPage
-      Proveedor={Proveedor}
+    <ProveedorAccordionContainer
+      currentProveedores={proveedor}
       invoices={invoices}
       payments={payments}
       paymentItems={paymentItemsValidos}
-      compras={compras}
+      articles={articles}
     />
   );
 }

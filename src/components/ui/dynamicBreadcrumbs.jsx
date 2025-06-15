@@ -39,7 +39,7 @@ const breadcrumbNames = {
 export default function DynamicBreadcrumbs() {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
-  const { Proveedor } = useProveedores();
+  const { proveedores } = useProveedores();
 
   let accumulatedPath = "";
 
@@ -63,9 +63,9 @@ export default function DynamicBreadcrumbs() {
           if (
             pathSegments[0] === "proveedores" &&
             index === 1 &&
-            Proveedor.length > 0
+            proveedores.length > 0
           ) {
-            const foundProveedores = Proveedor.find(
+            const foundProveedores = proveedores.find(
               (s) => s.id_proveedor.toString() === segment
             );
             if (foundProveedores) label = foundProveedores.nombre;
