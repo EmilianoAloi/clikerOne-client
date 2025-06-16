@@ -12,7 +12,7 @@ import { ProveedorArticlesProvider } from "./contexts/ProveedorArticlesContext";
 import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEditPage";
 import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
 import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
-import ProveedorAddPage from "./page/proveedores/ProveedorAddPage";
+import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
