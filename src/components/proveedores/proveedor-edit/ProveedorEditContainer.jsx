@@ -1,26 +1,19 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProveedoresEditTitle from "./ProveedorEditTitle";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import ProveedoresEditForm from "./ProveedorEditForm";
 
-const ProveedorEditContainer = () => {
-  const { getProveedoresByID } = useProveedores();
-  const [Proveedor, setProveedores] =
-    (useState < ProveedoresWithArticulos) | (null > null);
-  const [loading, setLoading] = useState(true);
+const ProveedorEditContainer = ({ proveedor }) => {
+  const [proveedorData, setProveedorData] = useState(proveedor);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchProveedores = async () => {
-      const data = await getProveedoresByID(id);
-      setProveedores(data);
-      setLoading(false);
-    };
+    if (proveedor) {
+      setProveedorData(proveedor);
+    }
+  }, [proveedor]);
 
-    fetchProveedores();
-  }, [id, getProveedoresByID]);
-
-  if (loading || !Proveedor) {
+  if (loading || !proveedorData) {
     return (
       <div className="p-6">
         <Skeleton className="h-6 w-1/3 mb-4" />
@@ -32,9 +25,9 @@ const ProveedorEditContainer = () => {
   return (
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-10">
       <ProveedoresEditTitle />
-      <ProveedoresEditFormm
-        proveedor={Proveedor}
-        articulos={Proveedor.articulos}
+      <ProveedoresEditForm
+        proveedor={proveedorData}
+        articulos={proveedorData.articulos}
       />
     </div>
   );

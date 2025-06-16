@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -47,6 +45,10 @@ export const ProveedorProvider = ({ children }) => {
   useEffect(() => {
     refreshProveedores();
   }, []);
+
+  useEffect(() => {
+    console.log("PROVEEDORES:", proveedores);
+  }, [proveedores]);
 
   const getProveedorByID = async (id) => {
     const local = proveedores.find((p) => p.id_proveedor === id);

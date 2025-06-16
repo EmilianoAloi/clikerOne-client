@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   User,
@@ -28,19 +28,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useProveedoress } from "@/components/contexts/Proveedor-context";
-import { useRouter } from "next/navigation";
-import { ProveedoresAddArticles } from "../Proveedor-add/Proveedor-add-articles";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { useProveedores } from "@/contexts/ProveedorContext";
 
-const ProveedorEditForm = () => {
-  const { editProveedores, refreshProveedoress } = useProveedoress();
-  const [formData, setFormData] = useState({}); // Removing TypeScript types
-  const [articulos, setArticulos] = useState([]);
-  const router = useRouter();
+import ProveedorAddArticles from "../proveedor-add/ProveedorAddArticles";
+import { useNavigate } from "react-router-dom";
+
+const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
+  const { editProveedor, refreshProveedores } = useProveedores();
+  const [formData, setFormData] = useState(proveedor);
+  const [articulos, setArticulos] = useState(articulosProp || []);
+  const navigate = useNavigate();
   const [deletedArticles, setDeletedArticles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setFormData(proveedor);
+    setArticulos(articulosProp || []);
+    console.log(proveedor);
+  }, [proveedor, articulosProp]);
 
   const handleAddItem = () => {
     setArticulos((prev) => [
@@ -96,15 +103,18 @@ const ProveedorEditForm = () => {
         return;
       }
 
-      await editProveedores(
+      await editProveedor(
         formData.id_proveedor,
         formData,
         articulos,
         deletedArticles
       );
 
+      refreshProveedores();
+      navigate(`/proveedores/${formData.id_proveedor}`);
+
       refreshProveedoress();
-      router.push(`/proveedores/${formData.id_proveedor}`);
+      navigate(`/proveedores/${formData.id_proveedor}`);
     } catch (error) {
       toast.error("Error al actualizar proveedor");
       console.error("❌ Error en edición:", error);
@@ -391,7 +401,7 @@ const ProveedorEditForm = () => {
       <Separator className="mb-6" />
 
       <div>
-        <ProveedoresAddArticles
+        <ProveedorAddArticles
           items={articulos}
           handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}
