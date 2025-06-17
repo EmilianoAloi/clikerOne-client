@@ -26,6 +26,7 @@ import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
 import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
 import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/ProveedoresInvoiceEditPage";
+import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 
 function App() {
   return (
@@ -115,6 +116,12 @@ function App() {
                       path="/proveedores/:id/notadebito/nuevanotadebito"
                       element={<ProveedoresNDPage />}
                     />
+
+                    <Route
+                      path="/proveedores/:id/notadebito/editar-nd/:idND"
+                      element={<ProveedoresNDeditPage />}
+                    />
+
                     <Route
                       path="/proveedores/:id/notadebito/:idND"
                       element={<ProveedoresNDviewPage />}
