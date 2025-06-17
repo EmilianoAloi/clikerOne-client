@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
+import ScrollToTop from "./components/ui/ScrollToTop";
 
 // Contexts
 import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
@@ -33,6 +34,7 @@ function App() {
             <ProveedorArticlesProvider>
               <BrowserRouter>
                 <MainLayout>
+                  <ScrollToTop />
                   <Routes>
                     {/* Proveedores */}
                     <Route

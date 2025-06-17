@@ -1,35 +1,49 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useProveedores } from "@/contexts/ProveedorContext";
 import ProveedorNDcontainer from "@/components/proveedores/proveedor/ndPage/ProveedorNDcontainer";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProveedoresNDPage() {
   const { id } = useParams();
+  const { proveedores } = useProveedores();
   const [proveedor, setProveedor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    if (!id) {
-      setError("ID de proveedor no válido");
+    if (!id) return;
+
+    // Buscar en el contexto primero
+    const found = proveedores?.find(
+      (p) => String(p.id_proveedor) === String(id)
+    );
+    if (found) {
+      setProveedor(found);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    fetch(`${API_URL}/api/proveedores/${id}`, { cache: "no-store" })
-      .then((res) => {
+    // Si no está, buscarlo por fetch
+    const fetchProveedor = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_URL}/api/proveedores/${id}`);
         if (!res.ok) throw new Error("Proveedor no encontrado");
-        return res.json();
-      })
-      .then((data) => setProveedor(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [id, API_URL]);
+        const data = await res.json();
+        setProveedor(data);
+      } catch (err) {
+        setProveedor(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProveedor();
+  }, [id, proveedores]);
 
   if (loading) return <p>Cargando proveedor...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (!id || isNaN(Number(id))) return <p>Error: ID de proveedor no válido</p>;
   if (!proveedor) return <p>Error: proveedor no encontrado</p>;
 
   return <ProveedorNDcontainer proveedor={proveedor} />;
