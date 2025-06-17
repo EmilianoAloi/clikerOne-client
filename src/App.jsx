@@ -19,7 +19,7 @@ import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
 import ProveedorOPPage from "./page/Proveedores/ProveedoresID/ProveedorOPPage";
 import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCviewPage";
 import ProveedorInvoiceViewPage from "./page/Proveedores/ProveedoresID/ProveedorInvoiceViewPage";
-import ProveedorOPViewPage from "./page/proveedores/proveedoresID/ProveedorOPViewPage";
+import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
