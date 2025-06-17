@@ -13,8 +13,8 @@ import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEdi
 import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
 import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
-import ProveedorOcPage from "./page/Proveedores/proveedoresID/ProveedorOcPage";
-import ProveedorInvoicePage from "./page/proveedores/proveedoresID/ProveedorInvoicePage";
+import ProveedorOcPage from "./page/Proveedores/ProveedoresID/ProveedorOcPage";
+import ProveedorInvoicePage from "./page/Proveedores/ProveedoresID/ProveedorInvoicePage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
