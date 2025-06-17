@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProveedores } from "@/contexts/ProveedorContext";
-import OCcontainer from "@/components/proveedores/proveedor/ocPage/OCcontainer";
+import ProveedorInvoiceContainer from "@/components/proveedores/proveedor/invoicePage/ProveedorInvoiceContainer";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function NuevaOrdenCompraPage() {
+export default function ProveedorInvoicePage() {
   const { id } = useParams();
   const { proveedores } = useProveedores();
   const [proveedor, setProveedor] = useState(null);
@@ -14,7 +14,7 @@ export default function NuevaOrdenCompraPage() {
   useEffect(() => {
     if (!id) return;
 
-    // 1. Buscar en el contexto primero
+    // Buscar en el contexto primero
     const found = proveedores?.find(
       (p) => String(p.id_proveedor) === String(id)
     );
@@ -24,7 +24,7 @@ export default function NuevaOrdenCompraPage() {
       return;
     }
 
-    // 2. Si no está, buscarlo por fetch
+    // Si no está, buscarlo por fetch
     const fetchProveedor = async () => {
       setLoading(true);
       try {
@@ -42,9 +42,10 @@ export default function NuevaOrdenCompraPage() {
     fetchProveedor();
   }, [id, proveedores]);
 
-  if (loading) return <p>Cargando proveedor...</p>;
-  if (!id || isNaN(Number(id))) return <p>Error: ID de proveedor no válido</p>;
-  if (!proveedor) return <p>Error: proveedor no encontrado</p>;
+  if (loading) return <div className="p-4">Cargando proveedor...</div>;
+  if (!id || isNaN(Number(id)))
+    return <div>Error: ID de proveedor no válido</div>;
+  if (!proveedor) return <div>Error: proveedor no encontrado</div>;
 
-  return <OCcontainer proveedor={proveedor} modo="nuevo" />;
+  return <ProveedorInvoiceContainer proveedor={proveedor} />;
 }

@@ -14,6 +14,7 @@ import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPag
 import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 import ProveedorOcPage from "./page/Proveedores/proveedoresID/ProveedorOcPage";
+import ProveedorInvoicePage from "./page/proveedores/proveedoresID/ProveedorInvoicePage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
@@ -71,15 +72,16 @@ function App() {
                     />
 
                     {/* Facturas */}
+                    <Route
+                      path="/proveedores/:id/facturacion/nueva-factura"
+                      element={<ProveedorInvoicePage />}
+                    />
                     {/* <Route
                       path="/proveedores/:id/facturacion/:facturaId"
                       element={<ProveedorFacturaPage />}
-                    />
-                    <Route
-                      path="/proveedores/:id/facturacion/nueva-factura"
-                      element={<ProveedorNuevaFacturaPage />}
-                    />
-                    <Route
+                    /> */}
+
+                    {/* <Route
                       path="/proveedores/:id/facturacion/:facturaId/editar-factura"
                       element={<ProveedorEditarFacturaPage />}
                     /> */}
