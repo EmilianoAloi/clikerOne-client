@@ -21,6 +21,7 @@ import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCvie
 import ProveedorInvoiceViewPage from "./page/Proveedores/ProveedoresID/ProveedorInvoiceViewPage";
 import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
 import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
+import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
 
 function App() {
   return (
@@ -95,6 +96,11 @@ function App() {
                     />
 
                     {/* Nota de Débito */}
+
+                    <Route
+                      path="/proveedores/:id/notadebito/:idND"
+                      element={<ProveedoresNDviewPage />}
+                    />
                   </Routes>
                 </MainLayout>
               </BrowserRouter>

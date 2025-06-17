@@ -1,7 +1,42 @@
-import React from "react";
+import { useState } from "react";
 
-const ProveedorNDcontainer = () => {
-  return <div>ProveedorNDcontainer</div>;
+import BackButton from "@/components/ui/back-button";
+import { Button } from "@/components/ui/button";
+import { Printer } from "lucide-react";
+import ProveedorNDtitle from "./ProveedorNDtitle";
+import ProveedorNDExtras from "./ProveedorNDExtras";
+
+const ProveedorNDcontainer = ({ notaDebito, proveedorId }) => {
+  const [isPrinting, setIsPrinting] = useState(false);
+
+  const handlePrint = () => {
+    setIsPrinting(true);
+    setTimeout(() => {
+      window.print();
+      setIsPrinting(false);
+    }, 100);
+  };
+
+  return (
+    <div className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-0 print:pt-0">
+      <div className="flex justify-end gap-2 md:mt-[-20px] mb-2 me-3 !print:hidden">
+        <BackButton />
+        <Button
+          onClick={handlePrint}
+          disabled={isPrinting}
+          variant="outline"
+          className="cursor-pointer mb-1"
+        >
+          <Printer className="mr-1 h-4 w-4" />
+          {isPrinting ? "Imprimiendo..." : "Imprimir Nota de Débito"}
+        </Button>
+      </div>
+      <ProveedorNDtitle notaDebito={notaDebito} />
+      <DebitNoteHeader notaDebito={notaDebito} />
+      <DebitNoteItems notaDebito={notaDebito} items={notaDebito.items || []} />
+      <ProveedorNDExtras notaDebito={notaDebito} />
+    </div>
+  );
 };
 
-export default ProveedorNDcontainer;
+export default DebitNoteContainer;
