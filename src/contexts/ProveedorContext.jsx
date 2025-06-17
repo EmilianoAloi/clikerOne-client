@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
@@ -47,7 +46,6 @@ export const ProveedorProvider = ({ children }) => {
       setIsLoaded(true);
     } catch (error) {
       console.error("Error al obtener los proveedores:", error);
-      toast.error("Error al obtener los proveedores.");
     }
   };
 
@@ -83,14 +81,11 @@ export const ProveedorProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.error || "Error al crear proveedor.");
         return;
       }
 
-      toast.success("Proveedor agregado con éxito.");
       await refreshProveedores(true);
     } catch (error) {
-      toast.error("Error agregando proveedor.");
       console.error(error);
     }
   };
@@ -119,18 +114,15 @@ export const ProveedorProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.error || "Error al actualizar proveedor.");
-        return;
-      }
-
-      if (!onlyBasicInfo) {
-        toast.success(`Proveedor "${proveedor.nombre}" actualizado con éxito.`);
+        return { error: errorData.error || "Error al actualizar proveedor." };
       }
 
       await refreshProveedores(true);
+
+      return { success: true };
     } catch (error) {
       console.error("Error editando proveedor:", error);
-      toast.error("Hubo un problema al actualizar el proveedor.");
+      return { error: "Hubo un problema al actualizar el proveedor." };
     }
   };
 
@@ -139,14 +131,11 @@ export const ProveedorProvider = ({ children }) => {
       const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.error || "Error al eliminar proveedor.");
         return;
       }
-      toast.success(`Proveedor "${nombre}" eliminado con éxito.`);
       await refreshProveedores(true);
     } catch (error) {
       console.error("Error eliminando proveedor:", error);
-      toast.error("Hubo un problema al eliminar el proveedor.");
     }
   };
 
@@ -179,11 +168,9 @@ export const ProveedorProvider = ({ children }) => {
   const activateProveedor = async (id, nombre) => {
     try {
       await editProveedor(id, { estado_logico: true }, [], [], true);
-      toast.success(`Proveedor "${nombre}" activado con éxito.`);
       await refreshProveedores(true);
     } catch (error) {
       console.error("Error activando proveedor:", error);
-      toast.error("Hubo un problema al activar el proveedor.");
     }
   };
 

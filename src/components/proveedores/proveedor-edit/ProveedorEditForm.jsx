@@ -100,21 +100,23 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
     try {
       if (!formData.id_proveedor) {
         toast.error("Falta el ID del proveedor");
+        setIsSubmitting(false);
         return;
       }
 
-      await editProveedor(
+      const result = await editProveedor(
         formData.id_proveedor,
         formData,
         articulos,
         deletedArticles
       );
 
-      refreshProveedores();
-      navigate(`/proveedores/${formData.id_proveedor}`);
-
-      refreshProveedoress();
-      navigate(`/proveedores/${formData.id_proveedor}`);
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(`Proveedor ${formData.nombre} actualizado con exito`);
+        navigate(`/proveedores/${formData.id_proveedor}`);
+      }
     } catch (error) {
       toast.error("Error al actualizar proveedor");
       console.error("❌ Error en edición:", error);

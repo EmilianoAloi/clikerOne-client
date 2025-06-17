@@ -28,12 +28,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useProveedor } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/contexts/ProveedorContext";
 import ProveedorAddArticles from "./ProveedorAddArticles";
+import { useNavigate } from "react-router-dom";
 
 const ProveedorAddForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const navigate = useNavigate();
   const inputStyle = {
     className:
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
@@ -44,7 +45,7 @@ const ProveedorAddForm = () => {
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
   };
 
-  const { createSupplierWithArticles } = useProveedor();
+  const { createProveedorWithArticles } = useProveedores();
 
   // Artículo vacío inicial
   const createEmptyArticulo = () => ({
@@ -113,10 +114,10 @@ const ProveedorAddForm = () => {
         return;
       }
 
-      await createSupplierWithArticles(formData, articulos);
+      await createProveedorWithArticles(formData, articulos);
 
       toast.success(`Proveedor creado con éxito.`);
-      router.push("/proveedores");
+      navigate("/proveedores", { state: { refresh: true } });
 
       // Reset formulario proveedor
       setFormData({
@@ -429,7 +430,7 @@ const ProveedorAddForm = () => {
           variant="outline"
           type="button"
           className="text-slate-700 cursor-pointer font-semibold py-5"
-          onClick={() => router.back()}
+          onClick={() => navigate(-1)}
         >
           Cancelar
         </Button>

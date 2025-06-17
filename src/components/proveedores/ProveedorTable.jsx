@@ -2,17 +2,28 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { useProveedores } from "@/contexts/ProveedorContext";
-
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Link } from "react-router-dom"; // Cambia este import
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
 
 export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { proveedores } = useProveedores();
+  const { proveedores, refreshProveedores } = useProveedores();
   const [isLoading, setIsLoading] = useState(true);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Refresca solo si venís de un alta (o edición)
+  useEffect(() => {
+    if (location.state?.refresh) {
+      refreshProveedores(true); // <<---- Forzá el fetch de la API
+      // Limpia el estado para evitar dobles refresh si el usuario recarga la página
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, location.pathname, navigate, refreshProveedores]);
 
   useEffect(() => {
     if (proveedores.length > 0) setIsLoading(false);
