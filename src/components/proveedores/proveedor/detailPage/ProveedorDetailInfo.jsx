@@ -20,9 +20,10 @@ import { useProveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import ProveedorDeleteDialog from "./ProveedorDeleteDialog";
+import { useProveedores } from "@/contexts/ProveedorContext";
 
 const ProveedorDetailInfo = ({ proveedor }) => {
-  const { proveedores = [], removeProveedor } = useProveedor() || {};
+  const { proveedores = [], removeProveedor } = useProveedores() || {};
 
   // Busca el proveedor actualizado (si cambia en el contexto), si no, usa la prop
   const currentProveedor =

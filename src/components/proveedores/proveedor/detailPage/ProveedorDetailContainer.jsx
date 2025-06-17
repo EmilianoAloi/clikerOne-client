@@ -14,11 +14,9 @@ const ProveedorDetailContainer = ({
   articles,
   compras,
 }) => {
-  // ProveedorDetailContainer.jsx
-  const { proveedores = [] } = useProveedor() || {}; // USÁ useProveedores acá, no useProveedor
+  const { proveedores = [] } = useProveedor() || {};
   const { id } = useParams();
 
-  // El proveedor actual según el contexto/prop
   const [currentProveedor, setCurrentProveedor] = useState(currentProveedores);
 
   useEffect(() => {
@@ -26,9 +24,6 @@ const ProveedorDetailContainer = ({
     const updatedProveedor = proveedores.find((p) => p.id_proveedor === idNum);
     if (updatedProveedor) setCurrentProveedor(updatedProveedor);
   }, [proveedores, id]);
-
-  // Defensa: si no hay proveedor, mostramos mensaje amigable
-  // if (!currentProveedor) return <p className="p-4">Proveedor no encontrado.</p>;
 
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8">

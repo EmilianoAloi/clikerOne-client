@@ -15,9 +15,9 @@ import ProveedoresActivateDialog from "./ProveedorActivateDialog";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProveedoresTableActions = ({ Proveedor }) => {
-  const { removeProveedores, activateProveedores } = useProveedores();
+  const { removeProveedor, activateProveedor } = useProveedores();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false); // Estado para controlar el Dropdown
+  const [isOpen, setIsOpen] = useState(false);
 
   const isInactivo = !Proveedor.estado_logico;
   return (
@@ -34,11 +34,20 @@ const ProveedoresTableActions = ({ Proveedor }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="px-4">
         <DropdownMenuLabel className="font-bold">Acciones</DropdownMenuLabel>
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem asChild disabled={isInactivo}>
           <Link
-            to={`/proveedores/${Proveedor.id_proveedor}`}
-            className="flex items-center gap-2 text-sm"
-            onClick={() => setIsOpen(false)}
+            to={isInactivo ? "#" : `/proveedores/${Proveedor.id_proveedor}`}
+            className={`flex items-center gap-2 text-sm ${
+              isInactivo
+                ? "opacity-40 pointer-events-none cursor-not-allowed"
+                : ""
+            }`}
+            onClick={() => {
+              if (isInactivo) return;
+              setIsOpen(false);
+            }}
+            tabIndex={isInactivo ? -1 : 0}
+            aria-disabled={isInactivo}
           >
             <Eye className="h-4 w-4 text-gray-500" />
             Ver detalles
@@ -46,12 +55,20 @@ const ProveedoresTableActions = ({ Proveedor }) => {
         </DropdownMenuItem>
 
         <DropdownMenuItem
+          disabled={isInactivo}
           onClick={(e) => {
+            if (isInactivo) return;
             e.stopPropagation();
             navigate(`/proveedores/${Proveedor.id_proveedor}/editar`);
             setIsOpen(false);
           }}
-          className="flex items-center gap-2 text-sm cursor-pointer"
+          className={`flex items-center gap-2 text-sm cursor-pointer ${
+            isInactivo
+              ? "opacity-40 pointer-events-none cursor-not-allowed"
+              : ""
+          }`}
+          tabIndex={isInactivo ? -1 : 0}
+          aria-disabled={isInactivo}
         >
           <Pencil className="text-gray-500 h-4 w-4" />
           Editar
@@ -62,7 +79,7 @@ const ProveedoresTableActions = ({ Proveedor }) => {
           <ProveedoresActivateDialog
             Proveedor={Proveedor}
             onActivate={async () => {
-              await activateProveedores(
+              await activateProveedor(
                 Proveedor.id_proveedor,
                 Proveedor.nombre || "Proveedor"
               );
@@ -73,7 +90,7 @@ const ProveedoresTableActions = ({ Proveedor }) => {
           <ProveedoresDeleteDialog
             Proveedor={Proveedor}
             onDelete={() => {
-              removeProveedores(
+              removeProveedor(
                 Proveedor.id_proveedor,
                 Proveedor.nombre || "Desconocido"
               );

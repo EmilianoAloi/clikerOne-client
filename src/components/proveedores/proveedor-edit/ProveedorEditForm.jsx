@@ -45,10 +45,16 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
 
   useEffect(() => {
     setFormData(proveedor);
-    setArticulos(articulosProp || []);
-    console.log(proveedor);
-  }, [proveedor, articulosProp]);
 
+    // Asegurá que cada artículo tenga un ID persistente para la UI
+    const ensureIds = (arr) =>
+      (arr || []).map((a) => ({
+        ...a,
+        id: a.id ?? a.id_articulo ?? `tmp-${Date.now()}-${Math.random()}`,
+      }));
+
+    setArticulos(ensureIds(articulosProp));
+  }, [proveedor, articulosProp]);
   const handleAddItem = () => {
     setArticulos((prev) => [
       ...prev,
@@ -103,6 +109,7 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
         setIsSubmitting(false);
         return;
       }
+      console.log("Artículos enviados al guardar:", articulos);
 
       const result = await editProveedor(
         formData.id_proveedor,
@@ -115,7 +122,8 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
         toast.error(result.error);
       } else {
         toast.success(`Proveedor ${formData.nombre} actualizado con exito`);
-        navigate(`/proveedores/${formData.id_proveedor}`);
+        navigate(`/proveedores/${formData.id_proveedor}`),
+          { state: { refresh: true } };
       }
     } catch (error) {
       toast.error("Error al actualizar proveedor");
@@ -144,6 +152,7 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
       );
     }
   }, [proveedor]);
+  console.log("Artículos actuales", articulos);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mx-8 mb-6">

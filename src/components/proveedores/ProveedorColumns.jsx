@@ -3,15 +3,16 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// COLUMNAS DE PROVEEDORES - JS, SIN TIPADOS
+// COLUMNAS DE PROVEEDORES
 export const SupppliersColumns = [
   {
     accessorKey: "id_proveedor",
+    enableSortingRemoval: false, // <--- Importante
     header: ({ column }) => (
       <Button
         className="cursor-pointer rounded-none !p-2 h-10"
         variant="ghost"
-        onClick={() => column.toggleSorting()}
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         ID
         <ChevronDown
