@@ -13,6 +13,7 @@ import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEdi
 import ProveedoresIDPage from "./page/Proveedores/ProveedoresID/ProveedoresIDPage";
 import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
+import ProveedorOcPage from "./page/Proveedores/proveedoresID/ProveedorOcPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
@@ -61,6 +62,12 @@ function App() {
                     <Route
                       path="/proveedores/:id/editar"
                       element={<ProveedoresEditPage />}
+                    />
+
+                    {/* Orden de compra */}
+                    <Route
+                      path="/proveedores/:id/ordencompra/nueva-oc"
+                      element={<ProveedorOcPage />}
                     />
 
                     {/* Facturas */}
@@ -117,12 +124,6 @@ function App() {
                     <Route
                       path="/proveedores/:id/notadebito/editar-nd/:ndId"
                       element={<ProveedorEditarNotaDebitoPage />}
-                    /> */}
-
-                    {/* Orden de compra */}
-                    {/* <Route
-                      path="/proveedores/:id/ordencompra/nueva-oc"
-                      element={<ProveedorNuevaOCPage />}
                     /> */}
 
                     {/* Otras rutas que necesites agregar */}

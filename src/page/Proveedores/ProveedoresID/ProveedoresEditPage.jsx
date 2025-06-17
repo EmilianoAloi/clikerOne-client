@@ -4,15 +4,15 @@ import { useProveedor } from "@/contexts/ProveedorContext";
 
 export default function ProveedoresEditPage() {
   const { id } = useParams();
-  const { proveedor, loading } = useProveedor(id); // Asegúrate de que useProveedor devuelva los datos del proveedor correctamente.
+  const { proveedor, loading } = useProveedor(id);
 
-  if (loading) {
-    return <div>Cargando proveedor...</div>;
-  }
+  // if (loading) {
+  //   return <div>Cargando proveedor...</div>;
+  // }
 
-  if (!proveedor) {
-    return <div>Proveedor no encontrado.</div>;
-  }
+  // if (!proveedor) {
+  //   return <div>Proveedor no encontrado.</div>;
+  // }
 
   return <ProveedorEditContainer proveedor={proveedor} />;
 }

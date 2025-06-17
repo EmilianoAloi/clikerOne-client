@@ -118,3 +118,90 @@
     @apply bg-background text-foreground;
   }
 }
+
+.animate-soft-pulse {
+  animation: softPulse 2s ease-in-out infinite;
+}
+
+/* Drag and drop */
+
+.filepond--credits {
+  display: none !important;
+}
+
+.filepond-minimal .filepond--panel-root {
+  background-color: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+}
+
+.filepond-minimal .filepond--drop-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.filepond-minimal .filepond--label-action {
+  color: #0ea5e9;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.filepond-minimal .filepond--drip-blob {
+  background-color: rgb(40, 150, 209);
+}
+
+.filepond-minimal .filepond--file-status {
+  margin-top: 4px;
+}
+
+.filepond-minimal .filepond--progress-indicator {
+  background-color: #0ea5e9;
+}
+
+.filepond--file {
+  cursor: pointer !important;
+}
+
+/* Ajuste visual para igualar altura con textarea */
+
+.pond-equal-height {
+  height: 100px; /* Ajustado para igualar visualmente el Textarea con padding y border */
+}
+
+.pond-equal-height .filepond--panel-root {
+  height: 100%;
+}
+
+.pond-equal-height .filepond--drop-label {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Boton imprimir factura */
+
+@media print {
+  nav,
+  button,
+  .breadcrumb,
+  .no-print {
+    display: none !important;
+  }
+
+  .invoice-content {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .invoice-header,
+  .invoice-summary,
+  .invoice-item {
+    page-break-inside: avoid;
+  }
+}
+
+/* Oculta la scrollbar en navegadores WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  display: none;
+}

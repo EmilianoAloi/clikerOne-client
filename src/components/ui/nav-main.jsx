@@ -17,9 +17,12 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavMain({ items }) {
+  //   const { state } = useSidebar();
+  // const isCollapsed = state === "collapsed";
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

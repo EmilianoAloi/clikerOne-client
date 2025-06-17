@@ -1,23 +1,16 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import * as React from "react";
 
-
-
-export const  = ({
+export const SidebarNavItem = ({
   title,
   href,
   icon: Icon,
   isActive,
   disabled,
 }) => {
-  const router = useRouter();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 

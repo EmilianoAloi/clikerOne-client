@@ -9,32 +9,41 @@ export const ProveedorProvider = ({ children }) => {
   const [proveedores, setProveedores] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const refreshProveedores = async (force = false) => {
-    if (isLoaded && !force) return;
+  const refreshProveedores = async (force = false, updatedProveedor = null) => {
+    if (isLoaded && !force) return; // Si los datos ya están cargados y no se fuerza la recarga, no se hace nada
+
     try {
       const response = await fetch(API_URL);
-      if (!response.ok) throw new Error();
+      if (!response.ok) throw new Error("Error al obtener proveedores");
       const data = await response.json();
 
-      const enriched = data.map((p) => {
-        const facturas = p.facturas_pendientes ?? 0;
-        const saldo = p.saldo ?? 0;
-        return {
-          ...p,
-          facturasText:
-            facturas === 0
-              ? "Ninguna"
-              : `${facturas} factura${facturas > 1 ? "s" : ""}`,
-          saldoText:
-            saldo === 0
-              ? "Saldo Cero"
-              : saldo > 0
-              ? `+ $${saldo.toLocaleString("es-AR")}`
-              : `- $${Math.abs(saldo).toLocaleString("es-AR")}`,
-        };
-      });
+      // Si es una actualización, solo actualiza ese proveedor en particular
+      if (updatedProveedor) {
+        setProveedores((prevProveedores) =>
+          prevProveedores.map((p) =>
+            p.id_proveedor === updatedProveedor.id_proveedor
+              ? updatedProveedor
+              : p
+          )
+        );
+      } else {
+        const enriched = data.map((p) => {
+          const facturas = p.facturas_pendientes ?? 0;
+          const saldo = p.saldo ?? 0;
+          return {
+            ...p,
+            facturasText: facturas === 0 ? "Ninguna" : `${facturas} factura(s)`,
+            saldoText:
+              saldo === 0
+                ? "Saldo Cero"
+                : saldo > 0
+                ? `+ $${saldo.toLocaleString("es-AR")}`
+                : `- $${Math.abs(saldo).toLocaleString("es-AR")}`,
+          };
+        });
 
-      setProveedores(enriched);
+        setProveedores(enriched);
+      }
       setIsLoaded(true);
     } catch (error) {
       console.error("Error al obtener los proveedores:", error);
@@ -52,11 +61,12 @@ export const ProveedorProvider = ({ children }) => {
 
   const getProveedorByID = async (id) => {
     const local = proveedores.find((p) => p.id_proveedor === id);
-    if (local) return local;
+    if (local) return local; // Si ya está en el contexto, no hace falta hacer el fetch
+
     try {
       const response = await fetch(`${API_URL}/${id}`);
       if (!response.ok) throw new Error("Proveedor no encontrado");
-      return await response.json();
+      return await response.json(); // Solo hace fetch si no lo encuentra en el contexto
     } catch (error) {
       console.error("Error al obtener proveedor por ID:", error);
       return null;

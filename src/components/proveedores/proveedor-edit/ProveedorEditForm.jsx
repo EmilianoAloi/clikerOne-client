@@ -133,6 +133,16 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
   };
 
+  useEffect(() => {
+    if (proveedor) {
+      console.log("Proveedor cargado desde el contexto:", proveedor);
+    } else {
+      console.log(
+        "Proveedor no encontrado en el contexto, realizando fetch..."
+      );
+    }
+  }, [proveedor]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mx-8 mb-6">
       <div className="w-full mx-auto px-2 md:px-6">
