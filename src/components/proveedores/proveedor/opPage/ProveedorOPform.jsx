@@ -12,7 +12,7 @@ import ProveedorOPpagos from "./ProveedorOPpagos";
 import ProveedorOPinvoices from "./ProveedorOPinvoices";
 import ProveedorOPheader from "./ProveedorOPheader";
 
-export default function ProveedorOPform({ idProveedor, idProveedorCliker }) {
+export default function ProveedorOPform({ modo, proveedor }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
@@ -131,10 +131,10 @@ export default function ProveedorOPform({ idProveedor, idProveedorCliker }) {
 
   return (
     <form className="space-y-6 mx-8 pb-10" onSubmit={handleSubmit}>
-      <ProveedorOPheader idProveedor={idProveedor} />
+      <ProveedorOPheader proveedor={proveedor} />
 
       <Separator className="mt-10 mb-8" />
-
+      {/* 
       <ProveedorOPinvoices
         idProveedor={idProveedor}
         facturasSeleccionadas={facturasSeleccionadas}
@@ -161,7 +161,7 @@ export default function ProveedorOPform({ idProveedor, idProveedorCliker }) {
       <ProveedorOPButtons
         idProveedor={idProveedor}
         isSubmitting={isSubmitting}
-      />
+      /> */}
     </form>
   );
 }

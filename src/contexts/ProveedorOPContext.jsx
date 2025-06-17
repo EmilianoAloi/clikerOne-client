@@ -1,9 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
-// Si querés usar types, importá desde tu /types/supplier-payments
-// import type { SupplierPayment, SupplierPaymentItem } from "@/types/supplier-payments";
-
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`;
 
 const ProveedorOPContext = createContext(undefined);
