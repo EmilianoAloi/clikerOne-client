@@ -24,6 +24,8 @@ import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPVie
 import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
 import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
 import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
+import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
+import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/ProveedoresInvoiceEditPage";
 
 function App() {
   return (
@@ -62,6 +64,11 @@ function App() {
                     />
 
                     <Route
+                      path="/proveedores/:id/ordencompra/oc-edit/:idOC"
+                      element={<ProveedorOCeditPage />}
+                    />
+
+                    <Route
                       path="/proveedores/:idProveedor/ordencompra/:idOC"
                       element={<ProveedorOCviewPage />}
                     />
@@ -71,6 +78,11 @@ function App() {
                       path="/proveedores/:id/facturacion/nueva-factura"
                       element={<ProveedorInvoicePage />}
                     />
+                    <Route
+                      path="/proveedores/:id/facturacion/:idFactura/editar-factura"
+                      element={<ProveedoresInvoiceEditPage />}
+                    />
+
                     <Route
                       path="/proveedores/:id/facturacion/:idFactura"
                       element={<ProveedorInvoiceViewPage />}

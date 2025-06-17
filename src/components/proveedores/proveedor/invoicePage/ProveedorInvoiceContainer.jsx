@@ -1,5 +1,5 @@
-import ProveedorInvoiceTitle from "./ProveedorInvoiceTitle";
 import ProveedorInvoiceForm from "./ProveedorInvoiceForm";
+import ProveedorInvoiceTitle from "./ProveedorInvoiceTitle";
 
 export default function ProveedorInvoiceContainer({ proveedor }) {
   return (
