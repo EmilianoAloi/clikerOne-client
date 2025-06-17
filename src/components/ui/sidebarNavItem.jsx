@@ -1,16 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
 
-export const SidebarNavItem = ({
-  title,
-  href,
-  icon: Icon,
-  isActive,
-  disabled,
-}) => {
+const SidebarNavItem = ({ title, href, icon: Icon, isActive, disabled }) => {
+  const navigate = useNavigate();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
@@ -29,7 +25,7 @@ export const SidebarNavItem = ({
         }`}
       >
         <button
-          onClick={() => !disabled && router.push(href)}
+          onClick={() => !disabled && navigate(href)}
           disabled={disabled}
           className="flex items-center gap-3 w-full text-left"
         >
@@ -38,9 +34,8 @@ export const SidebarNavItem = ({
               isCollapsed ? "size-5" : "size-6"
             }`}
           >
-            <Icon className={`transition-all size-5`} />
+            <Icon className="transition-all size-5" />
           </div>
-
           {!isCollapsed && (
             <span className="truncate transition-opacity duration-200">
               {title}
@@ -51,3 +46,5 @@ export const SidebarNavItem = ({
     </SidebarMenuItem>
   );
 };
+
+export default SidebarNavItem;
