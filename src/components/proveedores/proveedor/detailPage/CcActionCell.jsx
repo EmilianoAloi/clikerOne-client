@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "sonner";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
-import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
+import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 import CcDeleteDialog from "./CcDeleteDialog";
 
 // Utilidad para limpiar el prefijo del ID
@@ -30,7 +30,7 @@ function getIdLimpio(movement) {
 const CcActionCell = ({ movement, currentProveedor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { refreshProveedorInvoices } = useProveedorInvoices();
-  const { refreshProveedorPayments } = useProveedorPayments();
+  const { refreshProveedorPayments } = useProveedorOP();
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_URL;
   const id = getIdLimpio(movement);

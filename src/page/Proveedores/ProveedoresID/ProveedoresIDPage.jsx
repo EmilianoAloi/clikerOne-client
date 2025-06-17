@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
-import { useProveedorPayments } from "@/contexts/ProveedorOPContext";
+import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 import { useProveedor } from "@/contexts/ProveedorContext";
 import { useProveedorArticles } from "@/contexts/ProveedorArticlesContext";
@@ -20,7 +20,7 @@ export default function ProveedoresIDPage() {
     getPaymentsForProveedor,
     getPaymentItemsForProveedor,
     refreshProveedorPayments,
-  } = useProveedorPayments();
+  } = useProveedorOP();
   const { getComprasForProveedor, refreshProveedorCompras } =
     useProveedorCompras();
   const { getArticlesForProveedor, loadArticlesByProveedor } =

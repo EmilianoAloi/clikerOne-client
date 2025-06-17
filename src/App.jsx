@@ -3,7 +3,7 @@ import MainLayout from "./layout/MainLayout";
 
 // Contexts
 import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
-import { ProveedorPaymentsProvider } from "@/contexts/ProveedorOPContext";
+import { ProveedorOPProvider } from "@/contexts/ProveedorOPContext";
 import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
 import { ProveedorProvider } from "./contexts/ProveedorContext";
 import { ProveedorArticlesProvider } from "./contexts/ProveedorArticlesContext";
@@ -16,6 +16,7 @@ import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 import ProveedorOcPage from "./page/Proveedores/ProveedoresID/ProveedorOcPage";
 import ProveedorInvoicePage from "./page/Proveedores/ProveedoresID/ProveedorInvoicePage";
 import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
+import ProveedorOPPage from "./page/Proveedores/ProveedoresID/ProveedorOPPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
@@ -41,7 +42,7 @@ function App() {
   return (
     <ProveedorProvider>
       <ProveedorInvoicesProvider>
-        <ProveedorPaymentsProvider>
+        <ProveedorOPProvider>
           <ProveedorComprasProvider>
             <ProveedorArticlesProvider>
               <BrowserRouter>
@@ -88,14 +89,16 @@ function App() {
                     /> */}
 
                     {/* Orden de Pago */}
+                    <Route
+                      path="/proveedores/:id/pagos/nuevopago"
+                      element={<ProveedorOPPage />}
+                    />
+
                     {/* <Route
                       path="/proveedores/:id/pagos/:pagoId"
                       element={<ProveedorPagoPage />}
                     />
-                    <Route
-                      path="/proveedores/:id/pagos/nuevopago"
-                      element={<ProveedorNuevoPagoPage />}
-                    />
+                
                     <Route
                       path="/proveedores/:id/pagos/:pagoId/editar-pago"
                       element={<ProveedorEditarPagoPage />}
@@ -135,7 +138,7 @@ function App() {
               </BrowserRouter>
             </ProveedorArticlesProvider>
           </ProveedorComprasProvider>
-        </ProveedorPaymentsProvider>
+        </ProveedorOPProvider>
       </ProveedorInvoicesProvider>
     </ProveedorProvider>
   );

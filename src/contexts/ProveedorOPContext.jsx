@@ -1,11 +1,66 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
+// Si querés usar types, importá desde tu /types/supplier-payments
+// import type { SupplierPayment, SupplierPaymentItem } from "@/types/supplier-payments";
+
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`;
 
-const ProveedorPaymentsContext = createContext(undefined);
+const ProveedorOPContext = createContext(undefined);
 
-export const ProveedorPaymentsProvider = ({ children }) => {
+export function normalizePaymentPayload({
+  items,
+  idProveedor,
+  observaciones,
+  archivos,
+  facturas,
+  usuarioId = 1,
+  idEmpresa = 1,
+}) {
+  const now = new Date().toISOString();
+
+  // Usar la fecha del primer ítem como base para la orden
+  const fecha = items[0]?.fecha ? new Date(items[0].fecha) : new Date();
+
+  // Calcular el monto total de la orden de pago
+  const totalMonto = items.reduce((acc, item) => acc + (item.monto ?? 0), 0);
+
+  // Una sola orden de pago (proveedor_pago)
+  const pagos = [
+    {
+      id_proveedor: idProveedor,
+      numero_comprobante: "",
+      fecha: fecha.toISOString().slice(0, 10),
+      fecha_pago: fecha.toISOString().slice(0, 10),
+      fecha_ejecucion: fecha.toISOString().slice(0, 10),
+      medio: "",
+      banco: "",
+      monto: totalMonto,
+      estado_pago: "pendiente",
+      estado_factura: "sin_factura",
+      observaciones,
+      fecha_creada: now,
+      creado_por: usuarioId,
+      modificado_por: usuarioId,
+      fecha_modificacion: now,
+      sync_origen: "manual",
+      estado_logico: 1,
+      id_empresa: idEmpresa,
+      tipo_id_empresa: "manual",
+      tipo_documento: "orden_pago",
+      adjuntos: archivos,
+    },
+  ];
+
+  return {
+    observaciones,
+    pagos,
+    items,
+    facturas,
+  };
+}
+
+export const ProveedorOPProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
   const [paymentItemsByProveedor, setPaymentItemsByProveedor] = useState({});
 
@@ -15,6 +70,7 @@ export const ProveedorPaymentsProvider = ({ children }) => {
   const getPaymentItemsForProveedor = (idProveedor) =>
     paymentItemsByProveedor[idProveedor] || [];
 
+  // Refresca pagos e items por proveedor
   const refreshProveedorPayments = async (idProveedor, force = false) => {
     if (!idProveedor) return;
     if (paymentsByProveedor[idProveedor] && !force) return;
@@ -53,26 +109,114 @@ export const ProveedorPaymentsProvider = ({ children }) => {
     }
   };
 
+  // Crear un solo pago para proveedor
+  const createSupplierPayment = async (payment) => {
+    try {
+      const response = await fetch(API_BASE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pagos: [payment] }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.error || "Error al registrar pago.");
+        return;
+      }
+
+      toast.success("Pago registrado correctamente.");
+      if (payment.id_proveedor)
+        await refreshProveedorPayments(payment.id_proveedor, true);
+    } catch (error) {
+      console.error("Error creando pago:", error);
+      toast.error("Hubo un problema al registrar el pago.");
+    }
+  };
+
+  // Crear múltiples pagos (orden de pago con ítems y archivos)
+  const createMultipleSupplierPayments = async (payload) => {
+    try {
+      const response = await fetch(API_BASE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.error || "Error al registrar los pagos.");
+        return;
+      }
+      // Refrescar proveedor si corresponde
+      // Ejemplo: await refreshProveedorPayments(payload?.pagos?.[0]?.id_proveedor, true);
+    } catch (error) {
+      console.error("Error creando pagos:", error);
+      toast.error("Hubo un problema al registrar los pagos.");
+    }
+  };
+
+  // Actualizar un pago existente
+  const updateSupplierPayment = async (id, payment) => {
+    try {
+      const response = await fetch(`${API_BASE}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payment),
+      });
+
+      if (!response.ok) throw new Error("Error al actualizar pago");
+      toast.success("Pago actualizado correctamente.");
+      if (payment.id_proveedor)
+        await refreshProveedorPayments(payment.id_proveedor, true);
+    } catch (error) {
+      console.error("Error actualizando pago:", error);
+      toast.error("Hubo un problema al actualizar el pago.");
+    }
+  };
+
+  // Eliminar pago
+  const removeSupplierPayment = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE}/${id}?modificado_por=sistema`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Error al eliminar pago");
+      toast.success("Pago eliminado correctamente.");
+      // Si sabés el proveedor, podés refrescar aquí
+      // await refreshProveedorPayments(id_proveedor, true);
+    } catch (error) {
+      console.error("Error eliminando pago:", error);
+      toast.error("Hubo un problema al eliminar el pago.");
+    }
+  };
+
   return (
-    <ProveedorPaymentsContext.Provider
+    <ProveedorOPContext.Provider
       value={{
         paymentsByProveedor,
         paymentItemsByProveedor,
         getPaymentsForProveedor,
         getPaymentItemsForProveedor,
         refreshProveedorPayments,
+        createSupplierPayment,
+        createMultipleSupplierPayments,
+        updateSupplierPayment,
+        removeSupplierPayment,
+        normalizePaymentPayload,
       }}
     >
       {children}
-    </ProveedorPaymentsContext.Provider>
+    </ProveedorOPContext.Provider>
   );
 };
 
-export const useProveedorPayments = () => {
-  const context = useContext(ProveedorPaymentsContext);
+// Custom hook
+export const useProveedorOP = () => {
+  const context = useContext(ProveedorOPContext);
   if (!context) {
     throw new Error(
-      "useProveedorPayments debe usarse dentro de un ProveedorPaymentsProvider"
+      "useProveedorOP debe usarse dentro de un ProveedorOPProvider"
     );
   }
   return context;
