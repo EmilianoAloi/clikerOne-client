@@ -15,6 +15,7 @@ import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 import ProveedorOcPage from "./page/Proveedores/ProveedoresID/ProveedorOcPage";
 import ProveedorInvoicePage from "./page/Proveedores/ProveedoresID/ProveedorInvoicePage";
+import ProveedorNCPage from "./page/proveedores/proveedoresID/ProveedorNCPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
@@ -65,7 +66,7 @@ function App() {
                       element={<ProveedoresEditPage />}
                     />
 
-                    {/* Orden de compra */}
+                    {/* OC */}
                     <Route
                       path="/proveedores/:id/ordencompra/nueva-oc"
                       element={<ProveedorOcPage />}
@@ -104,12 +105,12 @@ function App() {
                     {/* <Route
                       path="/proveedores/:id/notacredito/:ncId"
                       element={<ProveedorNotaCreditoPage />}
-                    />
+                    /> */}
                     <Route
                       path="/proveedores/:id/notacredito/nuevanotacredito"
-                      element={<ProveedorNuevaNotaCreditoPage />}
+                      element={<ProveedorNCPage />}
                     />
-                    <Route
+                    {/* <Route
                       path="/proveedores/:id/notacredito/editar-nc/:ncId"
                       element={<ProveedorEditarNotaCreditoPage />}
                     /> */}
