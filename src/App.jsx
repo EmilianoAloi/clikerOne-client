@@ -22,26 +22,6 @@ import ProveedorInvoiceViewPage from "./page/Proveedores/ProveedoresID/Proveedor
 import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
 import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
 
-// Estas son páginas que deberías crear/importar, si no existen aún
-// import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
-// import ProveedorNuevaFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorNuevaFacturaPage";
-// import ProveedorEditarFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorEditarFacturaPage";
-
-// import ProveedorPagoPage from "./page/Proveedores/ProveedoresID/ProveedorPagoPage";
-// import ProveedorNuevoPagoPage from "./page/Proveedores/ProveedoresID/ProveedorNuevoPagoPage";
-// import ProveedorEditarPagoPage from "./page/Proveedores/ProveedoresID/ProveedorEditarPagoPage";
-
-// import ProveedorNotaCreditoPage from "./page/Proveedores/ProveedoresID/ProveedorNotaCreditoPage";
-// import ProveedorNuevaNotaCreditoPage from "./page/Proveedores/ProveedoresID/ProveedorNuevaNotaCreditoPage";
-// import ProveedorEditarNotaCreditoPage from "./page/Proveedores/ProveedoresID/ProveedorEditarNotaCreditoPage";
-
-// import ProveedorNotaDebitoPage from "./page/Proveedores/ProveedoresID/ProveedorNotaDebitoPage";
-// import ProveedorNuevaNotaDebitoPage from "./page/Proveedores/ProveedoresID/ProveedorNuevaNotaDebitoPage";
-// import ProveedorEditarNotaDebitoPage from "./page/Proveedores/ProveedoresID/ProveedorEditarNotaDebitoPage";
-
-// import ProveedorNuevaOCPage from "./page/Proveedores/ProveedoresID/ProveedorNuevaOCPage";
-// ...agregá cualquier otra página que tengas
-
 function App() {
   return (
     <ProveedorProvider>
@@ -115,20 +95,6 @@ function App() {
                     />
 
                     {/* Nota de Débito */}
-                    {/* <Route
-                      path="/proveedores/:id/notadebito/:ndId"
-                      element={<ProveedorNotaDebitoPage />}
-                    />
-                    <Route
-                      path="/proveedores/:id/notadebito/nuevanotadebito"
-                      element={<ProveedorNuevaNotaDebitoPage />}
-                    />
-                    <Route
-                      path="/proveedores/:id/notadebito/editar-nd/:ndId"
-                      element={<ProveedorEditarNotaDebitoPage />}
-                    /> */}
-
-                    {/* Otras rutas que necesites agregar */}
                   </Routes>
                 </MainLayout>
               </BrowserRouter>

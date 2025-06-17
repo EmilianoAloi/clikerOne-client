@@ -25,47 +25,33 @@ import {
 import SidebarHead from "./sidebar-head";
 
 // This is sample data.
-
-const data = {
-  user: {
-    name: "Emiliano Aloi",
-    email: "emilianoaloi@cliker.com",
-    avatar: "",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: false,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-  ],
+const user = {
+  name: "Emiliano Aloi",
+  email: "emilianoaloi@cliker.com",
+  // avatar: "/avatars/emiliano.jpg", // si tenés
 };
+
+const navMain = [
+  { title: "Inicio", url: "/inicio", icon: "Home" },
+  { title: "Inventario", url: "/inventario", icon: "Boxes" },
+  { title: "Ventas", url: "/ventas", icon: "CircleDollarSign" },
+  { title: "Clientes", url: "/clientes", icon: "User2" },
+  { title: "Proveedores", url: "/proveedores", icon: "Users" },
+  { title: "Reportes", url: "/reportes", icon: "PieChart" },
+  { title: "Ajustes", url: "/ajustes", icon: "Settings" },
+];
 
 export function AppSidebar({ ...props }) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>{/* <TeamSwitcher teams={data.teams} /> */}</SidebarHeader>
+      <SidebarHeader>
+        <SidebarHead />
+      </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
