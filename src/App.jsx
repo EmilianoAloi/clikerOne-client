@@ -15,7 +15,7 @@ import ProveedoresPage from "./page/Proveedores/ProveedoresPage";
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 import ProveedorOcPage from "./page/Proveedores/ProveedoresID/ProveedorOcPage";
 import ProveedorInvoicePage from "./page/Proveedores/ProveedoresID/ProveedorInvoicePage";
-import ProveedorNCPage from "./page/proveedores/proveedoresID/ProveedorNCPage";
+import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
 
 // Estas son páginas que deberías crear/importar, si no existen aún
 // import ProveedorFacturaPage from "./page/Proveedores/ProveedoresID/ProveedorFacturaPage";
