@@ -134,9 +134,9 @@ export default function ProveedorOPform({ modo, proveedor }) {
       <ProveedorOPheader proveedor={proveedor} />
 
       <Separator className="mt-10 mb-8" />
-      {/* 
+
       <ProveedorOPinvoices
-        idProveedor={idProveedor}
+        proveedor={proveedor}
         facturasSeleccionadas={facturasSeleccionadas}
         setFacturasSeleccionadas={setFacturasSeleccionadas}
       />
@@ -146,7 +146,7 @@ export default function ProveedorOPform({ modo, proveedor }) {
       <ProveedorOPpagos
         items={items}
         setItems={setItems}
-        idProveedorCliker={idProveedorCliker}
+        idProveedorCliker={proveedor.id_proveedor_cliker}
       />
       <Separator className="my-10" />
 
@@ -159,9 +159,9 @@ export default function ProveedorOPform({ modo, proveedor }) {
       />
 
       <ProveedorOPButtons
-        idProveedor={idProveedor}
+        idProveedor={proveedor.id_proveedor}
         isSubmitting={isSubmitting}
-      /> */}
+      />
     </form>
   );
 }
