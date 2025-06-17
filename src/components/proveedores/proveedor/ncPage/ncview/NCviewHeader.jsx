@@ -1,0 +1,101 @@
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { BadgeInfo } from "lucide-react";
+import { Link } from "react-router-dom";
+
+export default function NCviewHeader({ notaCredito }) {
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
+      <Card className="col-span-2 border-none shadow-none md:border md:shadow-md px-0 md:px-4">
+        <CardHeader className="px-0 ">
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-none px-0">
+            <BadgeInfo className="w-5 h-5" />
+            Información de la Nota de Crédito
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-0 md:px-2">
+          <div className="grid grid-cols-2 md:gap-8 max-w-full">
+            <div className="flex flex-col ">
+              <h3 className="font-semibold text-md text-muted-foreground">
+                Proveedor
+              </h3>
+              <p className="font-semibold">
+                {notaCredito.razon_social_proveedor}
+              </p>
+              <p className="text-sm">CUIT: {notaCredito.cuit_proveedor}</p>
+              <p className="text-sm">
+                {notaCredito.direccion_proveedor},{" "}
+                {notaCredito.proveedor_provincia}
+              </p>
+              <Link
+                to={`/proveedores/${notaCredito.id_proveedor}`}
+                className="text-primary text-sm font-medium inline-block mt-2"
+              >
+                Ver detalles del proveedor →
+              </Link>
+            </div>
+            <div>
+              <div className="grid grid-cols-2 gap-4 md:gap-8">
+                <div>
+                  <h3 className="font-semibold text-md text-muted-foreground">
+                    Número de NC
+                  </h3>
+                  <p>#{notaCredito.numero_factura}</p>
+                </div>
+                <div className="hidden md:block">
+                  <h3 className="font-semibold text-md text-muted-foreground">
+                    Estado
+                  </h3>
+                  <span
+                    className={`inline-block px-2 py-1 text-xs font-semibold rounded-md
+        ${
+          notaCredito.estado_saldo === "ejecutada"
+            ? "bg-green-100 text-green-800"
+            : notaCredito.estado_saldo === "anulada"
+            ? "bg-gray-100 text-gray-800"
+            : "bg-sky-100 text-sky-800"
+        }`}
+                  >
+                    {(notaCredito.estado_saldo || "Sin estado")
+                      .charAt(0)
+                      .toUpperCase() +
+                      (notaCredito.estado_saldo || "Sin estado").slice(1)}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-md text-muted-foreground">
+                    Fecha de emisión
+                  </h3>
+                  <p>{formatDate(notaCredito.fecha_emision ?? "")}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-md text-muted-foreground">
+                    Fecha Contable
+                  </h3>
+                  <p>{formatDate(notaCredito.fecha_contable ?? "")}</p>
+                </div>
+              </div>
+              {notaCredito.condicion_venta && (
+                <div className="mt-4">
+                  <h3 className="font-semibold text-md text-muted-foreground">
+                    Condición de venta
+                  </h3>
+                  <p className="text-md">{notaCredito.condicion_venta}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
