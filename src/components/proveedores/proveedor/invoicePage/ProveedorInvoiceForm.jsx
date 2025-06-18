@@ -1,17 +1,15 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceFormSchema } from "@/schemas/invoice-form-schema";
-import { Separator } from "@/components/ui/separator";
+import { mapFormToApi } from "@/utils/invoice-form-mapper";
+import { toast } from "sonner";
 
 import ProveedorInvoiceHeader from "./ProveedorInvoiceHeader";
 import ProveedorInvoiceArticle from "./ProveedorInvoiceArticle";
 import ProveedorInvoiceExtra from "./ProveedorInvoiceExtra";
 import ProveedorInvoiceActions from "./ProveedorInvoiceActions";
-
-import { mapFormToApi } from "@/utils/invoice-form-mapper";
-import { sanitizeFactura } from "@/utils/sanitize-factura";
-import { toast } from "sonner";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export default function ProveedorInvoiceForm({
   modo,
@@ -22,39 +20,63 @@ export default function ProveedorInvoiceForm({
   const inputStyle = "bg-white border border-gray-300 rounded-md shadow-sm ";
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [files, setFiles] = useState([]); // <-- Estado de archivos elevado acá
+  const [files, setFiles] = useState([]);
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-
-  const safeFactura = sanitizeFactura(factura);
 
   const methods = useForm({
     resolver: zodResolver(invoiceFormSchema),
-    defaultValues: {
-      proveedor: idProveedor?.toString() || "",
-      numero_factura: "",
-      condicion_venta: "",
-      iibb_porcentaje: 0,
-      items: [
-        {
-          id_articulo: -2,
-          nombre_manual: "",
-          cantidad: 1,
-          precio_unitario: 0,
-          valor_descuento: 0,
-          iva: "",
+    defaultValues: factura
+      ? {
+          // Modo edición: los valores vienen de factura
+          ...factura,
+          proveedor: factura.id_proveedor?.toString() || "",
+          fecha_emision: factura.fecha_emision?.split("T")[0] ?? "",
+          fecha_vencimiento: factura.fecha_vencimiento?.split("T")[0] ?? "",
+          fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
+          tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "", // <- preferible dejar "" si no está
+          percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
+        }
+      : {
+          // Modo crear: valores por defecto
+          proveedor: idProveedor?.toString() || "",
+          numero_factura: "",
+          condicion_venta: "",
+          iibb_porcentaje: 0,
+          tipo_comprobante: "", // ← ACÁ
+          percepcion_iibb: "0",
+          items: [
+            {
+              id_articulo: -2,
+              nombre_manual: "",
+              cantidad: 1,
+              precio_unitario: 0,
+              valor_descuento: 0,
+              iva: "",
+            },
+          ],
+          url_factura_comprobante: null,
+          observaciones: "",
+          fecha_emision: "",
+          fecha_vencimiento: "",
+          fecha_contable: "",
         },
-      ],
-      url_factura_comprobante: null,
-      observaciones: "",
-      fecha_emision: "",
-      fecha_vencimiento: "",
-      fecha_contable: "",
-      ...(factura || {}),
-    },
     mode: "onTouched",
   });
 
-  // Artículos disponibles
+  useEffect(() => {
+    if (factura) {
+      methods.reset({
+        ...factura,
+        proveedor: factura.id_proveedor?.toString() || "",
+        fecha_emision: factura.fecha_emision?.split("T")[0] ?? "",
+        fecha_vencimiento: factura.fecha_vencimiento?.split("T")[0] ?? "",
+        fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
+        tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "factura",
+        percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
+      });
+    }
+  }, [factura]);
+
   const articulos = useMemo(
     () =>
       proveedor?.articulos
@@ -110,9 +132,7 @@ export default function ProveedorInvoiceForm({
   const descuentoTotal = calcDescuentoTotal(items);
   const total = subtotal + iva + iibb;
 
-  // Submit
   const onSubmit = async (form) => {
-    console.log("FORM ANTES DEL MAPPER:", form);
     try {
       setIsSubmitting(true);
 
@@ -127,37 +147,47 @@ export default function ProveedorInvoiceForm({
           body: formData,
         });
 
-        if (!uploadRes.ok) {
-          throw new Error("Error al subir el archivo");
-        }
+        if (!uploadRes.ok) throw new Error("Error al subir el archivo");
 
         const { url } = await uploadRes.json();
         fileUrl = url;
       }
 
       const data = mapFormToApi(
-        {
-          ...form,
-          url_factura_comprobante: fileUrl || null,
-        },
+        { ...form, url_factura_comprobante: fileUrl || null },
         proveedor
       );
 
-      console.log("Payload final que mando al backend:", data);
-
-      const res = await fetch(`${API_URL}/api/proveedores/facturas`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      let res;
+      if (modo === "editar" && factura?.id_factura) {
+        // MODIFICAR: PUT
+        res = await fetch(
+          `${API_URL}/api/proveedores/facturas/${factura.id_factura}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        );
+      } else {
+        // CREAR: POST
+        res = await fetch(`${API_URL}/api/proveedores/facturas`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      }
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error?.error || "Error al cargar factura");
+        throw new Error(error?.error || "Error al guardar factura");
       }
 
-      toast.success("Factura cargada correctamente");
-      // redireccionar o limpiar si querés
+      toast.success(
+        modo === "editar"
+          ? "Factura modificada correctamente"
+          : "Factura cargada correctamente"
+      );
     } catch (err) {
       toast.error(err.message);
       console.error("Error al enviar factura", err);
@@ -175,9 +205,8 @@ export default function ProveedorInvoiceForm({
         <ProveedorInvoiceHeader
           proveedores={[
             {
-              id: proveedor.id_proveedor.toString(),
-              nombre:
-                proveedor.nombre || proveedor.razon_social || "Sin nombre",
+              id: proveedor?.id_proveedor?.toString() || "",
+              nombre: proveedor?.nombre,
             },
           ]}
           inputStyle={inputStyle}
@@ -185,16 +214,14 @@ export default function ProveedorInvoiceForm({
           setOpen={setOpen}
           disabledProveedor={!!idProveedor}
         />
+        {/* Otros componentes */}
         <Separator className="my-10" />
-
         <ProveedorInvoiceArticle
           articulos={articulos}
           ivaDefault={ivaDelProveedor}
           inputStyle={inputStyle}
         />
-
         <Separator className="my-10" />
-
         <ProveedorInvoiceExtra
           inputStyle={inputStyle}
           subtotal={subtotal}
@@ -202,8 +229,8 @@ export default function ProveedorInvoiceForm({
           iibb={iibb}
           total={total}
           descuentoTotal={descuentoTotal}
-          files={files} // <-- Pasa los archivos
-          setFiles={setFiles} // <-- Pasa el setter
+          files={files}
+          setFiles={setFiles}
         />
         <ProveedorInvoiceActions modo={modo} isSubmitting={isSubmitting} />
       </form>

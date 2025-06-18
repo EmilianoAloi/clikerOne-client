@@ -1,4 +1,3 @@
-// utils/invoice-form-mapper.js
 const VALID_TYPES = [
   "factura a",
   "factura b",
@@ -44,8 +43,8 @@ export const mapFormToApi = (form, proveedor) => {
     fecha_vencimiento: normalizeDate(form.fecha_vencimiento),
     fecha_contable: normalizeDate(form.fecha_contable),
     condicion_venta: form.condicion_venta || "",
-    tipo_comprobante: VALID_TYPES.includes(form.tipo_comprobante?.toLowerCase())
-      ? form.tipo_comprobante.toLowerCase()
+    tipo_comprobante: VALID_TYPES.includes(form.tipo_comprobante)
+      ? form.tipo_comprobante
       : "factura",
     monto_total: total,
     estado_saldo: "pendiente de pago",
@@ -56,7 +55,7 @@ export const mapFormToApi = (form, proveedor) => {
     creado_por: 1,
     sync_origen: "clikerOne",
     alicuota_iva: form.alicuota_iva?.toString() ?? null,
-    percepcion_iibb: form.iibb_porcentaje?.toString() ?? null,
+    percepcion_iibb: form.percepcion_iibb ?? null,
     items: items.map((item) => ({
       id_articulo: item.id_articulo > 0 ? item.id_articulo : null,
       nombre_manual: item.id_articulo > 0 ? null : item.nombre_manual || null,

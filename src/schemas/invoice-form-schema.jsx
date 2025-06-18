@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// --- Sub-schema: Item de factura ---
 export const invoiceItemSchema = z.object({
   id_articulo: z.union([
     z.number().int().positive(),
@@ -30,7 +29,6 @@ export const invoiceItemSchema = z.object({
     .nullable(),
 });
 
-// --- Schema: Formulario de factura ---
 export const invoiceFormSchema = z.object({
   proveedor: z.string().min(1, "Debe seleccionar un proveedor"),
   numero_factura: z
@@ -48,9 +46,11 @@ export const invoiceFormSchema = z.object({
     .default(0)
     .optional(),
   condicion_venta: z.string().optional().nullable(),
-
-  // --------- FECHAS ---------
-  fecha_emision: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
-  fecha_vencimiento: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
-  fecha_contable: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
+  tipo_comprobante: z
+    .string()
+    .min(1, "Debe seleccionar un tipo de comprobante"),
+  fecha_emision: z.string().optional().nullable(),
+  fecha_vencimiento: z.string().optional().nullable(),
+  fecha_contable: z.string().optional().nullable(),
+  percepcion_iibb: z.string().optional().nullable(),
 });

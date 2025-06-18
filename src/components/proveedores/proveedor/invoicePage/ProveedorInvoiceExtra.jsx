@@ -24,20 +24,34 @@ export default function ProveedorInvoiceExtra({
   const { control, watch } = useFormContext();
   const url_factura_comprobante = watch("url_factura_comprobante");
 
+  // Cuando hay comprobante, lo mostramos como archivo remoto en FilePond
   useEffect(() => {
     if (
       url_factura_comprobante &&
       typeof url_factura_comprobante === "string"
     ) {
+      // Seteamos el archivo como "local"
       setFiles([
         {
           source: url_factura_comprobante,
-          options: { type: "local" },
+          options: {
+            type: "local",
+            file: {
+              name:
+                url_factura_comprobante.split("/").pop()?.split("?")[0] ||
+                "comprobante.pdf",
+              type: "application/pdf", // Si admitís imágenes también, podés mejorar esto
+            },
+          },
         },
       ]);
+    } else {
+      // Si no hay comprobante, limpiamos el FilePond
+      setFiles([]);
     }
-    // No hacer nada si no hay archivo: FilePond lo maneja
-  }, [url_factura_comprobante, setFiles]);
+    // Solo reaccionar a cambios en la url del comprobante
+    // eslint-disable-next-line
+  }, [url_factura_comprobante]);
 
   const condicionPago = watch("condicion_venta") || "-";
   const iibbPorcentaje = watch("iibb_porcentaje") ?? 0;

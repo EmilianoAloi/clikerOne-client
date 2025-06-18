@@ -35,7 +35,8 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function ProveedorInvoiceHeader({
   proveedores,
@@ -45,6 +46,7 @@ export default function ProveedorInvoiceHeader({
   disabledProveedor,
 }) {
   const {
+    control,
     register,
     setValue,
     watch,
@@ -59,6 +61,17 @@ export default function ProveedorInvoiceHeader({
   const fecha_vencimiento = watch("fecha_vencimiento");
   const fecha_contable = watch("fecha_contable");
   const percepcion_iibb = watch("percepcion_iibb");
+
+  // useEffect(() => {
+  //   if (
+  //     proveedores.length > 0 &&
+  //     proveedor &&
+  //     !proveedores.find((p) => String(p.id) === String(proveedor))
+  //   ) {
+  //     // Si el proveedor no está en la lista, resetear a ""
+  //     setValue("proveedor", "", { shouldValidate: false });
+  //   }
+  // }, [proveedores, proveedor, setValue]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
@@ -87,7 +100,8 @@ export default function ProveedorInvoiceHeader({
             >
               <span className={cn(proveedor ? "" : "text-muted-foreground")}>
                 {proveedor
-                  ? proveedores.find((p) => p.id === proveedor)?.nombre
+                  ? proveedores.find((p) => String(p.id) === String(proveedor))
+                      ?.nombre ?? "Proveedor no encontrado"
                   : "Seleccionar proveedor"}
               </span>
               <ChevronDown className="h-4 w-4 text-gray-500" />
@@ -105,13 +119,15 @@ export default function ProveedorInvoiceHeader({
                   <CommandItem
                     key={prov.id}
                     onSelect={() => {
-                      setValue("proveedor", prov.id, { shouldValidate: true });
+                      setValue("proveedor", prov.id.toString(), {
+                        shouldValidate: true,
+                      });
                       setOpen(false);
                     }}
                     className="flex items-center justify-between w-full"
                   >
                     <span className="text-left w-full">{prov.nombre}</span>
-                    {proveedor === prov.id && (
+                    {String(proveedor) === String(prov.id) && (
                       <Check className="h-4 w-4 text-primary" />
                     )}
                   </CommandItem>
@@ -170,14 +186,14 @@ export default function ProveedorInvoiceHeader({
         >
           <SelectTrigger
             id="tipo_comprobante"
-            className={`mt-2 w-full ${inputStyle}`}
+            className={`mt-2 w-full bg-white border border-gray-300 rounded-md shadow-sm ${inputStyle}`}
           >
             <SelectValue placeholder="Seleccionar tipo" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Factura A">Factura A</SelectItem>
-            <SelectItem value="Factura B">Factura B</SelectItem>
-            <SelectItem value="Factura C">Factura C</SelectItem>
+            <SelectItem value="factura a">Factura A</SelectItem>
+            <SelectItem value="factura b">Factura B</SelectItem>
+            <SelectItem value="factura c">Factura C</SelectItem>
           </SelectContent>
         </Select>
         {errors.tipo_comprobante && (
@@ -204,7 +220,7 @@ export default function ProveedorInvoiceHeader({
         >
           <SelectTrigger
             id="condicion_venta"
-            className={`w-full mt-1 ${inputStyle}`}
+            className={`mt-1 w-full bg-white border border-gray-300 rounded-md shadow-sm ${inputStyle}`}
           >
             <SelectValue placeholder="Seleccionar condición" />
           </SelectTrigger>
@@ -270,7 +286,6 @@ export default function ProveedorInvoiceHeader({
               onSelect={(date) => {
                 const value = date ? format(date, "yyyy-MM-dd") : "";
                 setValue("fecha_emision", value, { shouldValidate: true });
-                console.log("Set fecha_emision:", value);
               }}
               initialFocus
             />
@@ -328,7 +343,6 @@ export default function ProveedorInvoiceHeader({
               onSelect={(date) => {
                 const value = date ? format(date, "yyyy-MM-dd") : "";
                 setValue("fecha_vencimiento", value, { shouldValidate: true });
-                console.log("Set fecha_vencimiento:", value);
               }}
               initialFocus
             />
@@ -386,7 +400,6 @@ export default function ProveedorInvoiceHeader({
               onSelect={(date) => {
                 const value = date ? format(date, "yyyy-MM-dd") : "";
                 setValue("fecha_contable", value, { shouldValidate: true });
-                console.log("Set fecha_contable:", value);
               }}
               initialFocus
             />
@@ -409,18 +422,14 @@ export default function ProveedorInvoiceHeader({
           Percepción IIBB
         </Label>
         <Select
-          value={percepcion_iibb?.toString() ?? ""}
+          value={percepcion_iibb}
           onValueChange={(value) =>
-            setValue(
-              "percepcion_iibb",
-              value === "Exento" ? "Exento" : parseFloat(value),
-              { shouldValidate: true }
-            )
+            setValue("percepcion_iibb", value, { shouldValidate: true })
           }
         >
           <SelectTrigger
             id="percepcion_iibb"
-            className={`w-full mt-1 ${inputStyle}`}
+            className={`mt-1 w-full bg-white border border-gray-300 rounded-md shadow-sm ${inputStyle}`}
           >
             <SelectValue placeholder="Seleccionar percepción" />
           </SelectTrigger>
@@ -428,7 +437,7 @@ export default function ProveedorInvoiceHeader({
             <SelectItem value="5">5%</SelectItem>
             <SelectItem value="3.5">3.5%</SelectItem>
             <SelectItem value="2.5">2.5%</SelectItem>
-            <SelectItem value="Exento">Exento</SelectItem>
+            <SelectItem value="0">Exento</SelectItem>
           </SelectContent>
         </Select>
         {errors.percepcion_iibb && (

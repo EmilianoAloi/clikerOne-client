@@ -2,10 +2,9 @@ import InvoiceEditContainer from "@/components/proveedores/proveedor/invoicePage
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProveedores } from "@/contexts/ProveedorContext";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 export default function ProveedoresInvoiceEditPage() {
-  const { id, idFactura } = useParams();
+  const { idFactura } = useParams();
 
   const [factura, setFactura] = useState(null);
   const [proveedor, setProveedor] = useState(null);
@@ -13,54 +12,44 @@ export default function ProveedoresInvoiceEditPage() {
 
   const API_URL = import.meta.env.VITE_API_URL;
   const { proveedores } = useProveedores();
-  const { invoicesByProveedor } = useProveedorInvoices();
 
+  // 1. Siempre fetch a la factura por id (trae items)
   useEffect(() => {
-    if (!id || !idFactura) return;
+    if (!idFactura) return;
 
     const fetchFactura = async () => {
       try {
-        const facturasProveedor = invoicesByProveedor[id] || [];
-        let encontrada = facturasProveedor.find(
-          (f) => String(f.id_factura) === String(idFactura)
+        const res = await fetch(
+          `${API_URL}/api/proveedores/facturas/${idFactura}`
         );
-
-        if (encontrada) {
-          encontrada = {
-            ...encontrada,
-            fecha_emision: encontrada.fecha_emision?.split("T")[0],
-            fecha_vencimiento: encontrada.fecha_vencimiento?.split("T")[0],
-          };
-          setFactura(encontrada);
-        } else {
-          const res = await fetch(
-            `${API_URL}/api/proveedores/facturas/${idFactura}`
-          );
-          if (!res.ok) throw new Error("Factura no encontrada");
-          const data = await res.json();
-          data.fecha_emision = data.fecha_emision?.split("T")[0];
-          data.fecha_vencimiento = data.fecha_vencimiento?.split("T")[0];
-          setFactura(data);
-        }
+        if (!res.ok) throw new Error("Factura no encontrada");
+        const data = await res.json();
+        data.fecha_emision = data.fecha_emision?.split("T")[0] ?? "";
+        data.fecha_vencimiento = data.fecha_vencimiento?.split("T")[0] ?? "";
+        data.fecha_contable = data.fecha_contable?.split("T")[0] ?? "";
+        setFactura(data);
       } catch (err) {
         setError(err.message);
       }
     };
 
     fetchFactura();
-  }, [id, idFactura, invoicesByProveedor, API_URL]);
+  }, [idFactura, API_URL]);
 
+  // 2. Trae proveedor (del contexto si está, sino fetch)
   useEffect(() => {
     if (!factura?.id_proveedor) return;
 
     const fetchProveedor = async () => {
       try {
+        // Busca en el contexto
         const proveedorContext = proveedores?.find(
           (p) => String(p.id_proveedor) === String(factura.id_proveedor)
         );
         if (proveedorContext) {
           setProveedor(proveedorContext);
         } else {
+          // Si no está, fetch por id
           const res = await fetch(
             `${API_URL}/api/proveedores/${factura.id_proveedor}`
           );
