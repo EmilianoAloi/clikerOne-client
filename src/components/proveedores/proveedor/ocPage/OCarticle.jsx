@@ -21,6 +21,21 @@ import {
   Calculator,
   Palette,
 } from "lucide-react";
+import { useEffect } from "react";
+
+const getDefaultItem = (proveedor) => ({
+  id_articulo: "",
+  descripcion: "",
+  cantidad: 1,
+  unidad_medida: "",
+  precio_unitario: 0,
+  iva: proveedor?.iva_predeterminado?.toString(),
+  color: "",
+  valor_descuento: 0,
+  subtotal: 0,
+  observaciones: "",
+  estado_logico: 1,
+});
 
 export default function OCarticle({
   form,
@@ -36,6 +51,26 @@ export default function OCarticle({
   const colores = Array.from(
     new Set(articulosProveedor.map((a) => a.color).filter(Boolean))
   );
+
+  useEffect(() => {
+    items.forEach((item, index) => {
+      const idArticulo = watch(`items.${index}.id_articulo`);
+      if (!idArticulo) return;
+      const articulo = articulosProveedor.find(
+        (a) => a.id_articulo === idArticulo
+      );
+      if (articulo && articulo.unidad_de_medida) {
+        if (
+          watch(`items.${index}.unidad_medida`) !== articulo.unidad_de_medida
+        ) {
+          form.setValue(
+            `items.${index}.unidad_medida`,
+            articulo.unidad_de_medida
+          );
+        }
+      }
+    });
+  }, [items, watch, articulosProveedor, form]);
 
   return (
     <div className="w-full mt-10 border border-slate-200">
@@ -76,17 +111,26 @@ export default function OCarticle({
                 >
                   <span className="text-slate-900">Ítem #{index + 1}</span>
                 </Badge>
-                {items.length > 1 && (
-                  <Button
-                    type="button"
-                    onClick={() => handleRemoveItem(index)}
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </Button>
-                )}
+
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (items.length === 1) {
+                      Object.entries(getDefaultItem(proveedor)).forEach(
+                        ([key, val]) => {
+                          form.setValue(`items.0.${key}`, val);
+                        }
+                      );
+                    } else {
+                      handleRemoveItem(index);
+                    }
+                  }}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </Button>
               </div>
 
               {/* FILA 1 */}
@@ -211,11 +255,17 @@ export default function OCarticle({
                               <SelectValue placeholder="Unidad" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="unidad">Unidad</SelectItem>
-                              <SelectItem value="kg">Kilogramo</SelectItem>
-                              <SelectItem value="metro">Metro</SelectItem>
-                              <SelectItem value="litro">Litro</SelectItem>
-                              <SelectItem value="caja">Caja</SelectItem>
+                              <SelectItem value="unidad">unidad</SelectItem>
+                              <SelectItem value="caja">caja</SelectItem>
+                              <SelectItem value="g">g</SelectItem>
+                              <SelectItem value="kg">kg</SelectItem>
+                              <SelectItem value="lt">lt</SelectItem>
+                              <SelectItem value="ml">ml</SelectItem>
+                              <SelectItem value="cm">cm</SelectItem>
+                              <SelectItem value="cm2">cm2</SelectItem>
+                              <SelectItem value="cm3">cm3</SelectItem>
+                              <SelectItem value="m">m</SelectItem>
+                              <SelectItem value="m2">m2</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -320,9 +370,7 @@ export default function OCarticle({
                             <SelectContent>
                               <SelectItem value="21">21%</SelectItem>
                               <SelectItem value="10.5">10.5%</SelectItem>
-                              <SelectItem value="27">27%</SelectItem>
-                              <SelectItem value="0">0%</SelectItem>
-                              <SelectItem value="Exento">Exento</SelectItem>
+                              <SelectItem value="0">Exento</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -391,18 +439,40 @@ export default function OCarticle({
                       <FormItem>
                         <FormControl>
                           <Input
-                            type="text"
+                            type="number"
                             inputMode="decimal"
                             min="0"
+                            max="100"
+                            step="0.01"
                             placeholder="0"
                             value={field.value ?? ""}
                             onChange={(e) => {
-                              let val = e.target.value.replace(/[^0-9.]/g, "");
-                              val = val.replace(/^([^.]*\.)|\./g, "$1");
+                              let val = e.target.value;
+                              let num = Number(val);
                               if (val === "") {
                                 field.onChange("");
-                              } else {
-                                field.onChange(Number(val));
+                              } else if (num > 100) {
+                                field.onChange(100);
+                              } else if (num < 0) {
+                                field.onChange(0);
+                              } else if (!isNaN(num)) {
+                                field.onChange(num);
+                              }
+                              // No hace nada si no es número (ignora letras)
+                            }}
+                            onKeyDown={(e) => {
+                              // Permite solo números, punto, backspace, delete, tab, arrows
+                              if (
+                                !/[0-9.,]/.test(e.key) &&
+                                ![
+                                  "Backspace",
+                                  "Delete",
+                                  "Tab",
+                                  "ArrowLeft",
+                                  "ArrowRight",
+                                ].includes(e.key)
+                              ) {
+                                e.preventDefault();
                               }
                             }}
                             onBlur={field.onBlur}
@@ -429,14 +499,22 @@ export default function OCarticle({
                         Number(watch(`items.${index}.precio_unitario`)) || 0;
                       const valor_descuento =
                         Number(watch(`items.${index}.valor_descuento`)) || 0;
-                      const sub = cantidad * (precio - valor_descuento);
+                      // Asegura rango válido 0-100
+                      const porcentaje = Math.max(
+                        0,
+                        Math.min(valor_descuento, 100)
+                      );
+                      const sub = cantidad * precio * (1 - porcentaje / 100);
                       return (
                         <FormItem>
                           <FormControl>
                             <div
                               className={`${inputStyle} w-full flex items-center h-9 !px-3 bg-slate-50 border rounded-md text-base font-medium"`}
                             >
-                              ${sub.toFixed(2)}
+                              $
+                              {sub.toLocaleString("es-AR", {
+                                minimumFractionDigits: 2,
+                              })}
                             </div>
                           </FormControl>
                         </FormItem>
