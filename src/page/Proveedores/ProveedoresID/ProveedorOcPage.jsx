@@ -46,5 +46,5 @@ export default function NuevaOrdenCompraPage() {
   if (!id || isNaN(Number(id))) return <p>Error: ID de proveedor no válido</p>;
   if (!proveedor) return <p>Error: proveedor no encontrado</p>;
 
-  return <OCcontainer proveedor={proveedor} modo="nuevo" />;
+  return <OCcontainer proveedor={proveedor} modo="nuevo" compra={null} />;
 }

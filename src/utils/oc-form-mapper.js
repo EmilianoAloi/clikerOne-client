@@ -1,7 +1,7 @@
 // De Backend (SupplierCompra) a Form (OCFormData)
 export function toFormData(compra) {
   return {
-    id_proveedor: compra.id_proveedor,
+    id_proveedor: Number(compra.id_proveedor),
     fecha_emision: compra.fecha_emision
       ? new Date(compra.fecha_emision)
       : new Date(),
@@ -19,25 +19,41 @@ export function toFormData(compra) {
     monto_total: Number(compra.monto_total) || 0,
     estado_compra: compra.estado_compra || "pendiente",
     observaciones: compra.observaciones ?? "",
+    url_orden_compra_comprobante: compra.url_orden_compra_comprobante ?? "",
     estado_logico:
       compra.estado_logico === true || compra.estado_logico === 1 ? 1 : 0,
-    url_orden_compra_comprobante: compra.url_orden_compra_comprobante ?? "",
-    items: (compra.items ?? []).map((item) => ({
-      id_item: item.id_item ? String(item.id_item) : "",
-      id_articulo: item.id_articulo ? item.id_articulo : "",
-      codigo_interno: item.codigo_interno,
-      descripcion: item.descripcion || "",
-      cantidad: Number(item.cantidad) || 1,
-      unidad_medida: item.unidad_medida || "",
-      precio_unitario: Number(item.precio_unitario) || 0,
-      iva: item.iva ? String(item.iva) : "21",
-      color: item.color || "",
-      valor_descuento: Number(item.valor_descuento) || 0,
-      subtotal: Number(item.subtotal) || 0,
-      observaciones: item.observaciones || "",
-      estado_logico:
-        item.estado_logico === true || item.estado_logico === 1 ? 1 : 0,
-    })),
+    items:
+      Array.isArray(compra.items) && compra.items.length > 0
+        ? compra.items.map((item) => ({
+            id_item: item.id_item,
+            id_articulo: Number(item.id_articulo),
+            descripcion: item.descripcion || "",
+            cantidad: Number(item.cantidad) || 1,
+            unidad_medida: item.unidad_medida || "",
+            precio_unitario: Number(item.precio_unitario) || 0,
+            iva: item.iva !== undefined ? String(Number(item.iva)) : "21",
+            valor_descuento: Number(item.valor_descuento) || 0,
+            subtotal: Number(item.subtotal_con_iva ?? item.subtotal ?? 0),
+            observaciones: item.observaciones || "",
+            estado_logico: item.estado_logico ?? 1,
+            color: item.color || "",
+          }))
+        : [
+            {
+              id_item: "",
+              id_articulo: "",
+              descripcion: "",
+              cantidad: 1,
+              unidad_medida: "",
+              precio_unitario: 0,
+              iva: "21",
+              valor_descuento: 0,
+              subtotal: 0,
+              observaciones: "",
+              estado_logico: 1,
+              color: "",
+            },
+          ],
   };
 }
 

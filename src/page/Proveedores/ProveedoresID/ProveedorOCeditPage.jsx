@@ -32,68 +32,48 @@ export default function ProveedorOCeditPage() {
   // Buscar OC en contexto, si no, forzar fetch, si no, fetch individual por ID
   useEffect(() => {
     if (!id || !idOC || fetchTried) return;
+
     setLoading(true);
 
-    const buscarOCenContexto = () => {
-      const compras = getComprasForProveedor(id);
-      console.log("Compras del proveedor:", compras);
-      console.log("Intentando buscar OC en contexto:", idOC);
-      // Acepta ambos campos de id por compatibilidad
-      return compras.find(
-        (oc) => String(oc.id_compra ?? oc.id_orden_compra) === String(idOC)
-      );
-    };
+    const compras = getComprasForProveedor(id) || [];
+    let encontrada = compras.find(
+      (oc) => String(oc.id_compra ?? oc.id_orden_compra) === String(idOC)
+    );
 
-    let encontrada = buscarOCenContexto();
-
-    if (encontrada) {
+    // Si la encontraste pero NO tiene items, es incompleta ⇒ Forzá fetch detalle
+    if (
+      encontrada &&
+      Array.isArray(encontrada.items) &&
+      encontrada.items.length > 0
+    ) {
       setOrdenCompra(encontrada);
       setError(null);
       setLoading(false);
-      setFetchTried(true); // Corta el ciclo
+      setFetchTried(true);
       return;
     }
 
+    // Siempre hace fetch de detalle si no la encontraste o no tiene items
     const fetchOC = async () => {
       try {
-        await refreshProveedorCompras(id, true);
-        encontrada = buscarOCenContexto();
-        if (encontrada) {
-          setOrdenCompra(encontrada);
+        const oc = await getCompraById(Number(idOC));
+        console.log("Resultado getCompraById:", oc);
+        if (oc) {
+          setOrdenCompra(oc);
           setError(null);
-          setLoading(false);
-          setFetchTried(true);
         } else {
-          const oc = await getCompraById(Number(idOC));
-          console.log("Resultado getCompraById:", oc);
-          if (oc) {
-            setOrdenCompra(oc);
-            setError(null);
-            setLoading(false);
-            setFetchTried(true);
-          } else {
-            setError("Orden de compra no encontrada");
-            setLoading(false);
-            setFetchTried(true);
-          }
+          setError("Orden de compra no encontrada");
         }
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "Error desconocido");
+      } finally {
         setLoading(false);
         setFetchTried(true);
       }
     };
 
     fetchOC();
-    // eslint-disable-next-line
-  }, [
-    id,
-    idOC,
-    getComprasForProveedor,
-    refreshProveedorCompras,
-    getCompraById,
-    fetchTried,
-  ]);
+  }, [id, idOC, getComprasForProveedor, getCompraById, fetchTried]);
 
   // Render final:
   if (loading || loadingCompras) return <div>Cargando...</div>;

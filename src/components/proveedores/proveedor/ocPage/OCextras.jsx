@@ -57,6 +57,7 @@ export default function OCextras({
   // FilePond (adjunto)
   const [files, setFiles] = useState([]);
 
+  // Carga inicial desde URL si viene defaultFileUrl
   useEffect(() => {
     async function loadFromUrl() {
       if (!defaultFileUrl) return;
@@ -69,18 +70,15 @@ export default function OCextras({
           type: blob.type,
         });
         setFiles([file]);
-        setValue("archivo_comprobante", file);
+        // No seteamos aquí URL, porque ya viene de backend
+        setValue("url_orden_compra_comprobante", defaultFileUrl);
       } catch {
         setFiles([]);
-        setValue("archivo_comprobante", undefined);
+        setValue("url_orden_compra_comprobante", "");
       }
     }
     loadFromUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultFileUrl]);
-
-  const format = (n) =>
-    Number(n || 0).toLocaleString("es-AR", { minimumFractionDigits: 2 });
+  }, [defaultFileUrl, setValue]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mt-6 px-6">
@@ -88,7 +86,7 @@ export default function OCextras({
       <div>
         <FormField
           control={control}
-          name="archivo_comprobante"
+          name="url_orden_compra_comprobante"
           render={() => (
             <FormItem>
               <FormLabel className="text-sm font-semibold flex items-center gap-2 mb-2">
@@ -98,21 +96,47 @@ export default function OCextras({
               <FormControl>
                 <Controller
                   control={control}
-                  name="archivo_comprobante"
+                  name="url_orden_compra_comprobante"
                   render={({ field: { onChange } }) => (
                     <FilePond
                       files={files}
-                      onupdatefiles={(fileItems) => {
+                      onupdatefiles={async (fileItems) => {
                         const file = fileItems[0]?.file;
-                        setFiles(file ? [file] : []);
-                        onChange(file || null);
+                        if (!file) {
+                          setFiles([]);
+                          onChange(""); // Limpia URL si elimina archivo
+                          return;
+                        }
+                        setFiles([file]);
+
+                        // Subir archivo al backend
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        formData.append("folder", "ordenes_compra");
+
+                        try {
+                          const res = await fetch(
+                            `${import.meta.env.VITE_API_URL}/api/uploads`,
+                            {
+                              method: "POST",
+                              body: formData,
+                            }
+                          );
+                          if (!res.ok) {
+                            throw new Error("Error al subir archivo");
+                          }
+                          const data = await res.json();
+                          onChange(data.url); // Guardar URL en el formulario
+                        } catch (error) {
+                          console.error("Error subida archivo:", error);
+                          onChange(""); // Limpiar si falla
+                        }
                       }}
-                      name="comprobante"
-                      labelIdle='Arrastrá el comprobante o <span class="filepond--label-action">hacé clic aquí</span>'
-                      acceptedFileTypes={["application/pdf", "image/*"]}
-                      allowImagePreview={true}
-                      className="filepond-minimal pond-equal-height h-[120px]"
+                      allowMultiple={false}
                       maxFiles={1}
+                      acceptedFileTypes={["application/pdf", "image/*"]}
+                      labelIdle='Arrastrá el comprobante o <span class="filepond--label-action">hacé clic aquí</span>'
+                      className="filepond-minimal pond-equal-height h-[120px]"
                       credits={false}
                     />
                   )}
@@ -146,6 +170,7 @@ export default function OCextras({
           )}
         />
       </div>
+
       {/* Columna derecha: resumen */}
       <div>
         <div className="border border-slate-200 rounded-md overflow-hidden bg-white">
@@ -154,7 +179,6 @@ export default function OCextras({
             Resumen
           </div>
           <div className="px-4 py-4 space-y-2 text-sm md:text-base">
-            {/* Artículos y cantidad */}
             <div className="flex justify-between">
               <span>Artículos:</span>
               <span className="font-semibold">{resumen.tipos} tipo(s)</span>
@@ -168,23 +192,25 @@ export default function OCextras({
             <hr className="my-2" />
             <div className="flex justify-between">
               <span>Subtotal:</span>
-              <span className="font-semibold">${format(resumen.subtotal)}</span>
+              <span className="font-semibold">
+                ${resumen.subtotal.toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>IVA (21%):</span>
-              <span className="font-semibold">${format(resumen.ivaMonto)}</span>
+              <span className="font-semibold">
+                ${resumen.ivaMonto.toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between text-lg mt-2 font-bold border-t border-slate-200 pt-2">
               <span>Total:</span>
-              <span className="text-blue-900">${format(resumen.total)}</span>
+              <span className="text-blue-900">${resumen.total.toFixed(2)}</span>
             </div>
             <div className="mt-3 text-xs text-slate-700 space-y-1">
               <div className="flex justify-between">
                 <span>Fecha de entrega:</span>
                 <span className="font-medium">
-                  {fechaEntrega ? (
-                    fechaEntrega
-                  ) : (
+                  {fechaEntrega || (
                     <span className="text-slate-400">Sin definir</span>
                   )}
                 </span>
@@ -192,9 +218,7 @@ export default function OCextras({
               <div className="flex justify-between">
                 <span>Condición de pago:</span>
                 <span className="font-medium">
-                  {condicionPago ? (
-                    condicionPago
-                  ) : (
+                  {condicionPago || (
                     <span className="text-slate-400">Sin definir</span>
                   )}
                 </span>
@@ -202,9 +226,7 @@ export default function OCextras({
               <div className="flex justify-between">
                 <span>Lugar de entrega:</span>
                 <span className="font-medium">
-                  {lugarEntrega ? (
-                    lugarEntrega
-                  ) : (
+                  {lugarEntrega || (
                     <span className="text-slate-400">Sin definir</span>
                   )}
                 </span>

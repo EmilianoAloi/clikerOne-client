@@ -201,6 +201,7 @@ export default function OCForm({ proveedor, compra, modo }) {
             }
             condicionPago={form.watch("condicion_pago")}
             lugarEntrega={form.watch("lugar_entrega")}
+            defaultFileUrl={compra?.url_orden_compra_comprobante ?? ""}
           />
 
           <OCbuttons
