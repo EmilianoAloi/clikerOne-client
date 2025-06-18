@@ -12,12 +12,14 @@ import OCproveedorInfo from "./OCproveedorInfo";
 import OCarticle from "./OCarticle";
 import OCextras from "./OCextras";
 import OCbuttons from "./OCbuttons";
+import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 
 export default function OCForm({ proveedor, compra, modo }) {
   const isEdit = modo === "editar";
   const navigate = useNavigate();
   const ivaPredeterminado = proveedor?.iva_predeterminado?.toString() || "21";
   const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const { refreshProveedorCompras } = useProveedorCompras();
 
   // useForm CON SCHEMA
   const form = useForm({
@@ -141,7 +143,7 @@ export default function OCForm({ proveedor, compra, modo }) {
       }
 
       const json = await res.json();
-
+      await refreshProveedorCompras(data.id_proveedor, true);
       toast.success(
         isEdit
           ? "Orden modificada correctamente"

@@ -60,7 +60,7 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
     const ok = await deleteCompra(id_orden_compra);
     if (ok) {
       toast.error(`Orden de compra #${id_orden_compra} eliminada`);
-      refreshProveedorCompras(currentProveedores.id_proveedor);
+      await refreshProveedorCompras(currentProveedores.id_proveedor, true);
     } else {
       toast.error("No se pudo eliminar la orden de compra");
     }

@@ -65,8 +65,8 @@ const CcActionCell = ({ movement, currentProveedor }) => {
         movement.type === "Factura" ||
         movement.type === "Nota de Crédito" ||
         movement.type === "Nota de Débito"
-          ? `${BASE_URL}/api/proveedores/facturas/${id}?modificado_por=1`
-          : `${BASE_URL}/api/proveedores/pagos/${id}?modificado_por=1`;
+          ? `${BASE_URL}/api/proveedores/facturas/${id}`
+          : `${BASE_URL}/api/proveedores/pagos/${id}`;
 
       const res = await fetch(endpoint, { method: "DELETE" });
 
@@ -77,10 +77,10 @@ const CcActionCell = ({ movement, currentProveedor }) => {
         movement.type === "Nota de Crédito" ||
         movement.type === "Nota de Débito"
       ) {
-        await refreshProveedorInvoices(currentProveedor.id_proveedor);
+        await refreshProveedorInvoices(currentProveedor.id_proveedor, true);
       } else {
-        await refreshProveedorPayments(currentProveedor.id_proveedor);
-        await refreshProveedorInvoices(currentProveedor.id_proveedor);
+        await refreshProveedorPayments(currentProveedor.id_proveedor, true);
+        await refreshProveedorInvoices(currentProveedor.id_proveedor, true);
       }
 
       toast.error(`${movement.type} eliminada correctamente`, {

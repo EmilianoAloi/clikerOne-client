@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, ReceiptText, Info } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ResumenBadgePopover from "@/components/ui/resumen-badge-popover";
+import BadgeEstado from "@/components/ui/badge-custom";
 
 const ProveedoresDetailAccordionOp = ({
   currentProveedores,
@@ -72,18 +72,6 @@ const ProveedoresDetailAccordionOp = ({
     });
     return map;
   }, [paymentItems]);
-
-  const getEstadoBadgeColor = (estado) => {
-    switch (estado) {
-      case "completo":
-        return "bg-green-100 text-green-800 border border-green-200 font-medium";
-      case "parcial":
-        return "bg-yellow-100 text-yellow-800 border border-yellow-200 font-medium";
-      case "pendiente":
-      default:
-        return "bg-red-100 text-red-800 border border-red-200 font-medium";
-    }
-  };
 
   return (
     <AccordionItem
@@ -228,14 +216,7 @@ const ProveedoresDetailAccordionOp = ({
                       </TableCell>
 
                       <TableCell className="text-center">
-                        <Badge
-                          variant="outline"
-                          className={`${getEstadoBadgeColor(
-                            pago.estado_pago
-                          )} px-2.5 py-0.5 rounded-md`}
-                        >
-                          {pago.estado_pago}
-                        </Badge>
+                        <BadgeEstado estado={pago.estado_pago} />
                       </TableCell>
 
                       <TableCell className="py-3 text-center">

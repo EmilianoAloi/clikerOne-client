@@ -148,7 +148,7 @@ export default function ProveedorOPform({ modo, proveedor }) {
       // 3. Enviar al backend y esperar confirmación
       const success = await createMultipleSupplierPayments(
         payload,
-        refreshProveedorInvoices
+        (idProveedor) => refreshProveedorInvoices(idProveedor, true)
       );
       if (success) {
         toast.success("Orden de pago guardada correctamente.");

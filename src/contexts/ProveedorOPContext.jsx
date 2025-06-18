@@ -61,10 +61,6 @@ export const ProveedorOPProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
   const [paymentItemsByProveedor, setPaymentItemsByProveedor] = useState({});
 
-  // Estado para trigger refresh
-  const [refreshFlag, setRefreshFlag] = useState(0);
-  const triggerRefresh = () => setRefreshFlag((prev) => prev + 1);
-
   const getPaymentsForProveedor = (idProveedor) =>
     paymentsByProveedor[idProveedor] || [];
 
@@ -153,15 +149,11 @@ export const ProveedorOPProvider = ({ children }) => {
       }
 
       toast.success("Orden de pago registrada correctamente.");
-      triggerRefresh();
       const idProveedor = payload?.pagos?.[0]?.id_proveedor;
       if (idProveedor) {
         await refreshProveedorPayments(idProveedor, true);
         if (refreshInvoicesCallback) {
           await refreshInvoicesCallback(idProveedor);
-          setTimeout(() => {
-            refreshInvoicesCallback(idProveedor);
-          }, 1000);
         }
       }
 
@@ -201,10 +193,6 @@ export const ProveedorOPProvider = ({ children }) => {
 
       if (!response.ok) throw new Error("Error al eliminar pago");
       toast.success("Pago eliminado correctamente.");
-      console.log("Trigger refresh llamado");
-      triggerRefresh();
-      // Si sabés el proveedor, podés refrescar aquí
-      // await refreshProveedorPayments(id_proveedor, true);
     } catch (error) {
       console.error("Error eliminando pago:", error);
       toast.error("Hubo un problema al eliminar el pago.");
@@ -224,8 +212,6 @@ export const ProveedorOPProvider = ({ children }) => {
         updateSupplierPayment,
         removeSupplierPayment,
         normalizePaymentPayload,
-        triggerRefresh,
-        refreshFlag,
       }}
     >
       {children}

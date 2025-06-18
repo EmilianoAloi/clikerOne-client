@@ -20,11 +20,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 
 export default function ActionCell({ idOrdenCompra, idProveedor, onDelete }) {
   const navigate = useNavigate();
+  const { refreshProveedorCompras } = useProveedorCompras();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
