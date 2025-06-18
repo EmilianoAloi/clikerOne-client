@@ -55,12 +55,12 @@ export const ProveedorProvider = ({ children }) => {
 
   const getProveedorByID = async (id) => {
     const local = proveedores.find((p) => p.id_proveedor === id);
-    if (local) return local; // Si ya está en el contexto, no hace falta hacer el fetch
+    if (local) return local;
 
     try {
       const response = await fetch(`${API_URL}/${id}`);
       if (!response.ok) throw new Error("Proveedor no encontrado");
-      return await response.json(); // Solo hace fetch si no lo encuentra en el contexto
+      return await response.json();
     } catch (error) {
       console.error("Error al obtener proveedor por ID:", error);
       return null;
@@ -149,6 +149,12 @@ export const ProveedorProvider = ({ children }) => {
         : await res.text();
 
       if (!res.ok) {
+        if (
+          data?.error &&
+          data.error.includes("Ya existe un proveedor con ese CUIT")
+        ) {
+          throw new Error("Ya existe un proveedor con ese CUIT");
+        }
         throw new Error(
           data?.error || "Error al crear proveedor con artículos"
         );

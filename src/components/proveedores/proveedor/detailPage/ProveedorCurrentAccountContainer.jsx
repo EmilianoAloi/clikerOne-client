@@ -18,7 +18,6 @@ export default function ProveedorCurrentAccountContainer({
   const [finalBalance, setFinalBalance] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { refreshFlag } = useProveedorOP();
 
   // Defensa: Si no hay proveedor, salimos
   if (!currentProveedor || !currentProveedor.id_proveedor) {
@@ -56,7 +55,7 @@ export default function ProveedorCurrentAccountContainer({
       return {
         id: `${idPrefix}${f.id_factura}`,
         type,
-        date: f.fecha_emision || f.fecha_creado || "",
+        date: new Date().toISOString(),
         comprobante: f.numero_factura
           ? `#${f.numero_factura}`
           : `#${f.id_factura}`,
@@ -99,7 +98,7 @@ export default function ProveedorCurrentAccountContainer({
         return {
           id: `pago-${p.id_pago}`,
           type: "Orden de pago",
-          date: p.fecha_pago || p.fecha_creada || "",
+          date: new Date().toISOString(),
           comprobante: p.numero_pago ? `#${p.numero_pago}` : `#${p.id_pago}`,
           razon_social: currentProveedor.nombre || "-",
           estado: p.estado_pago || p.estado || "pendiente",
@@ -128,7 +127,7 @@ export default function ProveedorCurrentAccountContainer({
     setMovements(movimientosOrdenados);
 
     setFinalBalance(movimientosOrdenados[0]?.balance || 0);
-  }, [currentProveedor, invoices, payments, paymentItems, refreshFlag]);
+  }, [currentProveedor, invoices, payments, paymentItems]);
 
   const filteredMovements = movements.filter(
     (m) =>

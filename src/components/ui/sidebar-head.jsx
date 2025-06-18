@@ -34,7 +34,7 @@ export function SidebarHead() {
           {!isCollapsed && (
             <div className="grid flex-1 text-left text-sm leading-tight transition-all duration-200">
               <span className="truncate font-medium text-md">ClikerOne</span>
-              <span className="truncate text-sm">v0.1</span>
+              <span className="truncate text-sm">v0.2</span>
             </div>
           )}
         </SidebarMenuButton>

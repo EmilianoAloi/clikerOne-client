@@ -121,7 +121,6 @@ export const ProveedorOPProvider = ({ children }) => {
         return;
       }
 
-      toast.success("Pago registrado correctamente.");
       if (payment.id_proveedor)
         await refreshProveedorPayments(payment.id_proveedor, true);
     } catch (error) {
@@ -148,7 +147,6 @@ export const ProveedorOPProvider = ({ children }) => {
         return false;
       }
 
-      toast.success("Orden de pago registrada correctamente.");
       const idProveedor = payload?.pagos?.[0]?.id_proveedor;
       if (idProveedor) {
         await refreshProveedorPayments(idProveedor, true);
