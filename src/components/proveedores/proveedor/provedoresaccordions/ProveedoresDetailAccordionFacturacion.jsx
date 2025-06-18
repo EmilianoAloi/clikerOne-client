@@ -22,8 +22,8 @@ import { FileText, Info, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
 import { useEffect, useState } from "react";
+import BadgeEstado from "@/components/ui/badge-custom";
 
-// Si no tenés esta función en utils, agregala acá:
 const capitalizeWords = (str) =>
   str ? str.toLowerCase().replace(/(^\w|\s\w)/g, (m) => m.toUpperCase()) : "";
 
@@ -151,14 +151,7 @@ const ProveedoresDetailAccordionFacturacion = ({
                       </div>
                     </TableCell>
                     <TableCell className="py-3 ">
-                      <Badge
-                        variant="outline"
-                        className={`${getEstadoBadgeColor(
-                          factura.estado_saldo ?? ""
-                        )} px-2.5 py-0.5 rounded-md`}
-                      >
-                        {capitalize(factura.estado_saldo ?? "")}
-                      </Badge>
+                      <BadgeEstado estado={factura.estado_saldo} />
                     </TableCell>
                     <TableCell className="py-3 text-center">
                       {factura.observaciones ? (
