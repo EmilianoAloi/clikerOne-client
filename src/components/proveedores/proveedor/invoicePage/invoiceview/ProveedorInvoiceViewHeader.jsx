@@ -1,3 +1,4 @@
+import BadgeEstado from "@/components/ui/badge-custom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeInfo, FileText } from "lucide-react";
@@ -86,24 +87,12 @@ export default function ProveedorInvoiceViewHeader({ factura }) {
                   <h3 className="font-semibold text-md text-muted-foreground ">
                     Estado
                   </h3>
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded-md
-                    ${
-                      factura.estado_saldo === "pagada"
-                        ? "bg-green-100 text-green-800"
-                        : factura.estado_saldo === "parcial"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : factura.estado_saldo === "pendiente de pago"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {(factura.estado_saldo || "Sin estado")
-                      .charAt(0)
-                      .toUpperCase() +
-                      (factura.estado_saldo || "Sin estado").slice(1)}
-                  </span>
+                  <BadgeEstado
+                    estado={(factura.estado_saldo || "").toLowerCase().trim()}
+                    className="mt-1"
+                  />
                 </div>
+
                 <div>
                   <h3 className="font-semibold text-md text-muted-foreground ">
                     Fecha de emisión

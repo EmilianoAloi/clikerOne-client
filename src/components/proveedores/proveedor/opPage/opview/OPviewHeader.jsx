@@ -1,15 +1,10 @@
-import { Badge } from "@/components/ui/badge";
+import BadgeEstado from "@/components/ui/badge-custom";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-";
   return format(new Date(dateStr), "dd/MM/yyyy", { locale: es });
-};
-
-const statusColor = {
-  ejecutada: "bg-green-100 text-green-800",
-  anulada: "bg-gray-100 text-gray-800",
 };
 
 export default function OPviewHeader({ pago }) {
@@ -32,14 +27,9 @@ export default function OPviewHeader({ pago }) {
         <div className="flex flex-col items-start md:items-end gap-1 text-sm">
           <div className="flex items-center gap-2 pt-[35px] pd:mt-0">
             <span className="text-muted-foreground">Estado:</span>
-            <Badge
-              className={statusColor[estadoKey] || statusColor["ejecutada"]}
-            >
-              {pago.estado_pago
-                ? pago.estado_pago[0].toUpperCase() + pago.estado_pago.slice(1)
-                : "Sin estado"}
-            </Badge>
+            <BadgeEstado estado={estadoKey} className="mt-0" />
           </div>
+
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground font-semibold">
               Fecha de Ejecución:

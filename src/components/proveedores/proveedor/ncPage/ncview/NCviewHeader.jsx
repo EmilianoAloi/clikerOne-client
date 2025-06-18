@@ -1,3 +1,4 @@
+import BadgeEstado from "@/components/ui/badge-custom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BadgeInfo } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -55,22 +56,14 @@ export default function NCviewHeader({ notaCredito }) {
                   <h3 className="font-semibold text-md text-muted-foreground">
                     Estado
                   </h3>
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded-md
-        ${
-          notaCredito.estado_saldo === "ejecutada"
-            ? "bg-green-100 text-green-800"
-            : notaCredito.estado_saldo === "anulada"
-            ? "bg-gray-100 text-gray-800"
-            : "bg-sky-100 text-sky-800"
-        }`}
-                  >
-                    {(notaCredito.estado_saldo || "Sin estado")
-                      .charAt(0)
-                      .toUpperCase() +
-                      (notaCredito.estado_saldo || "Sin estado").slice(1)}
-                  </span>
+                  <BadgeEstado
+                    estado={(notaCredito.estado_saldo || "")
+                      .toLowerCase()
+                      .trim()}
+                    className="mt-1"
+                  />
                 </div>
+
                 <div>
                   <h3 className="font-semibold text-md text-muted-foreground">
                     Fecha de emisión

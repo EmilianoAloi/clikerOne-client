@@ -6,7 +6,7 @@ import OCviewObs from "./OCviewObs";
 import OCviewItems from "./OCviewItems";
 import OCviewTitle from "./OCviewTitle";
 import OCviewHeader from "./OCviewHeader";
-import OCviewDownloadButton from "./OCviewDownloadButton";
+// import OCviewDownloadButton from "./OCviewDownloadButton";
 
 const OCviewContainer = ({ orden }) => {
   const [isPrinting, setIsPrinting] = useState(false);
@@ -26,7 +26,7 @@ const OCviewContainer = ({ orden }) => {
     >
       <div className="flex justify-end gap-2 md:mt-[-20px] mb-2 me-3 !print:hidden">
         <BackButton />
-        <OCviewDownloadButton orden={orden} />
+        {/* <OCviewDownloadButton orden={orden} /> */}
         <Button
           onClick={handlePrint}
           disabled={isPrinting}
