@@ -9,6 +9,10 @@ import ProveedorInvoiceArticle from "./ProveedorInvoiceArticle";
 import ProveedorInvoiceExtra from "./ProveedorInvoiceExtra";
 import ProveedorInvoiceActions from "./ProveedorInvoiceActions";
 
+import { mapFormToApi } from "@/utils/invoice-form-mapper";
+import { sanitizeFactura } from "@/utils/sanitize-factura";
+import { toast } from "sonner";
+
 export default function ProveedorInvoiceForm({
   modo,
   factura,
@@ -18,8 +22,11 @@ export default function ProveedorInvoiceForm({
   const inputStyle = "bg-white border border-gray-300 rounded-md shadow-sm ";
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [files, setFiles] = useState([]); // <-- Estado de archivos elevado acá
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
-  // RHF setup
+  const safeFactura = sanitizeFactura(factura);
+
   const methods = useForm({
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: {
@@ -39,12 +46,15 @@ export default function ProveedorInvoiceForm({
       ],
       url_factura_comprobante: null,
       observaciones: "",
+      fecha_emision: "",
+      fecha_vencimiento: "",
+      fecha_contable: "",
       ...(factura || {}),
     },
     mode: "onTouched",
   });
 
-  // Usá directamente el proveedor recibido
+  // Artículos disponibles
   const articulos = useMemo(
     () =>
       proveedor?.articulos
@@ -61,7 +71,6 @@ export default function ProveedorInvoiceForm({
   const items = methods.watch("items") || [];
   const iibbPorcentaje = methods.watch("iibb_porcentaje") ?? 0;
 
-  // Utilidades de cálculo:
   function calcSubtotal(items) {
     return items.reduce((acc, item) => {
       const cantidad = Number(item.cantidad) || 0;
@@ -72,7 +81,6 @@ export default function ProveedorInvoiceForm({
       return acc + neto;
     }, 0);
   }
-
   function calcIVA(items) {
     return items.reduce((acc, item) => {
       const cantidad = Number(item.cantidad) || 0;
@@ -84,11 +92,9 @@ export default function ProveedorInvoiceForm({
       return acc + (neto * iva) / 100;
     }, 0);
   }
-
   function calcIIBB(subtotal, iibbPorcentaje) {
     return subtotal * (Number(iibbPorcentaje) / 100);
   }
-
   function calcDescuentoTotal(items) {
     return items.reduce((acc, item) => {
       const cantidad = Number(item.cantidad) || 0;
@@ -105,10 +111,59 @@ export default function ProveedorInvoiceForm({
   const total = subtotal + iva + iibb;
 
   // Submit
-  const onSubmit = (data) => {
-    setIsSubmitting(true);
-    console.log("Datos validados:", data);
-    setTimeout(() => setIsSubmitting(false), 500); // Simula una request
+  const onSubmit = async (form) => {
+    console.log("FORM ANTES DEL MAPPER:", form);
+    try {
+      setIsSubmitting(true);
+
+      let fileUrl = form.url_factura_comprobante;
+
+      if (files.length > 0 && files[0]?.file) {
+        const formData = new FormData();
+        formData.append("file", files[0].file);
+
+        const uploadRes = await fetch(`${API_URL}/api/uploads`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error("Error al subir el archivo");
+        }
+
+        const { url } = await uploadRes.json();
+        fileUrl = url;
+      }
+
+      const data = mapFormToApi(
+        {
+          ...form,
+          url_factura_comprobante: fileUrl || null,
+        },
+        proveedor
+      );
+
+      console.log("Payload final que mando al backend:", data);
+
+      const res = await fetch(`${API_URL}/api/proveedores/facturas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error?.error || "Error al cargar factura");
+      }
+
+      toast.success("Factura cargada correctamente");
+      // redireccionar o limpiar si querés
+    } catch (err) {
+      toast.error(err.message);
+      console.error("Error al enviar factura", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -147,6 +202,8 @@ export default function ProveedorInvoiceForm({
           iibb={iibb}
           total={total}
           descuentoTotal={descuentoTotal}
+          files={files} // <-- Pasa los archivos
+          setFiles={setFiles} // <-- Pasa el setter
         />
         <ProveedorInvoiceActions modo={modo} isSubmitting={isSubmitting} />
       </form>

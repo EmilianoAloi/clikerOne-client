@@ -9,6 +9,7 @@ export default function ProveedorInvoiceContainer({ proveedor }) {
         modo="crear"
         idProveedor={proveedor.id_proveedor}
         proveedor={proveedor}
+        factura={null}
       />
     </div>
   );

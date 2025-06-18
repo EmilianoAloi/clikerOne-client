@@ -86,7 +86,10 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(invoice),
+        body: JSON.stringify({
+          ...invoice,
+          estado_logico: 1,
+        }),
       });
 
       if (!response.ok) throw new Error("Error al actualizar factura");

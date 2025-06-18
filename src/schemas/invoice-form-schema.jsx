@@ -22,7 +22,12 @@ export const invoiceItemSchema = z.object({
     z.number().min(0, "Debe ser >= 0").max(100, "Máx 100%")
   ),
   subtotal_manual: z.number().optional().nullable(),
-  iva: z.union([z.number(), z.string(), z.null()]),
+  iva: z
+    .preprocess(
+      (v) => (v === "" ? 0 : typeof v === "string" ? Number(v) : v),
+      z.number().min(0).max(100)
+    )
+    .nullable(),
 });
 
 // --- Schema: Formulario de factura ---
@@ -32,9 +37,20 @@ export const invoiceFormSchema = z.object({
     .string()
     .min(1, "Ingrese el número de factura")
     .max(20, "Máximo 20 caracteres"),
-  items: z.array(invoiceItemSchema),
-  url_factura_comprobante: z.any().optional().nullable(),
+  items: z.array(invoiceItemSchema).min(1, "Debe cargar al menos un ítem"),
+  url_factura_comprobante: z
+    .union([z.string().url("Debe ser una URL válida"), z.null()])
+    .optional()
+    .nullable(),
   observaciones: z.string().optional().nullable(),
-  iibb_porcentaje: z.number().min(0).max(10).default(0).optional(),
-  condicion_venta: z.any().optional().nullable(),
+  iibb_porcentaje: z
+    .preprocess((v) => (v === "" ? 0 : Number(v)), z.number().min(0).max(10))
+    .default(0)
+    .optional(),
+  condicion_venta: z.string().optional().nullable(),
+
+  // --------- FECHAS ---------
+  fecha_emision: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
+  fecha_vencimiento: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
+  fecha_contable: z.string().optional().nullable(), // "YYYY-MM-DD" o ""
 });

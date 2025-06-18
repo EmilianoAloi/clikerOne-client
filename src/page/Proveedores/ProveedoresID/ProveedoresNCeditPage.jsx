@@ -8,7 +8,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProveedoresNCeditPage() {
   const { id, idNC } = useParams(); // idProveedor y id de la NC
-  console.log("useParams:", { id, idNC });
   const { proveedores } = useProveedores();
   const { getInvoicesForProveedor, refreshProveedorInvoices } =
     useProveedorInvoices();
@@ -19,8 +18,6 @@ export default function ProveedoresNCeditPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log("ProveedoresNCeditPage - Params recibidos:", { id, idNC });
-
     const idProveedor = Number(id);
     if (!idProveedor || !idNC) {
       console.error("Parámetros inválidos:", { idProveedor, idNC });
@@ -113,10 +110,6 @@ export default function ProveedoresNCeditPage() {
             );
             if (!resNC.ok) throw new Error("Nota de Crédito no encontrada");
             notaCreditoData = await resNC.json();
-            console.log(
-              "ProveedoresNCeditPage - nota de crédito obtenida por fetch:",
-              notaCreditoData
-            );
           }
         }
 

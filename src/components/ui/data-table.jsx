@@ -27,10 +27,10 @@ export function DataTable({
   onRowClick,
   enableRowClick,
   rowClassName,
+  defaultSort = [],
 }) {
   const navigate = useNavigate();
-  const [sorting, setSorting] = useState([{ id: "id_proveedor", desc: false }]);
-
+  const [sorting, setSorting] = useState(defaultSort);
   const [isLoading, setIsLoading] = useState(false);
   const [columnFilters, setColumnFilters] = useState([]);
 
@@ -60,7 +60,6 @@ export function DataTable({
 
   const from = totalRows > 0 ? pageIndex * pageSize + 1 : 0;
   const to = Math.min((pageIndex + 1) * pageSize, totalRows);
-  console.log(sorting);
   return (
     <div className="relative">
       {isLoading && (

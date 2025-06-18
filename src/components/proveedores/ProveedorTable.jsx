@@ -70,6 +70,7 @@ export default function ProveedoresTable() {
           columns={SupppliersColumns}
           data={filteredProveedores}
           enableRowClick={true}
+          defaultSort={[{ id: "id_proveedor", desc: false }]}
           onRowClick={(row) => {
             if (row.estado_logico !== 0) {
               navigate(`/proveedores/${row.id_proveedor}`);

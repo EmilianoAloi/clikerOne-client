@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { FileUp, StickyNote, Calculator } from "lucide-react";
@@ -18,40 +18,30 @@ export default function ProveedorInvoiceExtra({
   iibb,
   total,
   descuentoTotal,
+  files,
+  setFiles,
 }) {
   const { control, watch } = useFormContext();
   const url_factura_comprobante = watch("url_factura_comprobante");
 
-  // Para filepond
-  const [files, setFiles] = useState([]);
   useEffect(() => {
-    const loadFromCloudinary = async () => {
-      if (
-        !url_factura_comprobante ||
-        typeof url_factura_comprobante !== "string"
-      )
-        return;
-      try {
-        const res = await fetch(url_factura_comprobante);
-        if (!res.ok) return;
-        const blob = await res.blob();
-        const extension = url_factura_comprobante.split(".").pop() || "pdf";
-        const file = new File([blob], `comprobante.${extension}`, {
-          type: blob.type,
-        });
-        setFiles([file]);
-      } catch {
-        setFiles([]);
-      }
-    };
-    loadFromCloudinary();
-  }, [url_factura_comprobante]);
+    if (
+      url_factura_comprobante &&
+      typeof url_factura_comprobante === "string"
+    ) {
+      setFiles([
+        {
+          source: url_factura_comprobante,
+          options: { type: "local" },
+        },
+      ]);
+    }
+    // No hacer nada si no hay archivo: FilePond lo maneja
+  }, [url_factura_comprobante, setFiles]);
 
-  // Para el resumen
   const condicionPago = watch("condicion_venta") || "-";
   const iibbPorcentaje = watch("iibb_porcentaje") ?? 0;
 
-  // Helper para formatear números
   const format = (n) =>
     Number(n || 0).toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -79,22 +69,14 @@ export default function ProveedorInvoiceExtra({
             render={({ field: { onChange } }) => (
               <FilePond
                 files={files}
-                onupdatefiles={(fileItems) => {
-                  setFiles(fileItems.map((item) => item.file));
-                  const file = fileItems[0]?.file;
-                  if (file) {
-                    onChange(file);
-                  } else {
-                    onChange(null);
-                  }
-                }}
-                name="comprobante"
-                labelIdle='Arrastrá tu comprobante o <span class="filepond--label-action">haz clic aquí</span>'
-                acceptedFileTypes={["application/pdf", "image/*"]}
-                allowImagePreview={true}
-                className="filepond-minimal"
+                onupdatefiles={setFiles}
+                allowMultiple={false}
                 maxFiles={1}
-                credits={false}
+                allowRevert={false}
+                allowProcess={false}
+                acceptedFileTypes={["application/pdf", "image/*"]}
+                labelIdle='Arrastrá tu comprobante o <span class="filepond--label-action">haz clic aquí</span>'
+                className="filepond-minimal"
               />
             )}
           />
@@ -129,12 +111,10 @@ export default function ProveedorInvoiceExtra({
       {/* Columna derecha: resumen */}
       <div>
         <div className="border border-slate-200 rounded-md overflow-hidden">
-          {/* Header */}
           <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 flex items-center gap-2 font-semibold text-slate-700">
             <Calculator className="h-5 w-5 text-slate-600" />
             Resumen
           </div>
-          {/* Contenido */}
           <div className="px-4 py-4 space-y-2 text-sm md:text-base">
             <div className="grid grid-cols-1 gap-x-6 gap-y-2">
               <div className="flex justify-between">

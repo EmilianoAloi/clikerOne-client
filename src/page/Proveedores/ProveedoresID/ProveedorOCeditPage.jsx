@@ -57,7 +57,6 @@ export default function ProveedorOCeditPage() {
     const fetchOC = async () => {
       try {
         const oc = await getCompraById(Number(idOC));
-        console.log("Resultado getCompraById:", oc);
         if (oc) {
           setOrdenCompra(oc);
           setError(null);

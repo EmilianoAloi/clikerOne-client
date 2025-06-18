@@ -44,7 +44,6 @@ export default function ProveedorInvoiceHeader({
   setOpen,
   disabledProveedor,
 }) {
-  // RHF
   const {
     register,
     setValue,
@@ -268,13 +267,11 @@ export default function ProveedorInvoiceHeader({
                     )
                   : new Date()
               }
-              onSelect={(date) =>
-                setValue(
-                  "fecha_emision",
-                  date ? format(date, "yyyy-MM-dd") : "",
-                  { shouldValidate: true }
-                )
-              }
+              onSelect={(date) => {
+                const value = date ? format(date, "yyyy-MM-dd") : "";
+                setValue("fecha_emision", value, { shouldValidate: true });
+                console.log("Set fecha_emision:", value);
+              }}
               initialFocus
             />
           </PopoverContent>
@@ -328,13 +325,11 @@ export default function ProveedorInvoiceHeader({
                     )
                   : new Date()
               }
-              onSelect={(date) =>
-                setValue(
-                  "fecha_vencimiento",
-                  date ? format(date, "yyyy-MM-dd") : "",
-                  { shouldValidate: true }
-                )
-              }
+              onSelect={(date) => {
+                const value = date ? format(date, "yyyy-MM-dd") : "";
+                setValue("fecha_vencimiento", value, { shouldValidate: true });
+                console.log("Set fecha_vencimiento:", value);
+              }}
               initialFocus
             />
           </PopoverContent>
@@ -389,14 +384,9 @@ export default function ProveedorInvoiceHeader({
                   : new Date()
               }
               onSelect={(date) => {
-                if (!date) return;
-                const yyyy = date.getFullYear();
-                const mm = String(date.getMonth() + 1).padStart(2, "0");
-                const dd = String(date.getDate()).padStart(2, "0");
-                const localISODate = `${yyyy}-${mm}-${dd}`;
-                setValue("fecha_contable", localISODate, {
-                  shouldValidate: true,
-                });
+                const value = date ? format(date, "yyyy-MM-dd") : "";
+                setValue("fecha_contable", value, { shouldValidate: true });
+                console.log("Set fecha_contable:", value);
               }}
               initialFocus
             />

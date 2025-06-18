@@ -53,10 +53,6 @@ export const ProveedorProvider = ({ children }) => {
     refreshProveedores();
   }, []);
 
-  useEffect(() => {
-    console.log("PROVEEDORES:", proveedores);
-  }, [proveedores]);
-
   const getProveedorByID = async (id) => {
     const local = proveedores.find((p) => p.id_proveedor === id);
     if (local) return local; // Si ya está en el contexto, no hace falta hacer el fetch

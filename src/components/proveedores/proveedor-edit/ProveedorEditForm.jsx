@@ -109,7 +109,6 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
         setIsSubmitting(false);
         return;
       }
-      console.log("Artículos enviados al guardar:", articulos);
 
       const result = await editProveedor(
         formData.id_proveedor,
@@ -152,7 +151,6 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
       );
     }
   }, [proveedor]);
-  console.log("Artículos actuales", articulos);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mx-8 mb-6">
