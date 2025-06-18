@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useParams,
+} from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
@@ -29,6 +35,11 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 
+function RedirectToProveedor() {
+  const { id } = useParams();
+  return <Navigate to={`/proveedores/${id}`} replace />;
+}
+
 function App() {
   return (
     <ProveedorProvider>
@@ -40,6 +51,29 @@ function App() {
                 <MainLayout>
                   <ScrollToTop />
                   <Routes>
+                    {/* Redirecciones */}
+
+                    <Route
+                      path="/proveedores/:id/ordencompra"
+                      element={<RedirectToProveedor />}
+                    />
+                    <Route
+                      path="/proveedores/:id/facturacion"
+                      element={<RedirectToProveedor />}
+                    />
+                    <Route
+                      path="/proveedores/:id/pagos"
+                      element={<RedirectToProveedor />}
+                    />
+                    <Route
+                      path="/proveedores/:id/notacredito"
+                      element={<RedirectToProveedor />}
+                    />
+                    <Route
+                      path="/proveedores/:id/notadebito"
+                      element={<RedirectToProveedor />}
+                    />
+
                     {/* Proveedores */}
                     <Route
                       path="/"
