@@ -74,35 +74,43 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <FileText className="mr-2 h-5 w-5 text-blue-500 group-hover:text-blue-600 transition-colors" />
-          <span className="font-semibold text-lg">Órdenes de Compra</span>
+          <span className="font-semibold text-lg">Ordenes de Compra</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
-        <div className="border rounded-lg overflow-hidden shadow-sm">
-          <Table>
+        <div className="border rounded-lg overflow-x-auto shadow-sm">
+          <Table className="min-w-full">
             <TableHeader>
               <TableRow className="bg-slate-50">
                 {[
-                  { icon: Hash, label: "N° OC" },
-                  { icon: Calendar, label: "Emisión" },
-                  { icon: Calendar, label: "Entrega" },
-                  { icon: BadgeDollarSign, label: "Monto" },
-                  { icon: HandCoins, label: "Condición Pago" },
-                  { icon: FileText, label: "Estado" },
+                  { icon: Hash, label: "N° OC", className: "text-left" },
+                  { icon: Calendar, label: "Emisión", className: "text-left" },
+                  { icon: Calendar, label: "Entrega", className: "text-left" },
+                  {
+                    icon: BadgeDollarSign,
+                    label: "Monto",
+                    className: "text-left",
+                  },
+                  {
+                    icon: HandCoins,
+                    label: "Condición Pago",
+                    className: "text-left",
+                  },
+                  { icon: FileText, label: "Estado", className: "text-left" },
                   { icon: Info, label: "Notas", className: "text-center" },
                   {
                     icon: Paperclip,
                     label: "Adjuntos",
-                    className: "text-center w-[120px]",
+                    className: "text-center",
                   },
-                  { label: "Acciones", className: "text-center w-[80px]" },
+                  { label: "Acciones", className: "text-center" },
                 ].map(({ icon: Icon, label, className = "" }, i) => (
                   <TableHead
                     key={i}
                     className={`font-semibold text-slate-700 ${className}`}
                   >
-                    <span className="flex items-center gap-1 justify-center">
-                      {Icon && <Icon className="w-4 h-4 mr-1" />} {label}
+                    <span className="inline-flex items-center gap-1 justify-center">
+                      {Icon && <Icon className="w-4 h-4" />} {label}
                     </span>
                   </TableHead>
                 ))}
@@ -126,30 +134,30 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
                       )
                     }
                   >
-                    <TableCell className="py-3 font-medium">
+                    <TableCell className="py-3 font-medium text-left">
                       #{oc.id_orden_compra}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 text-left">
                       {oc.fecha_emision
                         ? new Date(oc.fecha_emision).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 text-left">
                       {oc.fecha_entrega
                         ? new Date(oc.fecha_entrega).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-right font-medium">
+                    <TableCell className="py-3 text-left font-medium">
                       $
                       {oc.monto_total?.toLocaleString("es-AR", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 text-left">
                       {oc.condicion_pago || "-"}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 text-left">
                       <BadgeEstado estado={oc.estado_compra ?? ""} />
                     </TableCell>
                     <TableCell className="py-3 text-center">

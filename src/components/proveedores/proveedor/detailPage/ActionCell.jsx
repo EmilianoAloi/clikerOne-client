@@ -8,126 +8,126 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Eye, MoreHorizontal, Pencil } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function ActionCell({ movement, currentProveedores }) {
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-  // Puede ajustar las rutas según el tipo de movimiento
+export default function ActionCell({ idOrdenCompra, idProveedor, onDelete }) {
+  const navigate = useNavigate();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const handleView = () => {
-    if (!movement) return;
-    if (movement.type === "Factura") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/facturacion/${movement.id.replace("factura-", "")}`
-      );
-    } else if (movement.type === "Nota de Crédito") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/notacredito/${movement.id.replace("nc-", "")}`
-      );
-    } else if (movement.type === "Nota de Débito") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/notadebito/${movement.id.replace("nd-", "")}`
-      );
-    } else if (movement.type === "Orden de pago") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/pagos/${movement.id.replace("pago-", "")}`
-      );
-    }
+    if (!idOrdenCompra) return;
+    navigate(`/proveedores/${idProveedor}/ordencompra/${idOrdenCompra}`);
+    setMenuOpen(false);
   };
 
   const handleEdit = () => {
-    if (!movement) return;
-    if (movement.type === "Factura") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/facturacion/${movement.id.replace("factura-", "")}/editar`
-      );
-    } else if (movement.type === "Nota de Crédito") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/notacredito/${movement.id.replace("nc-", "")}/editar`
-      );
-    } else if (movement.type === "Nota de Débito") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/notadebito/${movement.id.replace("nd-", "")}/editar`
-      );
-    } else if (movement.type === "Orden de pago") {
-      navigate(
-        `/proveedores/${
-          currentProveedores.id_proveedor
-        }/pagos/${movement.id.replace("pago-", "")}/editar`
-      );
-    }
+    if (!idOrdenCompra) return;
+    navigate(
+      `/proveedores/${idProveedor}/ordencompra/oc-edit/${idOrdenCompra}`
+    );
+    setMenuOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!idOrdenCompra) return;
+    onDelete(idOrdenCompra);
+    setDialogOpen(false);
+  };
+
+  // Abrir diálogo cierra menú primero
+  const openDialog = () => {
+    setMenuOpen(false);
+    setDialogOpen(true);
   };
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span className="sr-only">Abrir menú</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="px-4">
-        <DropdownMenuLabel className="font-bold">Acciones</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            handleView();
-            setIsOpen(false);
-          }}
-          className="flex items-center gap-2 text-sm cursor-pointer"
-        >
-          <Eye className="h-4 w-4 text-gray-500" />
-          Ver detalles
-        </DropdownMenuItem>
+    <>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menú</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
 
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEdit();
-            setIsOpen(false);
-          }}
-          className="flex items-center gap-2 text-sm cursor-pointer"
-        >
-          <Pencil className="h-4 w-4 text-gray-500" />
-          Editar
-        </DropdownMenuItem>
+        <DropdownMenuContent align="end" className="px-4">
+          <DropdownMenuLabel className="font-bold">Acciones</DropdownMenuLabel>
 
-        {/* Agregá más acciones personalizadas si querés */}
-        <DropdownMenuSeparator />
-        {/* Ejemplo de acción extra:
-        <DropdownMenuItem
-          onClick={e => {
-            e.stopPropagation();
-            alert("Acción personalizada");
-            setIsOpen(false);
-          }}
-          className="flex items-center gap-2 text-sm cursor-pointer"
-        >
-          <Download className="h-4 w-4 text-gray-500" />
-          Descargar PDF
-        </DropdownMenuItem>
-        */}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              handleView();
+            }}
+            className="flex items-center gap-2 text-sm cursor-pointer"
+          >
+            <Eye className="h-4 w-4 text-gray-500" />
+            Ver detalles
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit();
+            }}
+            className="flex items-center gap-2 text-sm cursor-pointer"
+          >
+            <Pencil className="h-4 w-4 text-gray-500" />
+            Editar
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          {/* Aquí no envuelvas DropdownMenuItem con AlertDialogTrigger, solo abre el diálogo con openDialog */}
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              openDialog();
+            }}
+            className="flex items-center gap-2 text-sm cursor-pointer !text-red-600 "
+          >
+            <Trash2 className="h-4 w-4 text-red-600" />
+            Eliminar
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Diálogo separado fuera del menú */}
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminar Orden de Compra</AlertDialogTitle>
+            <AlertDialogDescription>
+              ¿Seguro que deseas eliminar esta orden de compra #{idOrdenCompra}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDialogOpen(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-500"
+              onClick={handleConfirmDelete}
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
