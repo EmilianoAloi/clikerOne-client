@@ -16,7 +16,6 @@ const ProveedorDetailContainer = ({
 }) => {
   const { proveedores = [] } = useProveedor() || {};
   const { id } = useParams();
-
   const [currentProveedor, setCurrentProveedor] = useState(currentProveedores);
 
   useEffect(() => {
@@ -46,12 +45,6 @@ const ProveedorDetailContainer = ({
         </div>
         <ProveedorDetailInfo proveedor={currentProveedor} />
       </div>
-      {/* <ProveedorCurrentAccountContainer
-        currentProveedores={currentProveedor}
-        invoices={invoices}
-        payments={payments}
-        paymentItems={paymentItems}
-      /> */}
 
       <ProveedorCurrentAccountContainer
         currentProveedor={currentProveedor}

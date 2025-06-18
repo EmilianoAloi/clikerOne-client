@@ -25,6 +25,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       const response = await fetch(`${API_BASE}/proveedor/${idProveedor}`);
       if (!response.ok) throw new Error("Error al obtener facturas");
       const data = await response.json();
+      console.log("Facturas refrescadas:", data);
       setInvoicesByProveedor((prev) => ({
         ...prev,
         [idProveedor]: data,
@@ -144,7 +145,6 @@ export const ProveedorInvoicesProvider = ({ children }) => {
         toast.error(errorData.error || "Error al crear la nota de crédito.");
         return;
       }
-      toast.success("Nota de crédito creada correctamente.");
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
       }
@@ -250,7 +250,6 @@ export const ProveedorInvoicesProvider = ({ children }) => {
         toast.error(errorData.error || "Error al crear la nota de débito.");
         return;
       }
-      toast.success("Nota de débito creada correctamente.");
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
       }

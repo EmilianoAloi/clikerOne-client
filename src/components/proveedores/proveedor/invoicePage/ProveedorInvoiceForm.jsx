@@ -4,12 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceFormSchema } from "@/schemas/invoice-form-schema";
 import { mapFormToApi } from "@/utils/invoice-form-mapper";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 import ProveedorInvoiceHeader from "./ProveedorInvoiceHeader";
 import ProveedorInvoiceArticle from "./ProveedorInvoiceArticle";
 import ProveedorInvoiceExtra from "./ProveedorInvoiceExtra";
 import ProveedorInvoiceActions from "./ProveedorInvoiceActions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 export default function ProveedorInvoiceForm({
   modo,
@@ -21,28 +23,28 @@ export default function ProveedorInvoiceForm({
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
+
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
   const methods = useForm({
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: factura
       ? {
-          // Modo edición: los valores vienen de factura
           ...factura,
           proveedor: factura.id_proveedor?.toString() || "",
           fecha_emision: factura.fecha_emision?.split("T")[0] ?? "",
           fecha_vencimiento: factura.fecha_vencimiento?.split("T")[0] ?? "",
           fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
-          tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "", // <- preferible dejar "" si no está
+          tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "",
           percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
         }
       : {
-          // Modo crear: valores por defecto
           proveedor: idProveedor?.toString() || "",
           numero_factura: "",
           condicion_venta: "",
           iibb_porcentaje: 0,
-          tipo_comprobante: "", // ← ACÁ
+          tipo_comprobante: "",
           percepcion_iibb: "0",
           items: [
             {
@@ -132,6 +134,9 @@ export default function ProveedorInvoiceForm({
   const descuentoTotal = calcDescuentoTotal(items);
   const total = subtotal + iva + iibb;
 
+  const { createSupplierInvoice, updateSupplierInvoice } =
+    useProveedorInvoices();
+
   const onSubmit = async (form) => {
     try {
       setIsSubmitting(true);
@@ -158,36 +163,15 @@ export default function ProveedorInvoiceForm({
         proveedor
       );
 
-      let res;
       if (modo === "editar" && factura?.id_factura) {
-        // MODIFICAR: PUT
-        res = await fetch(
-          `${API_URL}/api/proveedores/facturas/${factura.id_factura}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          }
-        );
+        await updateSupplierInvoice(factura.id_factura, data);
+        toast.success("Factura modificada correctamente");
       } else {
-        // CREAR: POST
-        res = await fetch(`${API_URL}/api/proveedores/facturas`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
+        await createSupplierInvoice(data);
+        toast.success("Factura cargada correctamente");
       }
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error?.error || "Error al guardar factura");
-      }
-
-      toast.success(
-        modo === "editar"
-          ? "Factura modificada correctamente"
-          : "Factura cargada correctamente"
-      );
+      navigate(`/proveedores/${idProveedor}`);
     } catch (err) {
       toast.error(err.message);
       console.error("Error al enviar factura", err);

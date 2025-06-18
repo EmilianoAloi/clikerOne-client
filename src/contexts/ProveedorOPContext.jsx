@@ -61,6 +61,10 @@ export const ProveedorOPProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
   const [paymentItemsByProveedor, setPaymentItemsByProveedor] = useState({});
 
+  // Estado para trigger refresh
+  const [refreshFlag, setRefreshFlag] = useState(0);
+  const triggerRefresh = () => setRefreshFlag((prev) => prev + 1);
+
   const getPaymentsForProveedor = (idProveedor) =>
     paymentsByProveedor[idProveedor] || [];
 
@@ -131,7 +135,10 @@ export const ProveedorOPProvider = ({ children }) => {
   };
 
   // Crear múltiples pagos (orden de pago con ítems y archivos)
-  const createMultipleSupplierPayments = async (payload) => {
+  const createMultipleSupplierPayments = async (
+    payload,
+    refreshInvoicesCallback
+  ) => {
     try {
       const response = await fetch(API_BASE, {
         method: "POST",
@@ -142,13 +149,27 @@ export const ProveedorOPProvider = ({ children }) => {
       if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.error || "Error al registrar los pagos.");
-        return;
+        return false;
       }
-      // Refrescar proveedor si corresponde
-      // Ejemplo: await refreshProveedorPayments(payload?.pagos?.[0]?.id_proveedor, true);
+
+      toast.success("Orden de pago registrada correctamente.");
+      triggerRefresh();
+      const idProveedor = payload?.pagos?.[0]?.id_proveedor;
+      if (idProveedor) {
+        await refreshProveedorPayments(idProveedor, true);
+        if (refreshInvoicesCallback) {
+          await refreshInvoicesCallback(idProveedor);
+          setTimeout(() => {
+            refreshInvoicesCallback(idProveedor);
+          }, 1000);
+        }
+      }
+
+      return true;
     } catch (error) {
       console.error("Error creando pagos:", error);
       toast.error("Hubo un problema al registrar los pagos.");
+      return false;
     }
   };
 
@@ -174,12 +195,14 @@ export const ProveedorOPProvider = ({ children }) => {
   // Eliminar pago
   const removeSupplierPayment = async (id) => {
     try {
-      const response = await fetch(`${API_BASE}/${id}?modificado_por=sistema`, {
+      const response = await fetch(`${API_BASE}/${id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) throw new Error("Error al eliminar pago");
       toast.success("Pago eliminado correctamente.");
+      console.log("Trigger refresh llamado");
+      triggerRefresh();
       // Si sabés el proveedor, podés refrescar aquí
       // await refreshProveedorPayments(id_proveedor, true);
     } catch (error) {
@@ -201,6 +224,8 @@ export const ProveedorOPProvider = ({ children }) => {
         updateSupplierPayment,
         removeSupplierPayment,
         normalizePaymentPayload,
+        triggerRefresh,
+        refreshFlag,
       }}
     >
       {children}

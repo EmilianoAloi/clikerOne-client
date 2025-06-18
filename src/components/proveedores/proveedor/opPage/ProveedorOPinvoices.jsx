@@ -107,6 +107,7 @@ const ProveedorOPinvoices = ({
           <TableBody>
             {facturasFiltradas.length > 0 ? (
               facturasFiltradas.map((factura) => {
+                console.log("🧾 Factura mostrada:", factura);
                 const selected = isSelected(factura.id_factura);
                 const monto = getMonto(factura.id_factura);
 

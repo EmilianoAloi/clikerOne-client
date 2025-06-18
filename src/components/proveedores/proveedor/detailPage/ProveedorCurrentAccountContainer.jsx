@@ -6,6 +6,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Link, useNavigate } from "react-router-dom";
 import { SaldoActual } from "./ProveedorSaldoActual";
 import { columnsCC } from "./ProveedorColumns";
+import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 
 export default function ProveedorCurrentAccountContainer({
   currentProveedor,
@@ -17,6 +18,7 @@ export default function ProveedorCurrentAccountContainer({
   const [finalBalance, setFinalBalance] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { refreshFlag } = useProveedorOP();
 
   // Defensa: Si no hay proveedor, salimos
   if (!currentProveedor || !currentProveedor.id_proveedor) {
@@ -126,7 +128,7 @@ export default function ProveedorCurrentAccountContainer({
     setMovements(movimientosOrdenados);
 
     setFinalBalance(movimientosOrdenados[0]?.balance || 0);
-  }, [currentProveedor, invoices, payments, paymentItems]);
+  }, [currentProveedor, invoices, payments, paymentItems, refreshFlag]);
 
   const filteredMovements = movements.filter(
     (m) =>
@@ -135,7 +137,7 @@ export default function ProveedorCurrentAccountContainer({
       m.estado.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.observaciones.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  console.log("Facturas actuales:", invoices);
   return (
     <section className="rounded-lg border shadow-sm mx-auto px-6 py-4 w-full space-y-6">
       {/* Header */}

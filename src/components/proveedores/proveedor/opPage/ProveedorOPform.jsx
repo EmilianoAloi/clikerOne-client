@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   normalizePaymentPayload,
@@ -11,6 +11,7 @@ import ProveedorOPButtons from "./ProveedorOPButtons";
 import ProveedorOPpagos from "./ProveedorOPpagos";
 import ProveedorOPinvoices from "./ProveedorOPinvoices";
 import ProveedorOPheader from "./ProveedorOPheader";
+import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 export default function ProveedorOPform({ modo, proveedor }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,6 +19,14 @@ export default function ProveedorOPform({ modo, proveedor }) {
   const navigate = useNavigate();
   const { createMultipleSupplierPayments } = useProveedorOP();
   const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
+  const { refreshProveedorInvoices } = useProveedorInvoices();
+
+  // Fetch de facturas cuando se monta el form y cambia el proveedor
+  useEffect(() => {
+    if (proveedor?.id_proveedor) {
+      refreshProveedorInvoices(proveedor.id_proveedor);
+    }
+  }, [proveedor?.id_proveedor, refreshProveedorInvoices]);
 
   //////////// Form ////////////////
 
@@ -51,32 +60,57 @@ export default function ProveedorOPform({ modo, proveedor }) {
   };
 
   /////// HandleSubmit ////////////
+  function montoSeguro(val) {
+    const n = Number(val);
+    return !isNaN(n) && isFinite(n) ? n : 0;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const totalFacturas = facturasSeleccionadas.reduce(
-      (acc, f) => acc + parseFloat(f.monto),
-      0
-    );
-    const totalPagos = items.reduce(
-      (acc, item) => acc + Number(item.monto_aplicado ?? item.monto ?? 0),
-      0
-    );
-
-    if (Math.abs(totalFacturas - totalPagos) > 0.009) {
-      toast.error(
-        "La suma de pagos debe coincidir exactamente con el monto total a cancelar en las facturas seleccionadas."
-      );
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
+      // Normalizar items y facturas para evitar NaN
+      const itemsNormalizados = items.map((item) => ({
+        ...item,
+        monto_aplicado: montoSeguro(item.monto_aplicado ?? item.monto),
+      }));
+
+      const facturasNormalizadas = facturasSeleccionadas.map((f) => ({
+        id_factura: f.id_factura,
+        monto_a_saldar: montoSeguro(f.monto),
+      }));
+
+      // Validación: todos los montos deben ser válidos
+      const invalidMonto =
+        itemsNormalizados.some((item) => isNaN(item.monto_aplicado)) ||
+        facturasNormalizadas.some((f) => isNaN(f.monto_a_saldar));
+      if (invalidMonto) {
+        toast.error("Todos los montos deben ser números válidos.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const totalFacturas = facturasNormalizadas.reduce(
+        (acc, f) => acc + f.monto_a_saldar,
+        0
+      );
+      const totalPagos = itemsNormalizados.reduce(
+        (acc, item) => acc + item.monto_aplicado,
+        0
+      );
+
+      if (Math.abs(totalFacturas - totalPagos) > 0.009) {
+        toast.error(
+          "La suma de pagos debe coincidir exactamente con el monto total a cancelar en las facturas seleccionadas."
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
       // 1. Subir comprobantes si existen
       const uploadedFiles = await Promise.all(
-        formData.comprobantes.map(async (file) => {
+        (formData.comprobantes || []).map(async (file) => {
           const data = new FormData();
           data.append("file", file);
           data.append("folder", "comprobantes");
@@ -104,21 +138,24 @@ export default function ProveedorOPform({ modo, proveedor }) {
 
       // 2. Normalizar payload para backend
       const payload = normalizePaymentPayload({
-        items,
-        facturas: facturasSeleccionadas.map((f) => ({
-          id_factura: f.id_factura,
-          monto_a_saldar: Number(f.monto),
-        })),
-        idProveedor,
+        items: itemsNormalizados,
+        facturas: facturasNormalizadas,
+        idProveedor: proveedor.id_proveedor,
         observaciones: formData.observaciones ?? "",
         archivos: uploadedFiles,
       });
 
-      // 3. Enviar al backend
-      await createMultipleSupplierPayments(payload);
-
-      toast.success("Orden de pago guardada correctamente.");
-      navigate(`/proveedores/${idProveedor}`);
+      // 3. Enviar al backend y esperar confirmación
+      const success = await createMultipleSupplierPayments(
+        payload,
+        refreshProveedorInvoices
+      );
+      if (success) {
+        toast.success("Orden de pago guardada correctamente.");
+        navigate(`/proveedores/${proveedor.id_proveedor}`);
+      } else {
+        toast.error("No se pudo guardar la orden de pago.");
+      }
     } catch (error) {
       console.error("❌ Error en handleSubmit:", error);
       toast.error("Error al guardar la orden de pago.");
@@ -136,7 +173,7 @@ export default function ProveedorOPform({ modo, proveedor }) {
       <Separator className="mt-10 mb-8" />
 
       <ProveedorOPinvoices
-        proveedor={proveedor}
+        idProveedor={proveedor.id_proveedor}
         facturasSeleccionadas={facturasSeleccionadas}
         setFacturasSeleccionadas={setFacturasSeleccionadas}
       />
