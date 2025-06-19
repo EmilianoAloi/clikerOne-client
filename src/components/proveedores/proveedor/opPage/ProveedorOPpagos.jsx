@@ -21,7 +21,7 @@ import {
 import ChequesModalTable from "./ChequesModalTable";
 import { FormOrdersImport } from "./FormOrdersImport";
 
-const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
+const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
   useEffect(() => {
     if (items.length === 0) {
       setItems([
@@ -93,14 +93,16 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
               });
             }}
           />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addEmptyItem}
-            className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100"
-          >
-            <Plus className="h-4 w-4 mr-1" /> Agregar Item
-          </Button>
+          {modo !== "editar" && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addEmptyItem}
+              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100"
+            >
+              <Plus className="h-4 w-4 mr-1" /> Agregar Item
+            </Button>
+          )}
         </div>
       </div>
       <div className="border rounded-md overflow-hidden">
@@ -126,12 +128,14 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
                 updateItem(index, "numero_comprobante", e.target.value)
               }
               placeholder="Ej: 0001-123456"
+              disabled={modo === "editar"}
             />
 
             {/* Medio */}
             <div>
               <Select
                 value={item.medio || ""}
+                disabled={modo === "editar"}
                 onValueChange={(val) => updateItem(index, "medio", val)}
               >
                 <SelectTrigger className="w-full cursor-pointer">
@@ -153,6 +157,7 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  disabled={modo === "editar"}
                   variant="outline"
                   className="w-full justify-start text-left"
                 >
@@ -186,6 +191,7 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
             {/* Monto */}
             <Input
               value={item.monto_aplicado ?? ""}
+              disabled={modo === "editar"}
               onChange={(e) =>
                 updateItem(
                   index,
@@ -203,6 +209,7 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
             {/* Observaciones */}
             <Input
               className="col-span-2"
+              disabled={modo === "editar"}
               value={item.observaciones || ""}
               onChange={(e) =>
                 updateItem(index, "observaciones", e.target.value)
@@ -221,15 +228,17 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker }) => {
 
             {/* Acciones */}
             <div className="text-center">
-              <Button
-                type="button"
-                onClick={() => removeItem(index)}
-                variant="ghost"
-                size="icon"
-                className={cn("cursor-pointer")}
-              >
-                <Trash2 className="w-4 h-4 text-red-500" />
-              </Button>
+              {modo !== "editar" && (
+                <Button
+                  type="button"
+                  onClick={() => removeItem(index)}
+                  variant="ghost"
+                  size="icon"
+                  className={cn("cursor-pointer")}
+                >
+                  <Trash2 className="w-4 h-4 text-red-500" />
+                </Button>
+              )}
             </div>
           </div>
         ))}

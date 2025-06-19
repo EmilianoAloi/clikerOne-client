@@ -13,7 +13,7 @@ import ProveedorOPinvoices from "./ProveedorOPinvoices";
 import ProveedorOPheader from "./ProveedorOPheader";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
-export default function ProveedorOPform({ modo, proveedor }) {
+export default function ProveedorOPform({ modo, proveedor, pagoData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
@@ -21,12 +21,37 @@ export default function ProveedorOPform({ modo, proveedor }) {
   const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
   const { refreshProveedorInvoices } = useProveedorInvoices();
 
-  // Fetch de facturas cuando se monta el form y cambia el proveedor
+  // EDIT: Fetch de facturas cuando se monta el form y cambia el proveedor
   useEffect(() => {
     if (proveedor?.id_proveedor) {
       refreshProveedorInvoices(proveedor.id_proveedor);
     }
   }, [proveedor?.id_proveedor, refreshProveedorInvoices]);
+
+  // EDIT: Prellenar datos
+  useEffect(() => {
+    if (modo === "editar" && pagoData) {
+      setFormData((prev) => ({
+        ...prev,
+        observaciones: pagoData.observaciones ?? "",
+        comprobantes: [], // Si querés mostrar links, manejalo aparte
+      }));
+      // El backend te da .facturas y .pagos (o .items)
+      setItems(
+        (pagoData.pagos || pagoData.items || []).map((item) => ({
+          ...item,
+          numero_comprobante: item.numero ?? item.numero_comprobante ?? "",
+          observaciones: item.observaciones,
+        }))
+      );
+      setFacturasSeleccionadas(
+        (pagoData.facturas || []).map((f) => ({
+          ...f,
+          monto: f.monto_a_saldar ?? f.monto_total ?? "", // Esto para que aparezca en el input "A pagar"
+        }))
+      );
+    }
+  }, [modo, pagoData]);
 
   //////////// Form ////////////////
 
@@ -176,6 +201,7 @@ export default function ProveedorOPform({ modo, proveedor }) {
         idProveedor={proveedor.id_proveedor}
         facturasSeleccionadas={facturasSeleccionadas}
         setFacturasSeleccionadas={setFacturasSeleccionadas}
+        modo={modo}
       />
 
       <Separator className="my-10" />
@@ -184,6 +210,7 @@ export default function ProveedorOPform({ modo, proveedor }) {
         items={items}
         setItems={setItems}
         idProveedorCliker={proveedor.id_proveedor_cliker}
+        modo={modo}
       />
       <Separator className="my-10" />
 

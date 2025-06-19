@@ -20,7 +20,6 @@ export default function ProveedoresTable() {
   useEffect(() => {
     if (location.state?.refresh) {
       refreshProveedores(true); // <<---- Forzá el fetch de la API
-      // Limpia el estado para evitar dobles refresh si el usuario recarga la página
       navigate(location.pathname, { replace: true });
     }
   }, [location.state, location.pathname, navigate, refreshProveedores]);

@@ -27,15 +27,26 @@ const ProveedorOPinvoices = ({
   idProveedor,
   facturasSeleccionadas,
   setFacturasSeleccionadas,
+  modo,
 }) => {
   const { invoicesByProveedor } = useProveedorInvoices();
   const facturasDelProveedor = invoicesByProveedor[idProveedor] || [];
 
-  const facturasFiltradas = facturasDelProveedor.filter(
-    (f) =>
-      f.id_proveedor === idProveedor &&
-      (f.estado_saldo === "pendiente de pago" || f.estado_saldo === "parcial")
+  const facturasSeleccionadasIds = facturasSeleccionadas.map(
+    (f) => f.id_factura
   );
+
+  const facturasFiltradas =
+    modo === "editar"
+      ? facturasDelProveedor.filter((f) =>
+          facturasSeleccionadasIds.includes(f.id_factura)
+        )
+      : facturasDelProveedor.filter(
+          (f) =>
+            f.id_proveedor === idProveedor &&
+            (f.estado_saldo === "pendiente de pago" ||
+              f.estado_saldo === "parcial")
+        );
 
   const isSelected = (id) =>
     facturasSeleccionadas.some((f) => f.id_factura === id);
@@ -121,14 +132,28 @@ const ProveedorOPinvoices = ({
                         type="checkbox"
                         className="h-4 w-4"
                         checked={selected}
+                        disabled={
+                          modo === "editar" &&
+                          selected &&
+                          Number(factura.saldo_restante) <= 0.009
+                        }
                         onChange={(e) =>
                           handleCheckboxChange(factura, e.target.checked)
                         }
                       />
                     </TableCell>
-                    <TableCell className="py-3 font-medium">
+
+                    <TableCell className="py-3 font-medium flex items-center gap-2">
                       # {factura.numero_factura}
+                      {modo === "editar" &&
+                        factura.estado_saldo === "pagada" &&
+                        isSelected(factura.id_factura) && (
+                          <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700 border border-emerald-200">
+                            Saldada por este pago
+                          </span>
+                        )}
                     </TableCell>
+
                     <TableCell>{factura.tipo_comprobante ?? "-"}</TableCell>
                     <TableCell>
                       <div className="flex items-center">
@@ -172,7 +197,10 @@ const ProveedorOPinvoices = ({
                     <TableCell className=" w-30">
                       <InputMonto
                         value={monto}
-                        disabled={!selected}
+                        disabled={
+                          selected ||
+                          (modo === "editar" && factura.saldo_restante === 0)
+                        }
                         onChange={(val) =>
                           handleMontoChange(factura.id_factura, val)
                         }
