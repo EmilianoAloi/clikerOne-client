@@ -135,6 +135,7 @@ export const ProveedorOPProvider = ({ children }) => {
     refreshInvoicesCallback
   ) => {
     try {
+      console.log("payload al back OP", payload);
       const response = await fetch(API_BASE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

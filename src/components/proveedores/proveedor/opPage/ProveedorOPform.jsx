@@ -173,6 +173,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       // 3. Enviar al backend y esperar confirmación
       const success = await createMultipleSupplierPayments(
         payload,
+
         (idProveedor) => refreshProveedorInvoices(idProveedor, true)
       );
       if (success) {

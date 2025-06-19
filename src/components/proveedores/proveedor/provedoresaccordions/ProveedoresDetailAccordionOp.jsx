@@ -21,8 +21,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import ResumenBadgePopover from "@/components/ui/resumen-badge-popover";
 import BadgeEstado from "@/components/ui/badge-custom";
+import FacturasBagdePopover from "@/components/ui/FacturasBagdePopover";
+import PagosBadgePopOver from "@/components/ui/PagosBadgePopOver";
 
 const ProveedoresDetailAccordionOp = ({
   currentProveedores,
@@ -41,35 +42,54 @@ const ProveedoresDetailAccordionOp = ({
 
   const facturasPorPago = useMemo(() => {
     const map = {};
+
     (paymentItems || []).forEach((item) => {
+      console.log("🧾 Item payment:", item);
       if (typeof item.id_pago !== "number") return;
       if (!map[item.id_pago]) map[item.id_pago] = [];
+
       const yaExiste = map[item.id_pago].some(
         (f) => f.numero_factura === item.numero_factura
       );
       if (!yaExiste) {
         map[item.id_pago].push({
+          id_factura: item.id_factura,
           numero_factura: item.numero_factura,
-          monto_total: item.monto_total ?? 0,
+          fecha_emision: item.fecha_emision,
+          fecha_vencimiento: item.fecha_vencimiento,
+          fecha_contable: item.fecha_contable,
+          monto_total: item.monto_total,
+          estado: item.estado_saldo || item.estado || "-",
+          proveedor_nombre: item.proveedor_nombre,
         });
       }
     });
+
     return map;
   }, [paymentItems]);
 
   const pagosPorPago = useMemo(() => {
     const map = {};
+
     (paymentItems || []).forEach((item) => {
       if (typeof item.id_pago !== "number") return;
+
       if (!map[item.id_pago]) map[item.id_pago] = [];
+
       map[item.id_pago].push({
+        id_pago: item.id_pago,
+        id_proveedor: item.id_proveedor,
         numero_comprobante:
           typeof item.numero_comprobante === "number"
             ? `#${item.numero_comprobante}`
-            : item.numero_comprobante,
-        monto_aplicado: item.monto_aplicado ?? 0,
+            : item.numero_comprobante || "-",
+        monto_aplicado: Number(item.monto_aplicado) || 0,
+        medio: item.medio || "-",
+        fecha_acreditacion: item.fecha_acreditacion || null,
+        estado: item.estado_pago || item.estado || "-",
       });
     });
+
     return map;
   }, [paymentItems]);
 
@@ -97,10 +117,10 @@ const ProveedoresDetailAccordionOp = ({
                 </TableHead>
 
                 <TableHead className="font-semibold text-slate-700">
-                  Factura/s
+                  Documentos cancelados
                 </TableHead>
                 <TableHead className="font-semibold text-slate-700">
-                  Pago/s
+                  Pagos asociados
                 </TableHead>
                 <TableHead className="font-semibold text-slate-700 text-right">
                   Total Pagos
@@ -145,66 +165,15 @@ const ProveedoresDetailAccordionOp = ({
                       <TableCell>#{pago.id_pago}</TableCell>
 
                       <TableCell>
-                        {facturas.length === 1 ? (
-                          <span className="text-sm text-slate-700">
-                            <span className="font-medium">
-                              #{facturas[0].numero_factura ?? "-"}
-                            </span>{" "}
-                            – $
-                            {facturas[0].monto_total.toLocaleString("es-AR", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </span>
-                        ) : facturas.length > 1 ? (
-                          <ResumenBadgePopover
-                            label={`${facturas.length} facturas asociadas`}
-                            items={facturas.map((f) => ({
-                              label: `#${f.numero_factura ?? "-"}`,
-                              value: `$${f.monto_total.toLocaleString("es-AR", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}`,
-                            }))}
-                          />
+                        {facturas.length > 0 ? (
+                          <FacturasBagdePopover facturas={facturas} />
                         ) : (
                           "-"
                         )}
                       </TableCell>
 
                       <TableCell>
-                        {pagos.length === 1 ? (
-                          <span className="text-sm text-slate-700">
-                            <span className="font-medium">
-                              #{pagos[0].numero_comprobante ?? "-"}
-                            </span>{" "}
-                            – $
-                            {pagos[0].monto_aplicado.toLocaleString("es-AR", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </span>
-                        ) : pagos.length > 1 ? (
-                          <ResumenBadgePopover
-                            label={`${pagos.length} pagos asociados`}
-                            items={pagos.map((p) => ({
-                              label: p.numero_comprobante?.startsWith(
-                                "sin-comp"
-                              )
-                                ? "-"
-                                : `#${p.numero_comprobante}`,
-                              value: `$${p.monto_aplicado.toLocaleString(
-                                "es-AR",
-                                {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                                }
-                              )}`,
-                            }))}
-                          />
-                        ) : (
-                          "-"
-                        )}
+                        <PagosBadgePopOver pagos={pagos} />
                       </TableCell>
 
                       <TableCell className="text-right">
