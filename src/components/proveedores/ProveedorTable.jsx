@@ -12,6 +12,31 @@ export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const { proveedores, refreshProveedores } = useProveedores();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Animación solo para estado vacío
+  useEffect(() => {
+    if (proveedores.length === 0) {
+      const timer = setTimeout(() => setIsLoaded(true), 50);
+      return () => clearTimeout(timer);
+    } else {
+      setIsLoaded(false);
+    }
+  }, [proveedores]);
+
+  // -- CLASES ANIMACIÓN SOLO SI ESTÁ VACÍO --
+  const mainClass =
+    proveedores.length === 0
+      ? `container mx-auto py-5 space-y-6 fade-in stagger-2${
+          isLoaded ? " loaded" : ""
+        }`
+      : "container mx-auto py-5 space-y-6";
+  const headerClass =
+    proveedores.length === 0
+      ? `flex flex-col md:flex-row md:items-center md:justify-between gap-4 fade-in stagger-3${
+          isLoaded ? " loaded" : ""
+        }`
+      : "flex flex-col md:flex-row md:items-center md:justify-between gap-4";
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,9 +68,9 @@ export default function ProveedoresTable() {
   });
 
   return (
-    <div className="container mx-auto py-5 space-y-6">
+    <div className={mainClass}>
       {/* Header de tabla: búsqueda + agregar */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className={headerClass}>
         <Input
           type="text"
           placeholder="Buscar proveedor..."
