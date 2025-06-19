@@ -112,7 +112,7 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
           <span>Fecha Acreditación</span>
           <span>Monto</span>
           <span className="col-span-2">Observaciones</span>
-          <span className="text-center">Detalle</span>
+          <span className="text-center">Detalle Cheques</span>
           <span className="text-center">Acciones</span>
         </div>
 
@@ -192,14 +192,20 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
             <Input
               value={item.monto_aplicado ?? ""}
               disabled={modo === "editar"}
-              onChange={(e) =>
-                updateItem(
-                  index,
-                  "monto_aplicado",
-                  parseFloat(e.target.value) || 0
-                )
-              }
-              type="number"
+              onBeforeInput={(e) => {
+                // Permite solo números, punto, coma, o borrar
+                if (!/[0-9.,]/.test(e.data)) {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                // Permití vacío (para borrar) y números válidos
+                const val = e.target.value.replace(",", ".");
+                if (/^[0-9]*[.]?[0-9]*$/.test(val) || val === "") {
+                  updateItem(index, "monto_aplicado", val);
+                }
+              }}
+              type="text"
               inputMode="decimal"
               step="any"
               className="text-right"

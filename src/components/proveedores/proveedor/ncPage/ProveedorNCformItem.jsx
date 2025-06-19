@@ -18,6 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import DecimalInput from "@/components/ui/DecimalInput";
 
 export default function ProveedorNCformItem({ formData, setFormData }) {
   const handleChange = (field, value) => {
@@ -104,14 +105,10 @@ export default function ProveedorNCformItem({ formData, setFormData }) {
             <CircleDollarSign className="h-4 w-4 text-slate-500" />
             Monto Total
           </Label>
-          <Input
-            type="number"
-            step="0.01"
-            min={0}
-            placeholder="Ej: 1500.00"
+          <DecimalInput
             value={formData.monto_total}
-            onChange={(e) => handleChange("monto_total", e.target.value)}
-            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-400"
+            onChange={(valor) => handleChange("monto_total", valor)}
+            placeholder="Ej: 1500.00"
           />
         </div>
         {/* Observaciones */}
