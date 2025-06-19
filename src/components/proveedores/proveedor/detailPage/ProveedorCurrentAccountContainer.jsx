@@ -6,7 +6,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { Link, useNavigate } from "react-router-dom";
 import { SaldoActual } from "./ProveedorSaldoActual";
 import { columnsCC } from "./ProveedorColumns";
-import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 
 export default function ProveedorCurrentAccountContainer({
   currentProveedor,
@@ -25,7 +24,6 @@ export default function ProveedorCurrentAccountContainer({
   }
 
   useEffect(() => {
-    // Helper para adjuntos
     const getFileNameFromUrl = (url) => {
       if (!url) return "";
       return decodeURIComponent(url.split("/").pop() || "");
@@ -34,7 +32,6 @@ export default function ProveedorCurrentAccountContainer({
     // Facturas/NC/ND
     const facturas = (invoices || []).map((f) => {
       const tipoComprobante = f.tipo_comprobante?.toLowerCase() || "";
-
       const isNotaCredito = tipoComprobante.includes("nota de credito");
       const isNotaDebito = tipoComprobante.includes("nota de debito");
 
@@ -55,7 +52,11 @@ export default function ProveedorCurrentAccountContainer({
       return {
         id: `${idPrefix}${f.id_factura}`,
         type,
-        date: new Date().toISOString(),
+        date: f.fecha_creado
+          ? new Date(f.fecha_creado).toISOString()
+          : f.fecha_emision
+          ? new Date(f.fecha_emision).toISOString()
+          : new Date().toISOString(),
         comprobante: f.numero_factura
           ? `#${f.numero_factura}`
           : `#${f.id_factura}`,
@@ -76,7 +77,7 @@ export default function ProveedorCurrentAccountContainer({
       };
     });
 
-    // Pagos
+    // Pagos (usa fecha_creada y si no, fecha_pago)
     const pagos = (payments || [])
       .filter(
         (p) =>
@@ -98,7 +99,11 @@ export default function ProveedorCurrentAccountContainer({
         return {
           id: `pago-${p.id_pago}`,
           type: "Orden de pago",
-          date: new Date().toISOString(),
+          date: p.fecha_creada
+            ? new Date(p.fecha_creada).toISOString()
+            : p.fecha_pago
+            ? new Date(p.fecha_pago).toISOString()
+            : new Date().toISOString(),
           comprobante: p.numero_pago ? `#${p.numero_pago}` : `#${p.id_pago}`,
           razon_social: currentProveedor.nombre || "-",
           estado: p.estado_pago || p.estado || "pendiente",
@@ -110,23 +115,22 @@ export default function ProveedorCurrentAccountContainer({
         };
       });
 
-    // Mezcla y ordena
+    // Junta y ordena ascendente (de más viejo a más nuevo)
     const todosLosMovimientos = [...facturas, ...pagos].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      (a, b) => new Date(a.date) - new Date(b.date)
     );
 
-    // Saldo histórico
+    // Calcula saldo histórico
     let saldo = 0;
     const movimientosConSaldo = todosLosMovimientos.map((m) => {
       saldo += m.amount;
       return { ...m, balance: saldo };
     });
 
-    // Ordenar de más nuevo a más viejo
-    const movimientosOrdenados = movimientosConSaldo.reverse();
-    setMovements(movimientosOrdenados);
-
-    setFinalBalance(movimientosOrdenados[0]?.balance || 0);
+    setMovements(movimientosConSaldo);
+    setFinalBalance(
+      movimientosConSaldo[movimientosConSaldo.length - 1]?.balance || 0
+    );
   }, [currentProveedor, invoices, payments, paymentItems]);
 
   const filteredMovements = movements.filter(
@@ -136,7 +140,7 @@ export default function ProveedorCurrentAccountContainer({
       m.estado.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.observaciones.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log("Facturas actuales:", invoices);
+
   return (
     <section className="rounded-lg border shadow-sm mx-auto px-6 py-4 w-full space-y-6">
       {/* Header */}
@@ -233,6 +237,7 @@ export default function ProveedorCurrentAccountContainer({
         columns={columnsCC(currentProveedor)}
         data={filteredMovements}
         enableRowClick={true}
+        defaultSort={[{ id: "date", desc: true }]}
         onRowClick={(row) => {
           if (row.type === "Factura") {
             const id = row.id.replace("factura-", "");

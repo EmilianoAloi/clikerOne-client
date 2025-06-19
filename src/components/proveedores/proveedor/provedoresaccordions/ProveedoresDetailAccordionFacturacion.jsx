@@ -31,27 +31,16 @@ const ProveedoresDetailAccordionFacturacion = ({
   currentProveedores,
   invoices = [],
 }) => {
-  const [filteredInvoices, setFilteredInvoices] = useState(invoices);
+  const [filteredInvoices, setFilteredInvoices] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFilteredInvoices(invoices);
+    // Ordena por fecha_creado DESC (más nueva primero)
+    const sorted = [...invoices].sort(
+      (a, b) => new Date(b.fecha_creado) - new Date(a.fecha_creado)
+    );
+    setFilteredInvoices(sorted);
   }, [invoices]);
-
-  const getEstadoBadgeColor = (estado) => {
-    switch ((estado || "").toLowerCase()) {
-      case "pagada":
-        return "bg-green-100 text-green-800 border border-green-200 font-medium";
-      case "parcial":
-        return "bg-yellow-100 text-yellow-800 border border-yellow-200 font-medium";
-      case "pendiente":
-      default:
-        return "bg-red-100 text-red-800 border border-red-200 font-medium";
-    }
-  };
-
-  const capitalize = (str) =>
-    str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
   return (
     <AccordionItem
@@ -61,7 +50,7 @@ const ProveedoresDetailAccordionFacturacion = ({
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <FileText className="mr-2 h-5 w-5 text-yellow-500 group-hover:text-yellow-600 transition-colors" />
-          <span className="font-semibold text-lg">Facturas</span>
+          <span className="font-semibold text-lg">Documentos</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
@@ -70,13 +59,13 @@ const ProveedoresDetailAccordionFacturacion = ({
             <TableHeader>
               <TableRow className="bg-slate-50">
                 <TableHead className="font-semibold text-slate-700">
+                  Fecha Creado
+                </TableHead>
+                <TableHead className="font-semibold text-slate-700">
                   N° Comprobante
                 </TableHead>
                 <TableHead className="font-semibold text-slate-700">
                   Tipo
-                </TableHead>
-                <TableHead className="font-semibold text-slate-700">
-                  Condición de Venta
                 </TableHead>
                 <TableHead className="font-semibold text-slate-700">
                   Emisión
@@ -110,6 +99,16 @@ const ProveedoresDetailAccordionFacturacion = ({
                       )
                     }
                   >
+                    <TableCell className="py-3">
+                      <div className="flex items-center">
+                        <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
+                        {factura.fecha_creado
+                          ? new Date(factura.fecha_creado).toLocaleDateString(
+                              "es-AR"
+                            )
+                          : "-"}
+                      </div>
+                    </TableCell>
                     <TableCell className="py-3 font-medium">
                       #{factura.numero_factura}
                     </TableCell>
@@ -117,9 +116,6 @@ const ProveedoresDetailAccordionFacturacion = ({
                       {factura.tipo_comprobante
                         ? capitalizeWords(factura.tipo_comprobante)
                         : "-"}
-                    </TableCell>
-                    <TableCell className="py-3">
-                      {factura.condicion_venta ?? "-"}
                     </TableCell>
                     <TableCell className="py-3">
                       <div className="flex items-center">
@@ -134,13 +130,18 @@ const ProveedoresDetailAccordionFacturacion = ({
                     <TableCell className="py-3">
                       <div className="flex items-center">
                         <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
-                        {factura.fecha_vencimiento
-                          ? new Date(
-                              factura.fecha_vencimiento
-                            ).toLocaleDateString("es-AR")
-                          : "-"}
+                        {factura.fecha_vencimiento ? (
+                          new Date(
+                            factura.fecha_vencimiento
+                          ).toLocaleDateString("es-AR")
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">
+                            Sin vencimiento
+                          </span>
+                        )}
                       </div>
                     </TableCell>
+
                     <TableCell className="py-3 text-right font-medium">
                       <div className="flex items-center justify-start gap-1">
                         <span>$</span>

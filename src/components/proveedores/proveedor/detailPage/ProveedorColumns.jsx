@@ -30,6 +30,7 @@ export const columnsCC = (currentProveedor) => [
   {
     accessorKey: "date",
     header: "Fecha Movimiento",
+    enableSorting: true,
     cell: ({ row }) => (
       <div className="flex items-center text-sm">
         <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" />

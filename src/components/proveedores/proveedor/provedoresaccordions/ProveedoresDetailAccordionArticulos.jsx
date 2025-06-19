@@ -16,6 +16,7 @@ import {
   Hash,
   Palette,
   FileText,
+  Tag,
   Ruler,
   CircleDollarSign,
 } from "lucide-react";
@@ -68,6 +69,11 @@ const ProveedoresDetailAccordionArticulos = ({
                 </TableHead>
                 <TableHead className="text-slate-700 font-semibold">
                   <span className="inline-flex items-center gap-1">
+                    <Tag className="w-4 h-4" /> Categoría
+                  </span>
+                </TableHead>
+                <TableHead className="text-slate-700 font-semibold">
+                  <span className="inline-flex items-center gap-1">
                     <Palette className="w-4 h-4" /> Color
                   </span>
                 </TableHead>
@@ -95,19 +101,22 @@ const ProveedoresDetailAccordionArticulos = ({
                     key={articulo.id_articulo}
                     className="hover:bg-slate-50 transition-colors"
                   >
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 ps-3">
                       {articulo.codigo_interno ?? "-"}
                     </TableCell>
                     <TableCell className="py-3 font-medium">
                       {articulo.nombre}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 ps-3">
+                      {articulo.categoria || "-"}
+                    </TableCell>
+                    <TableCell className="py-3 ps-3">
                       {articulo.color || "-"}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 ps-3">
                       {articulo.descripcion || "-"}
                     </TableCell>
-                    <TableCell className="py-3">
+                    <TableCell className="py-3 ps-4">
                       {articulo.unidad_de_medida || "-"}
                     </TableCell>
                     <TableCell className="py-3 text-right">
@@ -121,7 +130,7 @@ const ProveedoresDetailAccordionArticulos = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-4">
+                  <TableCell colSpan={7} className="text-center py-4">
                     No hay artículos cargados para este proveedor.
                   </TableCell>
                 </TableRow>

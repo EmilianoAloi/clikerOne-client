@@ -81,7 +81,7 @@ const ProveedoresDetailAccordionOp = ({
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <ReceiptText className="mr-2 h-5 w-5 text-green-700 group-hover:text-green-800 transition-colors" />
-          <span className="font-semibold text-lg">Órdenes de Pago</span>
+          <span className="font-semibold text-lg">Ordenes de Pago</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
@@ -90,11 +90,12 @@ const ProveedoresDetailAccordionOp = ({
             <TableHeader>
               <TableRow className="bg-slate-50">
                 <TableHead className="font-semibold text-slate-700">
-                  N° de OP
+                  Fecha Creado
                 </TableHead>
                 <TableHead className="font-semibold text-slate-700">
-                  Fecha
+                  N° Comprobante
                 </TableHead>
+
                 <TableHead className="font-semibold text-slate-700">
                   Factura/s
                 </TableHead>
@@ -131,8 +132,6 @@ const ProveedoresDetailAccordionOp = ({
                         )
                       }
                     >
-                      <TableCell>#{pago.id_pago}</TableCell>
-
                       <TableCell>
                         <div className="flex items-center">
                           <Calendar className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
@@ -143,6 +142,7 @@ const ProveedoresDetailAccordionOp = ({
                             : "-"}
                         </div>
                       </TableCell>
+                      <TableCell>#{pago.id_pago}</TableCell>
 
                       <TableCell>
                         {facturas.length === 1 ? (

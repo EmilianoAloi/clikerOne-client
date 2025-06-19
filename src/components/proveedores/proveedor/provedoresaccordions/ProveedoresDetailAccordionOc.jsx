@@ -127,37 +127,37 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
                 supplierOrders.map((oc) => (
                   <TableRow
                     key={oc.id_orden_compra}
-                    className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer"
+                    className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer "
                     onClick={() =>
                       navigate(
                         `/proveedores/${currentProveedores.id_proveedor}/ordencompra/${oc.id_orden_compra}`
                       )
                     }
                   >
-                    <TableCell className="py-3 font-medium text-left">
+                    <TableCell className="py-3 font-medium text-left ps-3">
                       #{oc.id_orden_compra}
                     </TableCell>
-                    <TableCell className="py-3 text-left">
+                    <TableCell className="py-3 text-left  ps-3">
                       {oc.fecha_emision
                         ? new Date(oc.fecha_emision).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left">
+                    <TableCell className="py-3 text-left  ps-3">
                       {oc.fecha_entrega
                         ? new Date(oc.fecha_entrega).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left font-medium">
+                    <TableCell className="py-3 text-left font-medium  ps-3">
                       $
                       {oc.monto_total?.toLocaleString("es-AR", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell className="py-3 text-left">
+                    <TableCell className="py-3 text-left  ps-3">
                       {oc.condicion_pago || "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left">
+                    <TableCell className="py-3 text-left  ">
                       <BadgeEstado estado={oc.estado_compra ?? ""} />
                     </TableCell>
                     <TableCell className="py-3 text-center">
