@@ -27,7 +27,6 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       const response = await fetch(`${API_BASE}/proveedor/${idProveedor}`);
       if (!response.ok) throw new Error("Error al obtener facturas");
       const data = await response.json();
-      console.log("Facturas refrescadas:", data);
       setInvoicesByProveedor((prev) => ({
         ...prev,
         [idProveedor]: data,
@@ -125,9 +124,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       if (proveedorId) {
         await refreshProveedorInvoices(Number(proveedorId), true);
       }
-      console.log(
-        "Voy a llamar a refreshProveedores desde removeSupplierInvoice"
-      );
+
       await refreshProveedores(true);
     } catch (error) {
       console.error("Error eliminando factura:", error);

@@ -8,7 +8,7 @@ import BadgeEstado from "../ui/badge-custom";
 export const SupppliersColumns = [
   {
     accessorKey: "id_proveedor",
-    enableSortingRemoval: false, // <--- Importante
+    enableSortingRemoval: false,
     header: ({ column }) => (
       <Button
         className="cursor-pointer rounded-none !p-2 h-10"
@@ -201,7 +201,7 @@ export const SupppliersColumns = [
       const saldo = Number(row.getValue("saldo"));
       if (saldo > 0) {
         return (
-          <BadgeEstado estado="completo">
+          <BadgeEstado estado="saldo_positivo">
             + $
             {saldo.toLocaleString("es-AR", {
               minimumFractionDigits: 2,
@@ -211,7 +211,7 @@ export const SupppliersColumns = [
         );
       } else if (saldo < 0) {
         return (
-          <BadgeEstado estado="vencida">
+          <BadgeEstado estado="saldo_negativo">
             - $
             {Math.abs(saldo).toLocaleString("es-AR", {
               minimumFractionDigits: 2,

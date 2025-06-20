@@ -10,8 +10,8 @@ import {
   DollarSign,
   Calendar,
   Circle,
-  Equal,
-  Minus,
+  ArrowDownCircle,
+  ArrowUpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -116,6 +116,19 @@ export default function BadgeEstado({ estado, className = "", children }) {
             "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
           label: "Saldo Cero",
           icon: Circle,
+        };
+      case "saldo_negativo":
+        return {
+          color: "bg-red-50 text-red-700 border-red-200 hover:bg-red-100",
+          label: "Acreedor",
+          icon: ArrowDownCircle,
+        };
+      case "saldo_positivo":
+        return {
+          color:
+            "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
+          label: "Acreedor",
+          icon: ArrowUpCircle,
         };
       default: {
         const safeEstado = String(estado);
