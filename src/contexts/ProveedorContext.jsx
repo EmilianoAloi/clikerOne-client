@@ -9,6 +9,7 @@ export const ProveedorProvider = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const refreshProveedores = async (force = false, updatedProveedor = null) => {
+    console.log("REFRESH proveedores called", { force });
     if (isLoaded && !force) return; // Si los datos ya están cargados y no se fuerza la recarga, no se hace nada
 
     try {

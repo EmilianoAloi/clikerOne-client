@@ -124,8 +124,11 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       );
       if (proveedorId) {
         await refreshProveedorInvoices(Number(proveedorId), true);
-        await refreshProveedores(true);
       }
+      console.log(
+        "Voy a llamar a refreshProveedores desde removeSupplierInvoice"
+      );
+      await refreshProveedores(true);
     } catch (error) {
       console.error("Error eliminando factura:", error);
       toast.error("Hubo un problema al eliminar la factura.");

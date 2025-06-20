@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 import CcDeleteDialog from "./CcDeleteDialog";
+import { useProveedores } from "@/contexts/ProveedorContext";
 
 // Utilidad para limpiar el prefijo del ID
 function getIdLimpio(movement) {
@@ -31,6 +32,8 @@ const CcActionCell = ({ movement, currentProveedor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { refreshProveedorInvoices } = useProveedorInvoices();
   const { refreshProveedorPayments } = useProveedorOP();
+  const { refreshProveedores } = useProveedores();
+
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_URL;
   const id = getIdLimpio(movement);
@@ -82,7 +85,7 @@ const CcActionCell = ({ movement, currentProveedor }) => {
         await refreshProveedorPayments(currentProveedor.id_proveedor, true);
         await refreshProveedorInvoices(currentProveedor.id_proveedor, true);
       }
-
+      await refreshProveedores(true);
       toast.error(`${movement.type} eliminada correctamente`, {
         description: movement.comprobante,
       });
@@ -91,6 +94,7 @@ const CcActionCell = ({ movement, currentProveedor }) => {
       toast.error("Error al eliminar el movimiento", {
         description: movement.comprobante,
       });
+      await refreshProveedores(true);
     }
   };
 
