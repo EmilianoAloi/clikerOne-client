@@ -170,7 +170,6 @@ export default function ProveedorInvoiceForm({
         await createSupplierInvoice(data);
         toast.success("Factura cargada correctamente");
       }
-
       navigate(`/proveedores/${idProveedor}`, { state: { refresh: true } });
     } catch (err) {
       toast.error(err.message);

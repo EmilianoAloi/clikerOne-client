@@ -14,7 +14,9 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
   // --------- Helpers ---------
   const getInvoicesForProveedor = (idProveedor) =>
-    invoicesByProveedor[idProveedor] || [];
+    Array.isArray(invoicesByProveedor[idProveedor])
+      ? invoicesByProveedor[idProveedor]
+      : [];
 
   // --------- Fetch/Refresh ---------
   const refreshProveedorInvoices = async (idProveedor, force = false) => {
@@ -29,7 +31,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       const data = await response.json();
       setInvoicesByProveedor((prev) => ({
         ...prev,
-        [idProveedor]: data,
+        [idProveedor]: Array.isArray(data) ? data : [], // <- defensa robusta
       }));
     } catch (error) {
       console.error("❌ Error al obtener facturas:", error);
@@ -107,7 +109,9 @@ export const ProveedorInvoicesProvider = ({ children }) => {
     }
   };
 
-  const removeSupplierInvoice = async (id) => {
+  // --------- Nota de Crédito ---------
+
+  const removeSupplierInvoice = async (id, idProveedor) => {
     try {
       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
         method: "DELETE",
@@ -117,22 +121,20 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
       toast.success("Factura eliminada correctamente.");
 
-      // Buscar el proveedor de la factura eliminada para refrescar solo ese cache
-      const proveedorId = Object.keys(invoicesByProveedor).find((provId) =>
-        invoicesByProveedor[Number(provId)]?.some((f) => f.id_factura === id)
-      );
-      if (proveedorId) {
-        await refreshProveedorInvoices(Number(proveedorId), true);
+      if (idProveedor) {
+        await refreshProveedorInvoices(idProveedor, true);
       }
 
       await refreshProveedores(true);
+
+      // Delay para asegurar sincronización antes de seguir
+      await new Promise((resolve) => setTimeout(resolve, 1500));
     } catch (error) {
       console.error("Error eliminando factura:", error);
       toast.error("Hubo un problema al eliminar la factura.");
     }
   };
 
-  // --------- Nota de Crédito ---------
   const createNotaCredito = async (nota) => {
     try {
       const response = await fetch(`${API_BASE}`, {

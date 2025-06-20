@@ -16,8 +16,8 @@ const InputMonto = memo(({ value, disabled, onChange }) => (
     type="text"
     inputMode="decimal"
     className="w-full text-right px-2 py-1 h-9"
-    disabled={disabled}
     value={value}
+    disabled={false}
     onChange={(e) => onChange(e.target.value)}
   />
 ));
@@ -60,6 +60,7 @@ const ProveedorOPinvoices = ({
     setFacturasSeleccionadas((prev) =>
       prev.map((f) => (f.id_factura === id ? { ...f, monto } : f))
     );
+    console.log("monto ", monto);
   };
 
   const handleCheckboxChange = (factura, checked) => {
@@ -197,10 +198,6 @@ const ProveedorOPinvoices = ({
                     <TableCell className=" w-30">
                       <InputMonto
                         value={monto}
-                        disabled={
-                          selected ||
-                          (modo === "editar" && factura.saldo_restante === 0)
-                        }
                         onChange={(val) =>
                           handleMontoChange(factura.id_factura, val)
                         }
@@ -209,7 +206,7 @@ const ProveedorOPinvoices = ({
                     <TableCell className="text-sm text-muted-foreground max-w-[350px]">
                       <div
                         className="max-w-[350px] overflow-x-auto whitespace-nowrap"
-                        style={{ scrollbarWidth: "none" }} // para Firefox
+                        style={{ scrollbarWidth: "none" }}
                       >
                         <span
                           className="inline-block select-text"
