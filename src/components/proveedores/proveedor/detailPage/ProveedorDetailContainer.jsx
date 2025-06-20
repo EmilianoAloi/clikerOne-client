@@ -25,7 +25,7 @@ const ProveedorDetailContainer = ({
   }, [proveedores, id]);
 
   return (
-    <div className="mx-6 mt-2 mb-4 space-y-8">
+    <div className="mx-6 mt-2 mb-4 space-y-8 mb-10">
       <div className="rounded-lg border text-card-foreground shadow-sm p-6">
         <div className="flex justify-between items-start">
           <div className="flex flex-col space-y-1.5 mb-7">

@@ -34,8 +34,8 @@ export default function ProveedorInvoiceViewObs({ factura }) {
     }, 0) ?? 0;
 
   return (
-    <div className="flex gap-2 mt-5 mb-5">
-      <Card className="w-1/2 md:w-full border-none shadow-none md:border md:shadow-md ">
+    <div className="flex gap-2 mt-5 mb-20">
+      <Card className="w-1/2 md:w-full  md:border md:shadow-md ">
         <CardHeader>
           <CardTitle className="flex items-center gap-2  text-xl">
             <FileText className="w-5 h-5" />

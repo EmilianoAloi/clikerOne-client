@@ -27,8 +27,9 @@ export default function OPviewInvoice({ facturas }) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-32">Fecha</TableHead>
+                <TableHead>Tipo</TableHead>
                 <TableHead>Nº de comprobante</TableHead>
-                <TableHead />
+                <TableHead>Vencimiento</TableHead>
                 <TableHead className="text-right">Importe</TableHead>
               </TableRow>
             </TableHeader>
@@ -42,15 +43,30 @@ export default function OPviewInvoice({ facturas }) {
                         })
                       : "-"}
                   </TableCell>
+                  <TableCell>
+                    {factura.tipo_comprobante?.toUpperCase() || "-"}
+                  </TableCell>
                   <TableCell>{factura.numero_factura}</TableCell>
-                  <TableCell />
+                  <TableCell>
+                    {factura.fecha_vencimiento ? (
+                      format(
+                        new Date(factura.fecha_vencimiento),
+                        "dd.MM.yyyy",
+                        { locale: es }
+                      )
+                    ) : (
+                      <span className="italic text-muted-foreground">
+                        Sin vencimiento
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right text-red-700 font-medium">
                     -{formatCurrency(Math.abs(factura.monto_total))}
                   </TableCell>
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell colSpan={4} className="px-2">
+                <TableCell colSpan={5} className="px-2">
                   <div className="flex justify-between items-center">
                     <span className="text-right font-semibold w-full">
                       TOTAL CANCELADO

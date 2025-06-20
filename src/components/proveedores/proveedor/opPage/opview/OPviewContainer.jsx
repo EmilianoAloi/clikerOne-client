@@ -119,7 +119,7 @@ export default function OPviewContainer({ pago }) {
     (acc, p) => acc + parseFloat(p.monto_aplicado ?? "0"),
     0
   );
-
+  console.log(pago.facturas);
   return (
     <div className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-0 print:pt-0">
       <div className="flex justify-end gap-2 md:mt-[-20px] mb-2 me-3 !print:hidden mx-22">

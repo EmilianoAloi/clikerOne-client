@@ -9,10 +9,13 @@ import {
   MessageSquare,
   DollarSign,
   Calendar,
+  Circle,
+  Equal,
+  Minus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function BadgeEstado({ estado, className = "" }) {
+export default function BadgeEstado({ estado, className = "", children }) {
   const {
     color,
     label,
@@ -57,7 +60,7 @@ export default function BadgeEstado({ estado, className = "" }) {
       case "pendiente":
         return {
           color:
-            "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100",
+            "bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-100",
           label: "Pendiente",
           icon: Clock,
         };
@@ -100,6 +103,20 @@ export default function BadgeEstado({ estado, className = "" }) {
           label: "Sobrada",
           icon: AlertCircle,
         };
+      case "ninguna":
+        return {
+          color:
+            "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100",
+          label: "Ninguna",
+          icon: AlertCircle,
+        };
+      case "saldo_cero":
+        return {
+          color:
+            "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+          label: "Saldo Cero",
+          icon: Circle,
+        };
       default: {
         const safeEstado = String(estado);
         return {
@@ -121,7 +138,7 @@ export default function BadgeEstado({ estado, className = "" }) {
       )}
     >
       <IconComponent className="h-3.5 w-3.5 flex-shrink-0" />
-      <span className="truncate">{label}</span>
+      <span className="truncate">{children ? children : label}</span>
     </Badge>
   );
 }

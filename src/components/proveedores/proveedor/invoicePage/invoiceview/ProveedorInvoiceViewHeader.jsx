@@ -42,7 +42,7 @@ export default function ProveedorInvoiceViewHeader({ factura }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 ">
       {/* Información del proveedor y factura */}
-      <Card className="col-span-2 border-none shadow-none md:border md:shadow-md px-0 md:px-4">
+      <Card className="col-span-2  md:border md:shadow-md px-0 md:px-4">
         <CardHeader className="px-0 ">
           <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-none px-0  ">
             <BadgeInfo className="w-5 h-5" />
@@ -120,7 +120,7 @@ export default function ProveedorInvoiceViewHeader({ factura }) {
       </Card>
 
       {/* Resumen de montos */}
-      <Card className="hidden md:block border-none shadow-none md:border md:shadow-md">
+      <Card className="hidden md:block  md:border md:shadow-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
             <FileText className="w-5 h-5" />

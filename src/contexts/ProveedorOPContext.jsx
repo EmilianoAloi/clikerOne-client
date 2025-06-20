@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
+import { useProveedores } from "./ProveedorContext";
 
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`;
 
@@ -60,6 +61,7 @@ export function normalizePaymentPayload({
 export const ProveedorOPProvider = ({ children }) => {
   const [paymentsByProveedor, setPaymentsByProveedor] = useState({});
   const [paymentItemsByProveedor, setPaymentItemsByProveedor] = useState({});
+  const { refreshProveedores } = useProveedores();
 
   const getPaymentsForProveedor = (idProveedor) =>
     paymentsByProveedor[idProveedor] || [];
@@ -123,6 +125,7 @@ export const ProveedorOPProvider = ({ children }) => {
 
       if (payment.id_proveedor)
         await refreshProveedorPayments(payment.id_proveedor, true);
+      await refreshProveedores(true);
     } catch (error) {
       console.error("Error creando pago:", error);
       toast.error("Hubo un problema al registrar el pago.");
@@ -151,6 +154,7 @@ export const ProveedorOPProvider = ({ children }) => {
       const idProveedor = payload?.pagos?.[0]?.id_proveedor;
       if (idProveedor) {
         await refreshProveedorPayments(idProveedor, true);
+        await refreshProveedores(true);
         if (refreshInvoicesCallback) {
           await refreshInvoicesCallback(idProveedor);
         }
@@ -177,6 +181,7 @@ export const ProveedorOPProvider = ({ children }) => {
       toast.success("Pago actualizado correctamente.");
       if (payment.id_proveedor)
         await refreshProveedorPayments(payment.id_proveedor, true);
+      await refreshProveedores(true);
     } catch (error) {
       console.error("Error actualizando pago:", error);
       toast.error("Hubo un problema al actualizar el pago.");

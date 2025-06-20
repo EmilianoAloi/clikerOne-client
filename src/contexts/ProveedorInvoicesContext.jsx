@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
+import { useProveedores } from "./ProveedorContext";
 
 // --------- API BASE ---------
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/facturas`;
@@ -9,6 +10,7 @@ const ProveedorInvoicesContext = createContext(undefined);
 
 export const ProveedorInvoicesProvider = ({ children }) => {
   const [invoicesByProveedor, setInvoicesByProveedor] = useState({});
+  const { refreshProveedores } = useProveedores();
 
   // --------- Helpers ---------
   const getInvoicesForProveedor = (idProveedor) =>
@@ -75,6 +77,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
       if (invoice.id_proveedor) {
         await refreshProveedorInvoices(invoice.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("Error creando factura:", error);
@@ -97,6 +100,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
       if (invoice.id_proveedor) {
         await refreshProveedorInvoices(invoice.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("❌ Error actualizando factura:", error);
@@ -120,6 +124,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       );
       if (proveedorId) {
         await refreshProveedorInvoices(Number(proveedorId), true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("Error eliminando factura:", error);
@@ -147,6 +152,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       }
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("Error creando nota de crédito:", error);
@@ -225,6 +231,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("❌ Error actualizando nota de crédito:", error);
@@ -252,6 +259,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       }
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("Error creando nota de débito:", error);
@@ -283,6 +291,7 @@ export const ProveedorInvoicesProvider = ({ children }) => {
 
       if (nota.id_proveedor) {
         await refreshProveedorInvoices(nota.id_proveedor, true);
+        await refreshProveedores(true);
       }
     } catch (error) {
       console.error("❌ Error actualizando nota de débito:", error);

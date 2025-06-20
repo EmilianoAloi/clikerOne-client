@@ -2,6 +2,7 @@ import ProveedoresTableActions from "./ProveedorTableActions";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import BadgeEstado from "../ui/badge-custom";
 
 // COLUMNAS DE PROVEEDORES
 export const SupppliersColumns = [
@@ -166,18 +167,15 @@ export const SupppliersColumns = [
     cell: ({ row }) => {
       const count = Number(row.getValue("facturas_pendientes") || 0);
       if (count === 0) {
-        return (
-          <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
-            Ninguna
-          </span>
-        );
+        return <BadgeEstado estado="ninguna" />;
       }
       return (
-        <span className="text-xs font-medium text-orange-700 bg-orange-100 px-2 py-1 rounded-full">
+        <BadgeEstado estado="pendiente">
           {count} factura{count > 1 ? "s" : ""}
-        </span>
+        </BadgeEstado>
       );
     },
+
     meta: {
       className: "w-[40px] text-left",
     },
@@ -201,26 +199,31 @@ export const SupppliersColumns = [
     ),
     cell: ({ row }) => {
       const saldo = Number(row.getValue("saldo"));
-      let texto = "";
-      let color = "";
       if (saldo > 0) {
-        texto = `+ $${saldo.toLocaleString("es-AR")}`;
-        color = "bg-green-100 text-green-700";
+        return (
+          <BadgeEstado estado="completo">
+            + $
+            {saldo.toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </BadgeEstado>
+        );
       } else if (saldo < 0) {
-        texto = `- $${Math.abs(saldo).toLocaleString("es-AR")}`;
-        color = "bg-red-100 text-red-700";
+        return (
+          <BadgeEstado estado="vencida">
+            - $
+            {Math.abs(saldo).toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </BadgeEstado>
+        );
       } else {
-        texto = "Saldo Cero";
-        color = "bg-yellow-100 text-yellow-700";
+        return <BadgeEstado estado="saldo_cero">Saldo Cero</BadgeEstado>;
       }
-      return (
-        <span
-          className={`px-3 py-1 text-xs font-medium rounded-full w-fit block ml-1 mr-auto ${color}`}
-        >
-          {texto}
-        </span>
-      );
     },
+
     meta: {
       className: "w-[140px] text-left",
     },
