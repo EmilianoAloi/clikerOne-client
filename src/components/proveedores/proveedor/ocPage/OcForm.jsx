@@ -153,7 +153,8 @@ export default function OCForm({ proveedor, compra, modo }) {
         }
       );
 
-      navigate(`/proveedores/${data.id_proveedor}`);
+      navigate(`/proveedores/${data.id_proveedor}`),
+        { state: { refresh: true } };
     } catch (error) {
       toast.error(
         isEdit

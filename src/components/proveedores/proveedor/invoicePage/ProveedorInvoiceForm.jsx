@@ -171,7 +171,7 @@ export default function ProveedorInvoiceForm({
         toast.success("Factura cargada correctamente");
       }
 
-      navigate(`/proveedores/${idProveedor}`);
+      navigate(`/proveedores/${idProveedor}`, { state: { refresh: true } });
     } catch (err) {
       toast.error(err.message);
       console.error("Error al enviar factura", err);

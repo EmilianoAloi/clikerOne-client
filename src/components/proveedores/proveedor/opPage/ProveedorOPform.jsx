@@ -178,7 +178,9 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       );
       if (success) {
         toast.success("Orden de pago guardada correctamente.");
-        navigate(`/proveedores/${proveedor.id_proveedor}`);
+        navigate(`/proveedores/${proveedor.id_proveedor}`, {
+          state: { refresh: true },
+        });
       } else {
         toast.error("No se pudo guardar la orden de pago.");
       }
