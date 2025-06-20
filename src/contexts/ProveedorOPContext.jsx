@@ -189,7 +189,7 @@ export const ProveedorOPProvider = ({ children }) => {
   };
 
   // Eliminar pago
-  const removeSupplierPayment = async (id) => {
+  const removeSupplierPayment = async (id, idProveedor) => {
     try {
       const response = await fetch(`${API_BASE}/${id}`, {
         method: "DELETE",
@@ -197,6 +197,10 @@ export const ProveedorOPProvider = ({ children }) => {
 
       if (!response.ok) throw new Error("Error al eliminar pago");
       toast.success("Pago eliminado correctamente.");
+      if (idProveedor) {
+        await refreshProveedorPayments(idProveedor, true);
+        await refreshProveedores(true);
+      }
     } catch (error) {
       console.error("Error eliminando pago:", error);
       toast.error("Hubo un problema al eliminar el pago.");
