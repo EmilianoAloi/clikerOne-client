@@ -35,6 +35,7 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
+import ArticulosPage from "./page/proveedores/articulos/ArticulosPage";
 
 function RedirectToProveedor() {
   const { id } = useParams();
@@ -92,6 +93,13 @@ function App() {
                     <Route
                       path="/proveedores/:id/editar"
                       element={<ProveedoresEditPage />}
+                    />
+
+                    {/* Articulos */}
+
+                    <Route
+                      path="proveedores/articulos"
+                      element={<ArticulosPage />}
                     />
 
                     {/* OC */}
