@@ -34,7 +34,7 @@ const ProveedoresDetailAccordionArticulos = ({
   const [showHistorialModal, setShowHistorialModal] = useState(false);
 
   useEffect(() => {
-    // Filtra artículos para este proveedor, si es necesario
+    // Filtra artículos para este proveedor
     if (articles.length && currentProveedores?.id_proveedor) {
       setFilteredArticles(
         articles.filter(
@@ -144,12 +144,12 @@ const ProveedoresDetailAccordionArticulos = ({
                       maximumFractionDigits: 2,
                     })}
                   </TableCell>
-                  <TableCell className="py-3 text-center flex gap-2 justify-center">
+                  <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowHistorialModal(true)}
-                      className="text-indigo-500"
+                      className="text-indigo-500 !p-0"
                       title="Ver historial de precios"
                     >
                       <CircleDollarSign className="w-4 h-4" />
@@ -158,7 +158,7 @@ const ProveedoresDetailAccordionArticulos = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowArticuloModal(true)}
-                      className="text-amber-500"
+                      className="text-amber-500 !p-0"
                       title="Editar artículo"
                     >
                       <FileText className="w-4 h-4" />
@@ -169,7 +169,7 @@ const ProveedoresDetailAccordionArticulos = ({
               <TableRow className="group">
                 <TableCell colSpan={8} className="p-0">
                   <div
-                    className="w-full py-3 hover:bg-slate-50 cursor-pointer transition-colors duration-200 border-t border-slate-100"
+                    className="w-full py-4 hover:bg-slate-50 cursor-pointer transition-colors duration-200 border-t border-slate-100"
                     onClick={() => setShowArticuloModal(true)}
                   >
                     <div className="flex items-center justify-center gap-3 text-slate-500 group-hover:text-indigo-600 transition-colors">

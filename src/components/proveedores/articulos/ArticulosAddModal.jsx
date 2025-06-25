@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,228 +8,321 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import {
+  Boxes,
+  Hash,
+  PackageCheck,
+  Tag,
+  Palette,
+  FileText,
+  Ruler,
+  CircleDollarSign,
+  Trash2,
+  Plus,
+} from "lucide-react";
+import { useState } from "react";
 import { useCreateArticuloMutation } from "@/hooks/react-query/useArticulosMutation";
 import { useArticulosStore } from "@/stores/articulosStore";
 
-// --- Esquema de validación Zod
-const articuloSchema = z.object({
-  codigo_interno: z.string().min(1, "Requerido"),
-  nombre: z.string().min(1, "Requerido"),
-  categoria: z.string().min(1, "Requerido"),
-  color: z.string().min(1, "Requerido"),
-  descripcion: z.string().optional(),
-  unidad_de_medida: z.string().min(1, "Requerido"),
-  precio_unitario: z.coerce.number().min(0.01, "Debe ser mayor a 0"),
-});
-
-// Opciones (podés mover a un archivo constante si lo usás en varios lados)
 const CATEGORIAS = [
-  { value: "Materia prima", label: "Materia prima" },
-  { value: "Producto final", label: "Producto final" },
-  { value: "Parte o componente", label: "Parte o componente" },
-  { value: "Librería", label: "Librería" },
-  { value: "Cocina", label: "Cocina" },
-  { value: "Ferretería", label: "Ferretería" },
-  { value: "Electrónica", label: "Electrónica" },
-  { value: "Otros", label: "Otros" },
+  "Materia prima",
+  "Producto final",
+  "Parte o componente",
+  "Librería",
+  "Cocina",
+  "Ferretería",
+  "Electrónica",
+  "Otros",
 ];
-
-const COLORES = [
-  { value: "Blanco", label: "Blanco" },
-  { value: "Negro", label: "Negro" },
-  { value: "Rojo", label: "Rojo" },
-  { value: "Azul", label: "Azul" },
-  { value: "Verde", label: "Verde" },
-  { value: "Otro", label: "Otro" },
-];
-
 const UNIDADES = [
-  { value: "unidad", label: "unidad" },
-  { value: "caja", label: "caja" },
-  { value: "g", label: "g" },
-  { value: "kg", label: "kg" },
-  { value: "lt", label: "lt" },
-  { value: "ml", label: "ml" },
-  { value: "cm", label: "cm" },
-  { value: "cm2", label: "cm²" },
-  { value: "cm3", label: "cm³" },
-  { value: "m", label: "m" },
-  { value: "m2", label: "m²" },
+  "unidad",
+  "caja",
+  "g",
+  "kg",
+  "lt",
+  "ml",
+  "cm",
+  "cm2",
+  "cm3",
+  "m",
+  "m2",
 ];
 
-export default function ArticulosFormModal({
+const EMPTY_ARTICULO = {
+  codigo_interno: "",
+  nombre: "",
+  categoria: "",
+  color: "",
+  descripcion: "",
+  unidad_de_medida: "unidad",
+  precio_unitario: 1,
+};
+
+export default function ArticulosMultiFormModal({
   open,
   onClose,
   onCreated,
   idProveedor,
 }) {
-  const form = useForm({
-    resolver: zodResolver(articuloSchema),
-    defaultValues: {
-      codigo_interno: "",
-      nombre: "",
-      categoria: "",
-      color: "",
-      descripcion: "",
-      unidad_de_medida: "unidad",
-      precio_unitario: 0,
-    },
-    mode: "onTouched",
-  });
-
-  // React Query + Zustand
+  const [items, setItems] = useState([{ ...EMPTY_ARTICULO, id: Date.now() }]);
   const mutation = useCreateArticuloMutation(idProveedor);
   const addArticulo = useArticulosStore((s) => s.addArticulo);
 
-  const handleSubmit = (values) => {
-    mutation.mutate(values, {
-      onSuccess: (data) => {
-        addArticulo?.(data); // Actualiza Zustand si usás cache local
-        onCreated?.(); // Callback para refrescar la lista
-        form.reset();
-        onClose();
-      },
-      // El error ya lo maneja el hook
-    });
+  // --- Handlers ---
+  const handleAddItem = () =>
+    setItems((prev) => [
+      ...prev,
+      { ...EMPTY_ARTICULO, id: Date.now() + Math.random() },
+    ]);
+
+  const handleRemoveItem = (id) =>
+    setItems((prev) =>
+      prev.length > 1 ? prev.filter((a) => a.id !== id) : prev
+    );
+
+  const handleItemChange = (id, key, value) =>
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
+    );
+
+  // --- Guardar todos ---
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    for (const { id, ...values } of items) {
+      // Si querés validar acá podés usar Zod o lo que prefieras antes de enviar
+      await mutation.mutateAsync(values, {
+        onSuccess: (data) => {
+          addArticulo?.(data);
+        },
+      });
+    }
+    setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
+    onCreated?.();
+    onClose();
   };
 
   return (
     <Dialog
       open={open}
       onOpenChange={() => {
-        form.reset();
+        setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
         onClose();
       }}
     >
-      <DialogContent className="max-w-lg">
-        <DialogTitle>Agregar Nuevo Artículo</DialogTitle>
-        <DialogDescription>
-          Completá la información del nuevo artículo para este proveedor.
-        </DialogDescription>
-        <form
-          className="space-y-3 mt-4"
-          onSubmit={form.handleSubmit(handleSubmit)}
-          autoComplete="off"
-        >
-          <Input
-            {...form.register("codigo_interno")}
-            placeholder="Código *"
-            disabled={mutation.isPending}
-            autoFocus
-          />
-          {form.formState.errors.codigo_interno && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.codigo_interno.message}
-            </p>
-          )}
-          <Input
-            {...form.register("nombre")}
-            placeholder="Nombre *"
-            disabled={mutation.isPending}
-          />
-          {form.formState.errors.nombre && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.nombre.message}
-            </p>
-          )}
-          <Select
-            value={form.watch("categoria")}
-            onValueChange={(v) => form.setValue("categoria", v)}
-            disabled={mutation.isPending}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar categoría *" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIAS.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value}>
-                  {cat.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {form.formState.errors.categoria && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.categoria.message}
-            </p>
-          )}
-          <Select
-            value={form.watch("color")}
-            onValueChange={(v) => form.setValue("color", v)}
-            disabled={mutation.isPending}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar color *" />
-            </SelectTrigger>
-            <SelectContent>
-              {COLORES.map((color) => (
-                <SelectItem key={color.value} value={color.value}>
-                  {color.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {form.formState.errors.color && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.color.message}
-            </p>
-          )}
-          <Input
-            {...form.register("descripcion")}
-            placeholder="Descripción"
-            disabled={mutation.isPending}
-          />
-          <Select
-            value={form.watch("unidad_de_medida")}
-            onValueChange={(v) => form.setValue("unidad_de_medida", v)}
-            disabled={mutation.isPending}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Unidad de Medida *" />
-            </SelectTrigger>
-            <SelectContent>
-              {UNIDADES.map((um) => (
-                <SelectItem key={um.value} value={um.value}>
-                  {um.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {form.formState.errors.unidad_de_medida && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.unidad_de_medida.message}
-            </p>
-          )}
-          <Input
-            {...form.register("precio_unitario", { valueAsNumber: true })}
-            type="number"
-            step="0.01"
-            min={0.01}
-            placeholder="Precio Unitario *"
-            disabled={mutation.isPending}
-          />
-          {form.formState.errors.precio_unitario && (
-            <p className="text-red-500 text-xs">
-              {form.formState.errors.precio_unitario.message}
-            </p>
-          )}
-          <div className="flex justify-end gap-2 mt-2">
+      <DialogContent className="!max-w-[90vw] p-8 ">
+        <form onSubmit={handleSubmit} autoComplete="off">
+          <div className="flex justify-between items-start mb-2">
+            <div>
+              <DialogTitle className="text-lg font-semibold flex items-center gap-2 mb-0">
+                <Boxes className="h-5 w-5 text-slate-600" />
+                Ingreso de nuevos artículos
+              </DialogTitle>
+              <p className="text-slate-500 text-sm  ">
+                Completá los datos de cada articulo para este proveedor.
+              </p>
+              <p className="text-slate-500 text-sm  mb-4">
+                Usá el botón “+ Agregar más” para cargar más productos antes de
+                guardar.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleAddItem}
+              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100"
+            >
+              <Plus className="h-4 w-4 mr-1" /> Agregar más
+            </Button>
+          </div>
+          {/* Encabezados */}
+          <div className="grid grid-cols-[80px_1.5fr_1.2fr_0.8fr_1.4fr_0.8fr_1.2fr_44px] gap-3 px-4 py-2 text-sm font-medium text-slate-700">
+            <div>
+              <span className="flex items-center gap-1">
+                <Hash className="h-4 w-4" /> Código
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <PackageCheck className="h-4 w-4" /> Nombre
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <Tag className="h-4 w-4" /> Categoría
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <Palette className="h-4 w-4" /> Color
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <FileText className="h-4 w-4" /> Descripción
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <Ruler className="h-4 w-4" /> U. medida
+              </span>
+            </div>
+            <div>
+              <span className="flex items-center gap-1">
+                <CircleDollarSign className="h-4 w-4" /> Precio Unitario
+              </span>
+            </div>
+            <div style={{ width: 44 }}></div>
+          </div>
+          {/* Filas */}
+          <div className="space-y-2">
+            {items.map((item, idx) => (
+              <div
+                key={item.id}
+                className="bg-slate-50 border border-slate-200 rounded-md px-4 py-2"
+              >
+                <div className="grid grid-cols-[80px_1.5fr_1.2fr_0.8fr_1.4fr_0.8fr_1.2fr_44px] gap-3 items-center">
+                  {/* Código interno */}
+                  <div>
+                    <Input
+                      value={item.codigo_interno ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(
+                          item.id,
+                          "codigo_interno",
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-white text-sm"
+                      placeholder="Ej: 4646"
+                    />
+                  </div>
+                  {/* Nombre */}
+                  <div>
+                    <Input
+                      value={item.nombre ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(item.id, "nombre", e.target.value)
+                      }
+                      className="w-full bg-white text-sm"
+                      placeholder="Ej: Papel A4"
+                    />
+                  </div>
+                  {/* Categoría */}
+                  <div>
+                    <Select
+                      value={item.categoria ?? ""}
+                      onValueChange={(value) =>
+                        handleItemChange(item.id, "categoria", value)
+                      }
+                    >
+                      <SelectTrigger className="w-full bg-white text-sm">
+                        <SelectValue placeholder="Elegí categoría" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CATEGORIAS.map((cat) => (
+                          <SelectItem key={cat} value={cat}>
+                            {cat}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {/* Color (input de texto) */}
+                  <div>
+                    <Input
+                      value={item.color ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(item.id, "color", e.target.value)
+                      }
+                      className="w-full bg-white text-sm"
+                      placeholder="Color"
+                    />
+                  </div>
+                  {/* Descripción */}
+                  <div>
+                    <Input
+                      value={item.descripcion ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(item.id, "descripcion", e.target.value)
+                      }
+                      className="w-full bg-white text-sm"
+                      placeholder="Descripción"
+                    />
+                  </div>
+                  {/* Unidad de medida */}
+                  <div>
+                    <Select
+                      value={item.unidad_de_medida ?? ""}
+                      onValueChange={(value) =>
+                        handleItemChange(item.id, "unidad_de_medida", value)
+                      }
+                    >
+                      <SelectTrigger className="w-full bg-white text-sm">
+                        <SelectValue placeholder="Unidad" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UNIDADES.map((um) => (
+                          <SelectItem key={um} value={um}>
+                            {um}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {/* Precio unitario */}
+                  <div>
+                    <Input
+                      min="0"
+                      type="number"
+                      value={item.precio_unitario ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(
+                          item.id,
+                          "precio_unitario",
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-white text-sm"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  {/* Botón eliminar */}
+                  <div className="flex justify-center" style={{ width: 44 }}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveItem(item.id)}
+                      className="hover:bg-gray-200 hover:text-red-500 cursor-pointer text-red-500"
+                      disabled={items.length === 1}
+                      tabIndex={-1}
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Botones pie */}
+          <div className="flex justify-end gap-2 mt-8">
             <Button
               type="button"
               variant="outline"
               onClick={() => {
-                form.reset();
+                setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
                 onClose();
               }}
               disabled={mutation.isPending}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={mutation.isPending}>
-              {mutation.isPending ? "Guardando..." : "Agregar Artículo"}
+            <Button
+              type="submit"
+              className="bg-black text-white font-semibold"
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? "Guardando..." : "Guardar Artículos"}
             </Button>
           </div>
         </form>
