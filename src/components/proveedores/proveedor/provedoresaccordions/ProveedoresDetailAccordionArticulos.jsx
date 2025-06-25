@@ -21,12 +21,16 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import ArticulosFormModal from "../../articulos/ArticulosAddModal";
 
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
   articles = [],
 }) => {
   const [filteredArticles, setFilteredArticles] = useState([]);
+  const [showArticuloModal, setShowArticuloModal] = useState(false);
+  const [showHistorialModal, setShowHistorialModal] = useState(false);
 
   useEffect(() => {
     // Filtra artículos para este proveedor, si es necesario
@@ -46,12 +50,42 @@ const ProveedoresDetailAccordionArticulos = ({
       value="articulos"
       className="border rounded-lg shadow-sm overflow-hidden bg-white"
     >
-      <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
-        <div className="flex items-center">
-          <Package className="mr-2 h-5 w-5 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
-          <span className="font-semibold text-lg">Artículos</span>
+      <AccordionTrigger className="px-6 py-3 hover:bg-slate-50 cursor-pointer group">
+        <div className="flex items-center justify-between w-full">
+          {/* Título + ícono */}
+          <div className="flex items-center">
+            <Package className="mr-2 h-5 w-5 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
+            <span className="font-semibold text-lg">Artículos</span>
+          </div>
         </div>
       </AccordionTrigger>
+      {/* Botones */}
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          onClick={() => setShowArticuloModal(true)}
+          className="flex items-center gap-2"
+          size="sm"
+        >
+          <Package className="w-4 h-4" /> Agregar Artículo
+        </Button>
+
+        <ArticulosFormModal
+          open={showArticuloModal}
+          onClose={() => setShowArticuloModal(false)}
+          idProveedor={currentProveedores.id_proveedor}
+          // onCreated={refreshArticles} // tu función para refrescar la lista de artículos en pantalla
+        />
+        <Button
+          variant="secondary"
+          onClick={() => setShowHistorialModal(true)}
+          className="flex items-center gap-2"
+          size="sm"
+        >
+          <CircleDollarSign className="w-4 h-4" /> Historial de Precios
+        </Button>
+      </div>
+
       <AccordionContent className="px-6 pb-6 pt-2">
         <div className="border rounded-lg overflow-hidden shadow-sm">
           <Table>
