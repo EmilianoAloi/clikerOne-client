@@ -19,6 +19,7 @@ import {
   Tag,
   Ruler,
   CircleDollarSign,
+  Plus,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -52,45 +53,26 @@ const ProveedoresDetailAccordionArticulos = ({
     >
       <AccordionTrigger className="px-6 py-3 hover:bg-slate-50 cursor-pointer group">
         <div className="flex items-center justify-between w-full">
-          {/* Título + ícono */}
           <div className="flex items-center">
             <Package className="mr-2 h-5 w-5 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
             <span className="font-semibold text-lg">Artículos</span>
           </div>
         </div>
       </AccordionTrigger>
-      {/* Botones */}
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          onClick={() => setShowArticuloModal(true)}
-          className="flex items-center gap-2"
-          size="sm"
-        >
-          <Package className="w-4 h-4" /> Agregar Artículo
-        </Button>
-
-        <ArticulosFormModal
-          open={showArticuloModal}
-          onClose={() => setShowArticuloModal(false)}
-          idProveedor={currentProveedores.id_proveedor}
-          // onCreated={refreshArticles} // tu función para refrescar la lista de artículos en pantalla
-        />
-        <Button
-          variant="secondary"
-          onClick={() => setShowHistorialModal(true)}
-          className="flex items-center gap-2"
-          size="sm"
-        >
-          <CircleDollarSign className="w-4 h-4" /> Historial de Precios
-        </Button>
-      </div>
-
-      <AccordionContent className="px-6 pb-6 pt-2">
+      <AccordionContent className="px-6 pb-6 ">
+        <div className="flex justify-end gap-2 mb-3">
+          <ArticulosFormModal
+            open={showArticuloModal}
+            onClose={() => setShowArticuloModal(false)}
+            idProveedor={currentProveedores.id_proveedor}
+            // onCreated={refreshArticles}
+          />
+        </div>
         <div className="border rounded-lg overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50">
+                {/* ...todas tus columnas, incluyendo Acciones... */}
                 <TableHead className="text-slate-700 font-semibold">
                   <span className="inline-flex items-center gap-1">
                     <Hash className="w-4 h-4" /> Código
@@ -126,49 +108,86 @@ const ProveedoresDetailAccordionArticulos = ({
                     <CircleDollarSign className="w-4 h-4" /> Precio Unitario
                   </span>
                 </TableHead>
+                <TableHead className="text-slate-700 font-semibold text-center w-32">
+                  Acciones
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredArticles.length > 0 ? (
-                filteredArticles.map((articulo) => (
-                  <TableRow
-                    key={articulo.id_articulo}
-                    className="hover:bg-slate-50 transition-colors"
-                  >
-                    <TableCell className="py-3 ps-3">
-                      {articulo.codigo_interno ?? "-"}
-                    </TableCell>
-                    <TableCell className="py-3 font-medium">
-                      {articulo.nombre}
-                    </TableCell>
-                    <TableCell className="py-3 ps-3">
-                      {articulo.categoria || "-"}
-                    </TableCell>
-                    <TableCell className="py-3 ps-3">
-                      {articulo.color || "-"}
-                    </TableCell>
-                    <TableCell className="py-3 ps-3">
-                      {articulo.descripcion || "-"}
-                    </TableCell>
-                    <TableCell className="py-3 ps-4">
-                      {articulo.unidad_de_medida || "-"}
-                    </TableCell>
-                    <TableCell className="py-3 text-right">
-                      ${" "}
-                      {articulo.precio_unitario?.toLocaleString("es-AR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-4">
-                    No hay artículos cargados para este proveedor.
+              {filteredArticles.map((articulo) => (
+                <TableRow
+                  key={articulo.id_articulo}
+                  className="hover:bg-slate-50 transition-colors"
+                >
+                  <TableCell className="py-3 ps-3">
+                    {articulo.codigo_interno ?? "-"}
+                  </TableCell>
+                  <TableCell className="py-3 font-medium">
+                    {articulo.nombre}
+                  </TableCell>
+                  <TableCell className="py-3 ps-3">
+                    {articulo.categoria || "-"}
+                  </TableCell>
+                  <TableCell className="py-3 ps-3">
+                    {articulo.color || "-"}
+                  </TableCell>
+                  <TableCell className="py-3 ps-3">
+                    {articulo.descripcion || "-"}
+                  </TableCell>
+                  <TableCell className="py-3 ps-4">
+                    {articulo.unidad_de_medida || "-"}
+                  </TableCell>
+                  <TableCell className="py-3 text-right">
+                    ${" "}
+                    {articulo.precio_unitario?.toLocaleString("es-AR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </TableCell>
+                  <TableCell className="py-3 text-center flex gap-2 justify-center">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowHistorialModal(true)}
+                      className="text-indigo-500"
+                      title="Ver historial de precios"
+                    >
+                      <CircleDollarSign className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowArticuloModal(true)}
+                      className="text-amber-500"
+                      title="Editar artículo"
+                    >
+                      <FileText className="w-4 h-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
-              )}
+              ))}
+              <TableRow className="group">
+                <TableCell colSpan={8} className="p-0">
+                  <div
+                    className="w-full py-3 hover:bg-slate-50 cursor-pointer transition-colors duration-200 border-t border-slate-100"
+                    onClick={() => setShowArticuloModal(true)}
+                  >
+                    <div className="flex items-center justify-center gap-3 text-slate-500 group-hover:text-indigo-600 transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
+                        <Plus className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">
+                          Agregar Artículo
+                        </div>
+                        <div className="text-xs text-slate-500 group-hover:text-indigo-500 transition-colors">
+                          Click para crear un nuevo artículo
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </div>
