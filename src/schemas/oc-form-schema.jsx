@@ -24,7 +24,7 @@ export const ocFormSchema = z.object({
   fecha_vencimiento: z.date().optional(),
   fecha_contable: z.date({ required_error: "Fecha contable requerida" }),
   condicion_pago: z.string().nonempty("Debe seleccionar una condición de pago"),
-  lugar_entrega: z.string().nonempty("Debe seleccionar un lugar de entrega"),
+  lugar_entrega: z.string().nonempty("Debe ingresar un lugar de entrega"),
   monto_total: z.number().min(0, "El monto total no puede ser negativo"),
   estado_compra: z.enum([
     "pendiente",

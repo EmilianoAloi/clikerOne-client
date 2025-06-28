@@ -183,6 +183,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
           />
         </div>
         {/* Lugar de entrega */}
+
         <div>
           <FormField
             control={control}
@@ -194,37 +195,18 @@ export default function OCproveedorInfo({ form, proveedor }) {
                   Lugar de Entrega
                 </FormLabel>
                 <FormControl>
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      form.trigger("lugar_entrega");
-                    }}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger
-                      onBlur={field.onBlur}
-                      className="w-full mt-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
-                    >
-                      <SelectValue placeholder="Seleccioná lugar de entrega" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Depósito Central">
-                        Depósito Central
-                      </SelectItem>
-                      <SelectItem value="Sucursal Buenos Aires">
-                        Sucursal Buenos Aires
-                      </SelectItem>
-                      <SelectItem value="Cliente">Cliente</SelectItem>
-                      <SelectItem value="Otro">Otro</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    {...field}
+                    placeholder="Ingresá el lugar de entrega"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+                  />
                 </FormControl>
                 <FormMessage className="block min-h-[20px] text-xs ms-2 ml-2 mt-[-4px]" />
               </FormItem>
             )}
           />
         </div>
+
         {/* Fecha de entrega */}
         <div>
           <FormField
@@ -278,7 +260,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
           />
         </div>
         {/* Fecha contable */}
-        <div>
+        {/* <div>
           <FormField
             control={control}
             name="fecha_contable"
@@ -328,7 +310,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -51,11 +51,11 @@ const ProveedoresDetailAccordionArticulos = ({
       value="articulos"
       className="border rounded-lg shadow-sm overflow-hidden bg-white"
     >
-      <AccordionTrigger className="px-6 py-3 hover:bg-slate-50 cursor-pointer group">
+      <AccordionTrigger className="px-6 py-3 hover:bg-slate-50 cursor-pointer group hover:no-underline">
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center">
+          <div className="flex items-center ">
             <Package className="mr-2 h-5 w-5 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
-            <span className="font-semibold text-lg">Artículos</span>
+            <span className="font-semibold text-lg ">Artículos</span>
           </div>
         </div>
       </AccordionTrigger>
