@@ -19,6 +19,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 
+const UNIDADES = [
+  "unidad",
+  "caja",
+  "g",
+  "kg",
+  "lt",
+  "ml",
+  "cm",
+  "cm2",
+  "cm3",
+  "m",
+  "m2",
+];
+
 export default function ProveedorInvoiceArticle({
   articulos,
   ivaDefault,
@@ -45,6 +59,8 @@ export default function ProveedorInvoiceArticle({
         precio_unitario: 0,
         valor_descuento: 0,
         iva: ivaDefault,
+        color: "",
+        unidad_medida: "",
       });
     } else {
       remove(idx);
@@ -59,6 +75,8 @@ export default function ProveedorInvoiceArticle({
       precio_unitario: 0,
       valor_descuento: 0,
       iva: ivaDefault,
+      color: "",
+      unidad_medida: "",
     });
   };
 
@@ -89,9 +107,19 @@ export default function ProveedorInvoiceArticle({
               <Hash className="h-4 w-4" /> Cantidad
             </span>
           </div>
-          <div className="col-span-6">
+          <div className="col-span-2">
             <span className="flex items-center gap-1">
               <PackageCheck className="h-4 w-4" /> Artículo
+            </span>
+          </div>
+          <div className="col-span-2 me-6">
+            <span className="flex items-center gap-1">
+              <CircleDollarSign className="h-4 w-4" /> Color
+            </span>
+          </div>
+          <div className="col-span-2 me-6">
+            <span className="flex items-center gap-1">
+              <CircleDollarSign className="h-4 w-4" /> U. medida
             </span>
           </div>
           <div className="col-span-2 me-6">
@@ -109,7 +137,7 @@ export default function ProveedorInvoiceArticle({
               <Percent className="h-4 w-4" /> IVA
             </span>
           </div>
-          <div className="col-span-2 ms-0">
+          <div className="col-span-1 ms-0">
             <span className="flex items-center gap-1 ">
               <CircleDollarSign className="h-4 w-4" /> Subtotal
             </span>
@@ -175,8 +203,8 @@ export default function ProveedorInvoiceArticle({
                   )}
                 />
               </div>
-              {/* Artículo o input manual */}
-              <div className="lg:col-span-6 col-span-full">
+              {/* Artículo  */}
+              <div className="lg:col-span-2 col-span-full">
                 <div className="lg:hidden font-semibold mb-1">Artículo</div>
                 {!esManual ? (
                   <Controller
@@ -200,6 +228,8 @@ export default function ProveedorInvoiceArticle({
                               setValue(`items.${idx}.cantidad`, 1);
                               setValue(`items.${idx}.valor_descuento`, 0);
                               setValue(`items.${idx}.iva`, ivaDefault);
+                              setValue(`items.${idx}.color`, "");
+                              setValue(`items.${idx}.unidad_de_medida`, "");
                             } else {
                               const selectedId = Number(value);
                               const selected = articulos.find(
@@ -216,6 +246,14 @@ export default function ProveedorInvoiceArticle({
                               setValue(
                                 `items.${idx}.iva`,
                                 selected?.iva_predeterminado ?? ivaDefault
+                              );
+                              setValue(
+                                `items.${idx}.color`,
+                                selected?.color ?? ""
+                              );
+                              setValue(
+                                `items.${idx}.unidad_medida`,
+                                selected?.unidad_de_medida ?? ""
                               );
                             }
                           }}
@@ -274,6 +312,63 @@ export default function ProveedorInvoiceArticle({
                   />
                 )}
               </div>
+
+              {/* Color */}
+              <div className="lg:col-span-2 col-span-full">
+                <div className="lg:hidden font-semibold mb-1">Color</div>
+                <Controller
+                  control={control}
+                  name={`items.${idx}.color`}
+                  render={({ field }) => (
+                    <>
+                      <Input
+                        {...field}
+                        placeholder="Color"
+                        className={inputStyle}
+                      />
+                      {errors.items?.[idx]?.color?.message && (
+                        <span className="text-xs text-red-500">
+                          {errors.items?.[idx]?.color?.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+
+              {/* Unidad de Medida */}
+              <div className="lg:col-span-2 col-span-full">
+                <div className="lg:hidden font-semibold mb-1">U. Medida</div>
+                <Controller
+                  control={control}
+                  name={`items.${idx}.unidad_medida`}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={(value) => field.onChange(value)}
+                      >
+                        <SelectTrigger className="w-full bg-white text-sm">
+                          <SelectValue placeholder="Unidad" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {UNIDADES.map((um) => (
+                            <SelectItem key={um} value={um}>
+                              {um}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.items?.[idx]?.unidad_medida?.message && (
+                        <span className="text-xs text-red-500">
+                          {errors.items?.[idx]?.unidad_medida?.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+
               {/* Precio unitario */}
               <div className="lg:col-span-2 col-span-full">
                 <div className="lg:hidden font-semibold mb-1">
@@ -402,9 +497,9 @@ export default function ProveedorInvoiceArticle({
                         <SelectValue placeholder="IVA" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="21">21%</SelectItem>
-                        <SelectItem value="10.5">10,5%</SelectItem>
-                        <SelectItem value="0">0%</SelectItem>
+                        <SelectItem value="21">21</SelectItem>
+                        <SelectItem value="10.5">10,5</SelectItem>
+                        <SelectItem value="0">0</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
