@@ -121,7 +121,7 @@ export default function ArticulosMultiFormModal({
                 Completá los datos de cada articulo para este proveedor.
               </p>
               <p className="text-slate-500 text-sm  mb-4">
-                Usá el botón “+ Agregar más” para cargar más productos antes de
+                Usá el botón “Agregar más” para cargar más productos antes de
                 guardar.
               </p>
             </div>
@@ -129,7 +129,7 @@ export default function ArticulosMultiFormModal({
               type="button"
               variant="outline"
               onClick={handleAddItem}
-              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100"
+              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100  mt-6"
             >
               <Plus className="h-4 w-4 mr-1" /> Agregar más
             </Button>
