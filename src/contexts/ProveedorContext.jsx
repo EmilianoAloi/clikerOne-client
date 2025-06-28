@@ -68,22 +68,35 @@ export const ProveedorProvider = ({ children }) => {
     }
   };
 
-  const createProveedor = async (proveedor) => {
+  const createProveedorWithArticles = async (proveedorData, articulos) => {
     try {
-      const response = await fetch(API_URL, {
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(proveedor),
+        body: JSON.stringify({ proveedor: proveedorData, articulos }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        return;
+      const contentType = res.headers.get("content-type");
+      const data = contentType?.includes("application/json")
+        ? await res.json()
+        : await res.text();
+
+      if (!res.ok) {
+        if (
+          data?.error &&
+          data.error.includes("Ya existe un proveedor con ese CUIT")
+        ) {
+          throw new Error("Ya existe un proveedor con ese CUIT");
+        }
+        throw new Error(
+          data?.error || "Error al crear proveedor con artículos"
+        );
       }
 
-      await refreshProveedores(true);
+      return data;
     } catch (error) {
-      console.error(error);
+      console.error("Error creando proveedor con artículos:", error);
+      throw error;
     }
   };
 
@@ -136,38 +149,6 @@ export const ProveedorProvider = ({ children }) => {
     }
   };
 
-  const createProveedorWithArticles = async (proveedorData, articulos) => {
-    try {
-      const res = await fetch(`${API_URL}/con-articulos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proveedor: proveedorData, articulos }),
-      });
-
-      const contentType = res.headers.get("content-type");
-      const data = contentType?.includes("application/json")
-        ? await res.json()
-        : await res.text();
-
-      if (!res.ok) {
-        if (
-          data?.error &&
-          data.error.includes("Ya existe un proveedor con ese CUIT")
-        ) {
-          throw new Error("Ya existe un proveedor con ese CUIT");
-        }
-        throw new Error(
-          data?.error || "Error al crear proveedor con artículos"
-        );
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Error creando proveedor con artículos:", error);
-      throw error;
-    }
-  };
-
   const activateProveedor = async (id, nombre) => {
     try {
       await editProveedor(id, { estado_logico: true }, [], [], true);
@@ -182,7 +163,6 @@ export const ProveedorProvider = ({ children }) => {
       value={{
         proveedores,
         refreshProveedores,
-        createProveedor,
         createProveedorWithArticles,
         editProveedor,
         removeProveedor,

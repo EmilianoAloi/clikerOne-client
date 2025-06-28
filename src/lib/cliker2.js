@@ -19,6 +19,18 @@ export async function fetchFromCliker2(consulta, params) {
   }
 }
 
+export async function fetchPagosProveedorUltimos3Meses(idProveedor) {
+  const BASE_URL = import.meta.env.VITE_API_URL || "";
+  const res = await fetch(
+    `${BASE_URL}/api/suppliers/external/pagos?IdProveedor=${idProveedor}`
+  );
+  if (!res.ok) {
+    throw new Error(`Error trayendo pagos proveedor: ${res.status}`);
+  }
+  const json = await res.json();
+  return json;
+}
+
 export async function fetchDetallePagoCliker2(idPago) {
   const BASE_URL = import.meta.env.VITE_API_URL || "";
   const res = await fetch(

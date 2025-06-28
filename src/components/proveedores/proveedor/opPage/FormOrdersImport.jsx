@@ -18,11 +18,18 @@ import {
 } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { toast } from "sonner";
-import { fetchFromCliker2, fetchDetallePagoCliker2 } from "@/lib/cliker2";
+import {
+  fetchPagosProveedorUltimos3Meses,
+  fetchDetallePagoCliker2,
+} from "@/lib/cliker2";
 import { Input } from "@/components/ui/input";
 import ChequesModalTable from "./ChequesModalTable";
 
-export const FormOrdersImport = ({ idProveedorCliker, onImport }) => {
+export const FormOrdersImport = ({
+  idProveedorCliker,
+  pagosYaImportados = [],
+  onImport,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pagos, setPagos] = useState([]);
   const [seleccionados, setSeleccionados] = useState([]);
@@ -40,17 +47,19 @@ export const FormOrdersImport = ({ idProveedorCliker, onImport }) => {
     }
     try {
       setLoading(true);
-      const data = await fetchFromCliker2("ListadoPagosProveedor", {
-        IdProveedor: idProveedorCliker,
-      });
-      const pagosFormateados = (data.pagosProveedor ?? []).map((p) => ({
-        id: p.idMovimiento,
-        numero_comprobante: p.idMovimiento,
-        medio: p.medio ?? "",
-        fecha_acreditacion: p.fecha ?? "",
-        monto: Number(p.monto ?? 0),
-        observaciones: p.observacion ?? "",
-      }));
+      const data = await fetchPagosProveedorUltimos3Meses(idProveedorCliker);
+
+      const pagosFormateados = (data.pagosProveedor ?? [])
+        .map((p) => ({
+          id: p.idMovimiento,
+          numero_comprobante: p.idMovimiento,
+          medio: p.medio ?? "",
+          fecha_acreditacion: p.fecha ?? "",
+          monto: Number(p.monto ?? 0),
+          observaciones: p.observacion ?? "",
+        }))
+        .filter((p) => !pagosYaImportados.includes(p.id));
+
       setPagos(pagosFormateados);
       setSeleccionados([]);
       setDialogOpen(true);
@@ -125,6 +134,15 @@ export const FormOrdersImport = ({ idProveedorCliker, onImport }) => {
     indexOfLast
   );
   const totalPages = Math.ceil(pagosFiltradosOrdenados.length / rowsPerPage);
+
+  function formatFechaToDMY(fechaStr) {
+    if (!fechaStr) return "";
+    // Asumimos formato original M/D/YYYY o MM/DD/YYYY
+    const partes = fechaStr.split("/");
+    if (partes.length !== 3) return fechaStr;
+    const [m, d, y] = partes;
+    return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+  }
 
   return (
     <>
@@ -226,11 +244,12 @@ export const FormOrdersImport = ({ idProveedorCliker, onImport }) => {
                     <TableCell className="w-[90px] min-w-[90px] max-w-[90px] text-start text-xs px-2">
                       <div
                         className="truncate"
-                        title={payment.fecha_acreditacion}
+                        title={formatFechaToDMY(payment.fecha_acreditacion)}
                       >
-                        {payment.fecha_acreditacion}
+                        {formatFechaToDMY(payment.fecha_acreditacion)}
                       </div>
                     </TableCell>
+
                     <TableCell className="w-[90px]  max-w-[120px] text-start text-xs font-medium px-2">
                       <div
                         className="truncate"

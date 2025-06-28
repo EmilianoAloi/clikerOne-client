@@ -57,10 +57,28 @@ const ProveedorOPinvoices = ({
   };
 
   const handleMontoChange = (id, monto) => {
+    // Si está vacío, simplemente guardalo vacío
+    if (monto === "") {
+      setFacturasSeleccionadas((prev) =>
+        prev.map((f) => (f.id_factura === id ? { ...f, monto: "" } : f))
+      );
+      return;
+    }
+
+    const factura = facturasFiltradas.find((f) => f.id_factura === id);
+    const saldo = factura?.saldo_restante ?? factura?.monto_total ?? 0;
+    let montoNum = parseFloat(monto.replace(",", "."));
+
+    if (isNaN(montoNum)) montoNum = ""; // no debería pasar, pero por las dudas
+
+    // No permitir más que el saldo
+    if (montoNum > saldo) montoNum = saldo;
+
     setFacturasSeleccionadas((prev) =>
-      prev.map((f) => (f.id_factura === id ? { ...f, monto } : f))
+      prev.map((f) =>
+        f.id_factura === id ? { ...f, monto: montoNum.toString() } : f
+      )
     );
-    console.log("monto ", monto);
   };
 
   const handleCheckboxChange = (factura, checked) => {

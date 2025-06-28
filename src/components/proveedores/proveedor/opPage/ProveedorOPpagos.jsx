@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Plus, Trash2 } from "lucide-react";
 import { format } from "date-fns";
@@ -22,6 +22,8 @@ import ChequesModalTable from "./ChequesModalTable";
 import { FormOrdersImport } from "./FormOrdersImport";
 
 const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
+  const [pagosImportadosIds, setPagosImportadosIds] = useState([]);
+
   useEffect(() => {
     if (items.length === 0) {
       setItems([
@@ -60,7 +62,12 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
   };
 
   const removeItem = (index) => {
+    const removed = items[index];
     setItems(items.filter((_, i) => i !== index));
+    // Si el item tiene un id (es importado), lo quitás de pagosImportadosIds
+    if (removed?.id && pagosImportadosIds.includes(removed.id)) {
+      setPagosImportadosIds((prev) => prev.filter((id) => id !== removed.id));
+    }
   };
 
   return (
@@ -70,8 +77,10 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
         <div className="flex gap-1 items-center">
           <FormOrdersImport
             idProveedorCliker={idProveedorCliker}
+            pagosYaImportados={pagosImportadosIds}
             onImport={(pagosImportados) => {
               const nuevosItems = pagosImportados.map((p) => ({
+                id: p.id,
                 fecha:
                   p.fecha_acreditacion || new Date().toISOString().slice(0, 10),
                 medio: p.medio,
@@ -91,8 +100,14 @@ const ProveedorOPpagos = ({ items, setItems, idProveedorCliker, modo }) => {
                 );
                 return [...sinVacios, ...nuevosItems];
               });
+              // Guardá los IDs importados
+              setPagosImportadosIds((prev) => [
+                ...prev,
+                ...pagosImportados.map((p) => p.id),
+              ]);
             }}
           />
+
           {modo !== "editar" && (
             <Button
               type="button"

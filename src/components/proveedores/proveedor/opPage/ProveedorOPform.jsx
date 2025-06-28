@@ -125,14 +125,6 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         0
       );
 
-      if (Math.abs(totalFacturas - totalPagos) > 0.009) {
-        toast.error(
-          "La suma de pagos debe coincidir exactamente con el monto total a cancelar en las facturas seleccionadas."
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
       // 1. Subir comprobantes si existen
       const uploadedFiles = await Promise.all(
         (formData.comprobantes || []).map(async (file) => {
