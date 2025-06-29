@@ -39,6 +39,7 @@ export default function ProveedorInvoiceForm({
           fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
           tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "",
           percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
+          impuestos: factura.impuestos ?? [],
         }
       : {
           proveedor: idProveedor?.toString() || "",
@@ -57,6 +58,7 @@ export default function ProveedorInvoiceForm({
               iva: "",
             },
           ],
+          impuestos: [],
           url_factura_comprobante: null,
           observaciones: "",
           fecha_emision: "",

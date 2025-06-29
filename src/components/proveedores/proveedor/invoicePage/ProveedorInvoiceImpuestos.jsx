@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
   const {
@@ -20,12 +21,25 @@ export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
     setValue,
     formState: { errors },
   } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: "impuestos",
   });
 
   const impuestos = watch("impuestos") || [];
+
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current && fields.length === 0) {
+      append({
+        detalle: "",
+        base_imponible: "",
+        alicuota: "",
+      });
+      initialized.current = true;
+    }
+    // eslint-disable-next-line
+  }, []);
 
   // Calcula el importe por fila
   const calcularImporte = (base, alicuota) => {
@@ -39,6 +53,18 @@ export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
     (acc, imp) => acc + calcularImporte(imp.base_imponible, imp.alicuota),
     0
   );
+
+  const handleRemoveImpuesto = (idx) => {
+    if (fields.length === 1) {
+      update(idx, {
+        detalle: "",
+        base_imponible: "",
+        alicuota: "",
+      });
+    } else {
+      remove(idx);
+    }
+  };
 
   return (
     <div className="space-y-2">
@@ -166,7 +192,7 @@ export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => remove(idx)}
+                  onClick={() => handleRemoveImpuesto(idx)}
                   className={cn(
                     "hover:bg-gray-200 hover:text-red-500 text-red-500 cursor-pointer ml-8"
                   )}
