@@ -35,7 +35,8 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
-// import ArticulosPage from "./page/proveedores/articulos/ArticulosPage";
+import ProveedoresHistorialPrecios from "./page/proveedores/proveedoresID/ProveedoresHistorialPreciosPage";
+import ProveedoresHistorialPreciosPage from "./page/proveedores/proveedoresID/ProveedoresHistorialPreciosPage";
 
 function RedirectToProveedor() {
   const { id } = useParams();
@@ -96,11 +97,16 @@ function App() {
                     />
 
                     {/* Articulos */}
-
-                    {/* <Route
+                    {/* 
+                    <Route
                       path="proveedores/articulos"
                       element={<ArticulosPage />}
                     /> */}
+
+                    <Route
+                      path="proveedores/:id/historial-precios"
+                      element={<ProveedoresHistorialPreciosPage />}
+                    />
 
                     {/* OC */}
                     <Route
