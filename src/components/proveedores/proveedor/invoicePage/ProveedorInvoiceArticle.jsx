@@ -540,7 +540,7 @@ export default function ProveedorInvoiceArticle({
                   size="icon"
                   onClick={() => handleRemoveItem(idx)}
                   className={cn(
-                    "hover:bg-gray-200 hover:text-red-500 text-red-500"
+                    "hover:bg-gray-200 hover:text-red-500 text-red-500 cursor-pointer"
                   )}
                 >
                   <Trash2 className="h-5 w-5" />

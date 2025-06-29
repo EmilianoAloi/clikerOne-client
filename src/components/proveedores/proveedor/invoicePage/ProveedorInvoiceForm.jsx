@@ -10,8 +10,9 @@ import ProveedorInvoiceHeader from "./ProveedorInvoiceHeader";
 import ProveedorInvoiceArticle from "./ProveedorInvoiceArticle";
 import ProveedorInvoiceExtra from "./ProveedorInvoiceExtra";
 import ProveedorInvoiceActions from "./ProveedorInvoiceActions";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
+import ProveedorInvoiceImpuestos from "./ProveedorInvoiceImpuestos";
 
 export default function ProveedorInvoiceForm({
   modo,
@@ -205,6 +206,11 @@ export default function ProveedorInvoiceForm({
           inputStyle={inputStyle}
         />
         <Separator className="my-10" />
+
+        <ProveedorInvoiceImpuestos inputStyle={inputStyle} />
+
+        <Separator className="my-10" />
+
         <ProveedorInvoiceExtra
           inputStyle={inputStyle}
           subtotal={subtotal}
