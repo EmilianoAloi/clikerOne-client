@@ -36,6 +36,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePickerWithRange } from "@/components/ui/DataRangePicker";
+import HistorialPreciosTitle from "./HistorialPreciosTitle";
+import HistorialPreciosCards from "./HistorialPreciosCards";
+import HistorialPreciosFiltros from "./HistorialPreciosFiltros";
+import HistorialPreciosTable from "./HistorialPreciosTable";
 
 // Datos de ejemplo para el historial de precios
 const priceHistory = [
@@ -194,242 +198,25 @@ export default function HistorialPreciosContainer() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div>
-            <h1 className="text-3xl font-bold">Historial de Precios</h1>
-            <p className="text-muted-foreground">
-              Seguimiento de cambios de precios de artículos del proveedor
-            </p>
-          </div>
-        </div>
-        <Button>
-          <Download className="h-4 w-4 mr-2" />
-          Exportar
-        </Button>
-      </div>
-
-      {/* Filtros y búsqueda */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Filter className="h-5 w-5 mr-2" />
-            Filtros
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Buscar</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Código, nombre, categoría o usuario..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Artículo</label>
-              <Select
-                value={selectedArticle}
-                onValueChange={setSelectedArticle}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar artículo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los artículos</SelectItem>
-                  {uniqueArticles.map((codigo) => (
-                    <SelectItem key={codigo} value={codigo}>
-                      {codigo}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Ordenar por</label>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fecha-desc">
-                    Fecha (más reciente)
-                  </SelectItem>
-                  <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
-                  <SelectItem value="precio-desc">
-                    Precio (mayor a menor)
-                  </SelectItem>
-                  <SelectItem value="precio-asc">
-                    Precio (menor a mayor)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Rango de fechas</label>
-              <DatePickerWithRange />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Estadísticas rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cambios</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{filteredHistory.length}</div>
-            <p className="text-xs text-muted-foreground">
-              En el período seleccionado
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Artículos Afectados
-            </CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {new Set(filteredHistory.map((item) => item.codigo)).size}
-            </div>
-            <p className="text-xs text-muted-foreground">Artículos únicos</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aumentos</CardTitle>
-            <TrendingUp className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-500">
-              {
-                filteredHistory.filter(
-                  (item) => item.precioNuevo > item.precioAnterior
-                ).length
-              }
-            </div>
-            <p className="text-xs text-muted-foreground">Cambios al alza</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Reducciones</CardTitle>
-            <TrendingDown className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-500">
-              {
-                filteredHistory.filter(
-                  (item) => item.precioNuevo < item.precioAnterior
-                ).length
-              }
-            </div>
-            <p className="text-xs text-muted-foreground">Cambios a la baja</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tabla de historial */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Historial de Cambios de Precios</CardTitle>
-          <CardDescription>
-            Mostrando {filteredHistory.length} registros de cambios de precios
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Fecha/Hora</TableHead>
-                  <TableHead>Código</TableHead>
-                  <TableHead>Nombre</TableHead>
-                  <TableHead>Categoría</TableHead>
-                  <TableHead>Color</TableHead>
-                  <TableHead>Descripción</TableHead>
-                  <TableHead>U. Medida</TableHead>
-                  <TableHead>Precio Anterior</TableHead>
-                  <TableHead>Precio Nuevo</TableHead>
-                  <TableHead>Cambio</TableHead>
-                  <TableHead>Usuario</TableHead>
-                  <TableHead>Motivo</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredHistory.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-mono text-sm">
-                      {formatDate(item.fechaCambio)}
-                    </TableCell>
-                    <TableCell className="font-medium">{item.codigo}</TableCell>
-                    <TableCell>{item.nombre}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{item.categoria}</Badge>
-                    </TableCell>
-                    <TableCell>{item.color}</TableCell>
-                    <TableCell>{item.descripcion}</TableCell>
-                    <TableCell>{item.unidadMedida}</TableCell>
-                    <TableCell className="font-mono">
-                      {formatPrice(item.precioAnterior)}
-                    </TableCell>
-                    <TableCell className="font-mono font-medium">
-                      {formatPrice(item.precioNuevo)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        {getPriceChangeIcon(
-                          item.precioAnterior,
-                          item.precioNuevo
-                        )}
-                        {getPriceChangeBadge(
-                          item.precioAnterior,
-                          item.precioNuevo
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{item.usuario}</TableCell>
-                    <TableCell
-                      className="max-w-xs truncate"
-                      title={item.motivo}
-                    >
-                      {item.motivo}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          {filteredHistory.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">
-                No se encontraron registros de cambios de precios con los
-                filtros aplicados.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+    <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
+      <HistorialPreciosTitle />
+      <HistorialPreciosCards filteredHistory={filteredHistory} />
+      <HistorialPreciosFiltros
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedArticle={selectedArticle}
+        setSelectedArticle={setSelectedArticle}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        uniqueArticles={uniqueArticles}
+      />
+      {/* <HistorialPreciosTable
+        filteredHistory={filteredHistory}
+        formatDate={formatDate}
+        formatPrice={formatPrice}
+        getPriceChangeIcon={getPriceChangeIcon}
+        getPriceChangeBadge={getPriceChangeBadge}
+      /> */}
     </div>
   );
 }

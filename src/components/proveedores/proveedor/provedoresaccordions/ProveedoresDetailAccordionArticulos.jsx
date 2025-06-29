@@ -24,6 +24,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ArticulosFormModal from "../../articulos/ArticulosAddModal";
+import { Link } from "react-router-dom";
 
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
@@ -145,15 +146,18 @@ const ProveedoresDetailAccordionArticulos = ({
                     })}
                   </TableCell>
                   <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowHistorialModal(true)}
-                      className="text-indigo-500 !p-0"
-                      title="Ver historial de precios"
+                    <Link
+                      to={`/proveedores/${currentProveedores.id_proveedor}/historial-precios`}
                     >
-                      <CircleDollarSign className="w-4 h-4" />
-                    </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-indigo-500 !p-0"
+                        title="Ver historial de precios"
+                      >
+                        <CircleDollarSign className="w-4 h-4" />
+                      </Button>
+                    </Link>
                     <Button
                       variant="ghost"
                       size="sm"
