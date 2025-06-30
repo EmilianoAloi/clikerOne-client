@@ -1,12 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import {
-  Calendar1,
-  CalendarCheck,
-  Filter,
-  PackageCheck,
-  Search,
-} from "lucide-react";
+import { Calendar1, CalendarCheck, PackageCheck, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,14 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { DateSelector } from "@/components/ui/DateSelector";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
@@ -42,7 +28,7 @@ const HistorialPreciosFiltros = ({
   setFechaHasta,
 }) => {
   return (
-    <div className="mx-6 px-4 py-3 pb-6 bg-slate-50 border border-slate-200 rounded-lg">
+    <div className="mx-6 px-4 py-3 pb-6 bg-slate-50 border border-slate-200 rounded-lg mt-8 mb-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Buscar */}
         <div>

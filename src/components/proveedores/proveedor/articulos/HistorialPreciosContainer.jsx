@@ -1,46 +1,10 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import {
-  ArrowLeft,
-  Calendar,
-  Search,
-  Filter,
-  Download,
-  Eye,
-  TrendingUp,
-  TrendingDown,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { DatePickerWithRange } from "@/components/ui/DataRangePicker";
+import { useParams } from "react-router-dom";
+
 import HistorialPreciosTitle from "./HistorialPreciosTitle";
 import HistorialPreciosCards from "./HistorialPreciosCards";
 import HistorialPreciosFiltros from "./HistorialPreciosFiltros";
 import HistorialPreciosTable from "./HistorialPreciosTable";
-import { Separator } from "@/components/ui/separator";
 
 // Datos de ejemplo para el historial de precios
 const priceHistory = [
@@ -185,22 +149,38 @@ export default function HistorialPreciosContainer() {
   };
 
   const getPriceChangeIcon = (oldPrice, newPrice) => {
-    if (newPrice > oldPrice) {
-      return <TrendingUp className="h-4 w-4 text-red-500" />;
-    } else if (newPrice < oldPrice) {
-      return <TrendingDown className="h-4 w-4 text-green-500" />;
-    }
+    // if (newPrice > oldPrice) {
+    //   return <TrendingUp className="h-4 w-4 text-red-500" />;
+    // } else if (newPrice < oldPrice) {
+    //   return <TrendingDown className="h-4 w-4 text-green-500" />;
+    // }
     return null;
   };
 
   const getPriceChangeBadge = (oldPrice, newPrice) => {
     const change = ((newPrice - oldPrice) / oldPrice) * 100;
+
     if (change > 0) {
-      return <Badge variant="destructive">+{change.toFixed(1)}%</Badge>;
+      // Positivo: fondo rojo suave, texto rojo, padding, border-radius, font-semibold
+      return (
+        <span className="inline-block px-4 py-1 rounded-full bg-red-100 text-red-600 font-semibold text-sm">
+          +{change.toFixed(1)}%
+        </span>
+      );
     } else if (change < 0) {
-      return <Badge variant="secondary">{change.toFixed(1)}%</Badge>;
+      // Negativo: fondo verde suave, texto verde, padding, border-radius, font-semibold
+      return (
+        <span className="inline-block px-4 py-1 rounded-full bg-green-100 text-green-600 font-semibold text-sm">
+          {change.toFixed(1)}%
+        </span>
+      );
     }
-    return <Badge variant="outline">Sin cambio</Badge>;
+    // Sin cambio: fondo gris muy suave, texto gris
+    return (
+      <span className="inline-block px-4 py-1 rounded-full bg-gray-100 text-gray-500 font-semibold text-sm">
+        Sin cambio
+      </span>
+    );
   };
 
   return (

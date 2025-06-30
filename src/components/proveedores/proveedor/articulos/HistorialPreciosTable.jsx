@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-const tableHeaderClass = "text-slate-700 font-semibold bg-slate-50";
+const tableHeaderClass = "text-gray-700 font-semibold bg-slate-50";
 const cellClass = "py-3 px-2";
 const rightCellClass = "py-3 px-2 text-right";
 const monoCellClass = "py-3 px-2";
@@ -32,7 +32,9 @@ const HistorialPreciosTable = ({
   return (
     <Card className="rounded-none border-0 ">
       <CardHeader>
-        <CardTitle>Historial de Cambios de Precios</CardTitle>
+        <CardTitle className="text-xl">
+          Registro de cambios de precios
+        </CardTitle>
         <CardDescription>
           Mostrando {filteredHistory.length} registros de cambios de precios
         </CardDescription>
@@ -41,7 +43,7 @@ const HistorialPreciosTable = ({
         <div className="overflow-x-auto">
           <Table className="border rounded-lg">
             <TableHeader>
-              <TableRow className="bg-slate-50 ">
+              <TableRow className="bg-gray-50/50">
                 <TableHead className={tableHeaderClass}>Fecha</TableHead>
                 <TableHead className={tableHeaderClass}>Usuario</TableHead>
                 <TableHead className={tableHeaderClass}>Código</TableHead>
@@ -56,7 +58,9 @@ const HistorialPreciosTable = ({
                 <TableHead className={tableHeaderClass + " text-right"}>
                   Precio Nuevo
                 </TableHead>
-                <TableHead className={tableHeaderClass}>Cambio</TableHead>
+                <TableHead className={tableHeaderClass + "text-center"}>
+                  Cambio
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -70,11 +74,13 @@ const HistorialPreciosTable = ({
                   </TableCell>
                   <TableCell className="py-3 px-2">{item.usuario}</TableCell>
                   <TableCell className="font-medium py-3 px-2">
-                    {item.codigo}
+                    <Badge variant="outline" className="font-mono">
+                      {item.codigo}
+                    </Badge>
                   </TableCell>
                   <TableCell className="py-3 px-2">{item.nombre}</TableCell>
                   <TableCell className="py-3 px-2">
-                    <Badge variant="outline">{item.categoria}</Badge>
+                    <Badge variant="secondary">{item.categoria}</Badge>
                   </TableCell>
                   <TableCell className="py-3 px-2">{item.color}</TableCell>
                   <TableCell className={descCellClass} title={item.descripcion}>

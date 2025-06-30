@@ -35,8 +35,7 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
-import ProveedoresHistorialPrecios from "./page/proveedores/proveedoresID/ProveedoresHistorialPreciosPage";
-import ProveedoresHistorialPreciosPage from "./page/proveedores/proveedoresID/ProveedoresHistorialPreciosPage";
+import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
 
 function RedirectToProveedor() {
   const { id } = useParams();
