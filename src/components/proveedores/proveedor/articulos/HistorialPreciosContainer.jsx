@@ -40,6 +40,7 @@ import HistorialPreciosTitle from "./HistorialPreciosTitle";
 import HistorialPreciosCards from "./HistorialPreciosCards";
 import HistorialPreciosFiltros from "./HistorialPreciosFiltros";
 import HistorialPreciosTable from "./HistorialPreciosTable";
+import { Separator } from "@/components/ui/separator";
 
 // Datos de ejemplo para el historial de precios
 const priceHistory = [
@@ -120,6 +121,8 @@ export default function HistorialPreciosContainer() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedArticle, setSelectedArticle] = useState("all");
   const [sortBy, setSortBy] = useState("fecha-desc");
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
 
   // Filtrar y ordenar datos
   const filteredHistory = priceHistory
@@ -133,7 +136,12 @@ export default function HistorialPreciosContainer() {
       const matchesArticle =
         selectedArticle === "all" || item.codigo === selectedArticle;
 
-      return matchesSearch && matchesArticle;
+      // --- FILTRO POR FECHAS ---
+      const fecha = item.fechaCambio.split("T")[0]; // "YYYY-MM-DD"
+      const afterDesde = !fechaDesde || fecha >= fechaDesde;
+      const beforeHasta = !fechaHasta || fecha <= fechaHasta;
+
+      return matchesSearch && matchesArticle && afterDesde && beforeHasta;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -162,19 +170,17 @@ export default function HistorialPreciosContainer() {
   );
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString("es-ES", {
+    return new Date(dateString).toLocaleDateString("es-ES", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("es-ES", {
-      style: "currency",
-      currency: "ARS",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(price);
   };
 
@@ -201,6 +207,7 @@ export default function HistorialPreciosContainer() {
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
       <HistorialPreciosTitle />
       <HistorialPreciosCards filteredHistory={filteredHistory} />
+
       <HistorialPreciosFiltros
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -209,14 +216,18 @@ export default function HistorialPreciosContainer() {
         sortBy={sortBy}
         setSortBy={setSortBy}
         uniqueArticles={uniqueArticles}
+        fechaDesde={fechaDesde}
+        setFechaDesde={setFechaDesde}
+        fechaHasta={fechaHasta}
+        setFechaHasta={setFechaHasta}
       />
-      {/* <HistorialPreciosTable
+      <HistorialPreciosTable
         filteredHistory={filteredHistory}
         formatDate={formatDate}
         formatPrice={formatPrice}
         getPriceChangeIcon={getPriceChangeIcon}
         getPriceChangeBadge={getPriceChangeBadge}
-      /> */}
+      />
     </div>
   );
 }

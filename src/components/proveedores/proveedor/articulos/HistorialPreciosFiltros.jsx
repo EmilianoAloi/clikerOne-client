@@ -1,6 +1,12 @@
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Filter, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Calendar1,
+  CalendarCheck,
+  Filter,
+  PackageCheck,
+  Search,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,7 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePickerWithRange } from "@/components/ui/DataRangePicker";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { DateSelector } from "@/components/ui/DateSelector";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+
+const inputStyle =
+  "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
 const HistorialPreciosFiltros = ({
   searchTerm,
@@ -19,70 +36,104 @@ const HistorialPreciosFiltros = ({
   sortBy,
   setSortBy,
   uniqueArticles,
+  fechaDesde,
+  setFechaDesde,
+  fechaHasta,
+  setFechaHasta,
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Filter className="h-5 w-5 mr-2" />
-          Filtros
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Buscar</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Código, nombre, categoría o usuario..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Artículo</label>
-            <Select value={selectedArticle} onValueChange={setSelectedArticle}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar artículo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los artículos</SelectItem>
-                {uniqueArticles.map((codigo) => (
-                  <SelectItem key={codigo} value={codigo}>
-                    {codigo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Ordenar por</label>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fecha-desc">Fecha (más reciente)</SelectItem>
-                <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
-                <SelectItem value="precio-desc">
-                  Precio (mayor a menor)
+    <div className="mx-6 px-4 py-3 pb-6 bg-slate-50 border border-slate-200 rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Buscar */}
+        <div>
+          <Label className="text-sm flex items-center gap-2 font-semibold mb-1">
+            <Search className="h-4 w-4 text-slate-500" />
+            Buscar
+          </Label>
+          <Input
+            placeholder="Código, nombre, categoría o usuario..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`mt-1 ${inputStyle}`}
+          />
+        </div>
+        {/* Artículo */}
+        <div>
+          <Label className="text-sm flex items-center gap-2 font-semibold mb-1">
+            <PackageCheck className="h-4 w-4 text-slate-500" />
+            Artículo
+          </Label>
+          <Select value={selectedArticle} onValueChange={setSelectedArticle}>
+            <SelectTrigger
+              className={cn(
+                "w-full mt-1 cursor-pointer",
+                inputStyle,
+                !selectedArticle && "text-muted-foreground"
+              )}
+            >
+              <SelectValue placeholder="Seleccionar artículo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos los artículos</SelectItem>
+              {uniqueArticles.map((codigo) => (
+                <SelectItem key={codigo} value={codigo}>
+                  {codigo}
                 </SelectItem>
-                <SelectItem value="precio-asc">
-                  Precio (menor a mayor)
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Ordenar */}
+        <div>
+          <Label className="text-sm flex items-center gap-2 font-semibold mb-1">
+            <Calendar1 className="h-4 w-4 text-slate-500" />
+            Ordenar Por
+          </Label>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger
+              className={`w-full mt-1 ${inputStyle} cursor-pointer`}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="fecha-desc">Fecha (más reciente)</SelectItem>
+              <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
+              <SelectItem value="precio-desc">
+                Precio (mayor a menor)
+              </SelectItem>
+              <SelectItem value="precio-asc">Precio (menor a mayor)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Fechas */}
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <Label className="text-sm flex items-center gap-2 font-semibold mb-1">
+              <CalendarCheck className="h-4 w-4 text-slate-500" />
+              Desde
+            </Label>
+            <Input
+              type="date"
+              value={fechaDesde}
+              onChange={(e) => setFechaDesde(e.target.value)}
+              className={`w-full mt-1 ${inputStyle} cursor-pointer`}
+            />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Rango de fechas</label>
-            <DatePickerWithRange />
+          <div>
+            <Label className="text-sm flex items-center gap-2 font-semibold mb-1">
+              <CalendarCheck className="h-4 w-4 text-slate-500" />
+              Hasta
+            </Label>
+            <Input
+              type="date"
+              value={fechaHasta}
+              onChange={(e) => setFechaHasta(e.target.value)}
+              className={`w-full mt-1 ${inputStyle} cursor-pointer`}
+            />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
