@@ -89,17 +89,15 @@ export default function ArticulosMultiFormModal({
     // Armá los artículos a enviar, sin el campo "id" local
     const articulos = items.map(({ id, ...rest }) => ({
       ...rest,
-      precio_unitario: Number(rest.precio_unitario), // siempre como número
-      id_proveedor: idProveedor, // asegúrate que esté
+      precio_unitario: Number(rest.precio_unitario),
+      id_proveedor: idProveedor,
     }));
     try {
       await mutation.mutateAsync(articulos);
       setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
       onCreated?.();
       onClose();
-    } catch (err) {
-      // El toast lo maneja el hook
-    }
+    } catch (err) {}
   };
 
   // Cuando el modal se cierra, resetea el form
