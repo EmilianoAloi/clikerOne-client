@@ -7,8 +7,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
 import DynamicBreadcrumbs from "@/components/ui/dynamicBreadcrumbs";
+import { Outlet } from "react-router-dom";
 
-const MainLayout = ({ children }) => (
+const MainLayout = () => (
   <SidebarProvider>
     <AppSidebar />
     <SidebarInset>
@@ -22,7 +23,7 @@ const MainLayout = ({ children }) => (
           <DynamicBreadcrumbs />
         </div>
       </header>
-      {children}
+      <Outlet />
     </SidebarInset>
     <Toaster position="top-right" richColors />
   </SidebarProvider>
