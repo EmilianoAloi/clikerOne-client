@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import BackButton from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
