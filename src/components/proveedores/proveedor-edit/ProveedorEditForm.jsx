@@ -130,7 +130,9 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
         },
       }
     );
+    console.log("Artículos a eliminar (deletedArticles):", deletedArticles);
   };
+
   const inputStyle = {
     className:
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",

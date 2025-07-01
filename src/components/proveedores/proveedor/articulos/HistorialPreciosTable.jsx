@@ -87,7 +87,7 @@ const HistorialPreciosTable = ({
                     {item.descripcion}
                   </TableCell>
                   <TableCell className="py-3 px-2">
-                    {item.unidadMedida}
+                    {item.unidad_medida}
                   </TableCell>
                   <TableCell className={rightCellClass}>
                     {formatPrice(item.precioAnterior)}
