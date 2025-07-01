@@ -303,6 +303,7 @@ import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
+import PrivateRoute from "./components/login/PrivateRoute";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -345,7 +346,13 @@ function App() {
                   />
 
                   {/* Layout y rutas protegidas */}
-                  <Route element={<MainLayout />}>
+                  <Route
+                    element={
+                      <PrivateRoute>
+                        <MainLayout />
+                      </PrivateRoute>
+                    }
+                  >
                     {/* Proveedores */}
                     <Route path="/proveedores" element={<ProveedoresPage />} />
                     <Route
