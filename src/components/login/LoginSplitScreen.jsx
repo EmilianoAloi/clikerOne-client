@@ -2,7 +2,16 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Lock, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  User,
+  Lock,
+  CheckCircle,
+  AlertCircle,
+  BarChart3,
+  TrendingUp,
+  Users,
+  FileText,
+} from "lucide-react";
 import { authenticateUser } from "@/utils/authenticate-user";
 import { useNavigate } from "react-router-dom";
 
@@ -30,26 +39,99 @@ export default function LoginSplitScreen() {
   ];
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex ">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden pb-6">
+        {/* Círculos decorativos */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-20 left-20 w-32 h-32 border border-white/20 rounded-full"></div>
+          <div className="absolute top-40 right-32 w-24 h-24 border border-white/20 rounded-full"></div>
+          <div className="absolute bottom-32 left-32 w-40 h-40 border border-white/20 rounded-full"></div>
+        </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
+        {/* Overlay oscuro */}
+        <div className="absolute inset-0 bg-black/20  "></div>
+
+        <div className="relative z-10 flex flex-col justify-center px-12 text-white h-full pt-16">
+          {/* Logo y título */}
           <div className="mb-12">
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mr-4 shadow-lg">
-                <CheckCircle className="w-7 h-7" />
+                <BarChart3 className="w-7 h-7" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold">Sistema de Gestión</h1>
-                <p className="text-slate-300 text-sm">Versión 2.1.0</p>
+                <p className="text-slate-300 text-sm">v0.2</p>
               </div>
             </div>
             <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-              Administra proveedores, facturas y reportes desde una sola
-              plataforma integrada
+              Administra proveedores, facturas y reportes desde esta plataforma
+              integrada.
             </p>
+          </div>
+
+          {/* Features */}
+          <div className="space-y-8 mb-12">
+            <div className="flex items-start space-x-4 group">
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300">
+                <Users className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">
+                  Gestión de Proveedores
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Administra toda la información de tus proveedores de manera
+                  simple.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4 group">
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300">
+                <FileText className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">
+                  Registro Integral.
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Llevá el registro y la gestión centralizada de todas las
+                  operaciones de tus proveedores.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4 group">
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">
+                  Estadísticas y Exportación
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Visualiza estadísticas, exportá datos de proveedores y
+                  facturación a Excel.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-6 p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
+            <div className="text-center">
+              <div className="text-2xl font-bold mb-1">180+</div>
+              <div className="text-slate-400 text-xs">Proveedores</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold mb-1">800+</div>
+              <div className="text-slate-400 text-xs">
+                Operaciones Mensuales
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold mb-1">100%</div>
+              <div className="text-slate-400 text-xs">Saldos Actualizados</div>
+            </div>
           </div>
         </div>
       </div>
