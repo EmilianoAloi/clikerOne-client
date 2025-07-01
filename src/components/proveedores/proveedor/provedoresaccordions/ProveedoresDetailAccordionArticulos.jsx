@@ -200,7 +200,7 @@ const ProveedoresDetailAccordionArticulos = ({
               )}
               {/* Fila de agregar artículo */}
               <TableRow className="group">
-                <TableCell colSpan={8} className="p-0">
+                <TableCell colSpan={9} className="p-0">
                   <div
                     className="w-full py-4 hover:bg-slate-50 cursor-pointer transition-colors duration-200 border-t border-slate-100"
                     onClick={() => setShowArticuloModal(true)}

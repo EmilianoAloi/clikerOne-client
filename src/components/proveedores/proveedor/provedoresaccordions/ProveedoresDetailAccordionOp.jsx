@@ -120,6 +120,10 @@ const ProveedoresDetailAccordionOp = ({
                   Notas
                 </TableHead>
                 <TableHead className="text-center font-semibold text-slate-700">
+                  Usuario
+                </TableHead>
+
+                <TableHead className="text-center font-semibold text-slate-700">
                   Adjuntos
                 </TableHead>
               </TableRow>
@@ -209,7 +213,9 @@ const ProveedoresDetailAccordionOp = ({
                           "-"
                         )}
                       </TableCell>
-
+                      <TableCell className="py-3 text-center">
+                        {pago.creador_nombre || pago.modificador_nombre || "-"}
+                      </TableCell>
                       <TableCell className="py-3">
                         <div className="flex justify-center">
                           <AdjuntosBadgePopover
@@ -223,7 +229,7 @@ const ProveedoresDetailAccordionOp = ({
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={8}
+                    colSpan={9}
                     className="text-center py-4 text-muted-foreground"
                   >
                     No hay órdenes de pago para este proveedor.

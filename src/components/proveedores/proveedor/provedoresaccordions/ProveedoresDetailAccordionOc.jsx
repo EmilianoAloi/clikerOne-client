@@ -26,6 +26,7 @@ import {
   Paperclip,
   HandCoins,
   Hash,
+  User,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
@@ -37,7 +38,7 @@ const ProveedoresDetailAccordionOc = ({
   compras = [],
   isLoading = false,
   error = null,
-  onDeleteCompra, // optional: handler para eliminar OC (puede usar queryClient.invalidateQueries)
+  onDeleteCompra,
 }) => {
   const navigate = useNavigate();
 
@@ -89,6 +90,7 @@ const ProveedoresDetailAccordionOc = ({
                     label: "Adjuntos",
                     className: "text-center",
                   },
+                  { icon: User, label: "Usuario", className: "text-center" },
                   { label: "Acciones", className: "text-center" },
                 ].map(({ icon: Icon, label, className = "" }, i) => (
                   <TableHead
@@ -186,6 +188,9 @@ const ProveedoresDetailAccordionOc = ({
                             : []
                         }
                       />
+                    </TableCell>
+                    <TableCell className="py-3 text-center">
+                      {oc.creador_nombre || oc.creado_por}{" "}
                     </TableCell>
                     <TableCell className="py-3 text-center">
                       <ActionCell

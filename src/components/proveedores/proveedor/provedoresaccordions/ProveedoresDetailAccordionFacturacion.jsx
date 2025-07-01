@@ -82,6 +82,9 @@ const ProveedoresDetailAccordionFacturacion = ({
                 <TableHead className="font-semibold text-slate-700 text-center">
                   Notas
                 </TableHead>
+                <TableHead className="font-semibold text-slate-700 text-center">
+                  Usuario
+                </TableHead>
                 <TableHead className="font-semibold text-slate-700 text-center w-[130px]">
                   Adjuntos
                 </TableHead>
@@ -186,6 +189,11 @@ const ProveedoresDetailAccordionFacturacion = ({
                         "-"
                       )}
                     </TableCell>
+                    <TableCell className="py-3 text-center">
+                      {factura.modificador_nombre ||
+                        factura.creador_nombre ||
+                        "-"}
+                    </TableCell>
                     <TableCell className="py-3 text-center text-center w-[100px]">
                       <AdjuntosBadgePopover
                         adjuntos={
@@ -204,7 +212,7 @@ const ProveedoresDetailAccordionFacturacion = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-4">
+                  <TableCell colSpan={10} className="text-center py-4">
                     No hay facturas para este proveedor.
                   </TableCell>
                 </TableRow>

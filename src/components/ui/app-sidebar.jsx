@@ -10,9 +10,9 @@ import NavMain from "./nav-main";
 import NavUser from "./nav-user";
 
 const user = {
-  name: "Emiliano Aloi",
-  email: "emilianoaloi@cliker.com",
-  avatar: "",
+  name: "admin",
+  email: "admin@cliker.com",
+  avatar: "AD",
 };
 
 export function AppSidebar(props) {
