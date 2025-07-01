@@ -27,9 +27,12 @@ export default function LoginSplitScreen() {
     const formData = new FormData(e.target);
     startTransition(async () => {
       const response = await authenticateUser(formData);
-      setResult(response);
-      if (response.success) {
+      if (response.token) {
+        setResult({ success: true, message: "Inicio de sesión exitoso" });
+        localStorage.setItem("token", response.token);
         navigate("/proveedores");
+      } else {
+        setResult({ success: false, message: "Credenciales incorrectas" });
       }
     });
   };
