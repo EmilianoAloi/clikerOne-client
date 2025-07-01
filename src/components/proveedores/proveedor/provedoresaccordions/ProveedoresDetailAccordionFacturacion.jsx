@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -21,7 +20,6 @@ import {
 import { FileText, Info, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
-import { useEffect, useState } from "react";
 import BadgeEstado from "@/components/ui/badge-custom";
 
 const capitalizeWords = (str) =>
@@ -30,17 +28,19 @@ const capitalizeWords = (str) =>
 const ProveedoresDetailAccordionFacturacion = ({
   currentProveedores,
   invoices = [],
+  isLoading = false,
+  error = null,
 }) => {
-  const [filteredInvoices, setFilteredInvoices] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Ordena por fecha_creado DESC (más nueva primero)
-    const sorted = [...invoices].sort(
-      (a, b) => new Date(b.fecha_creado) - new Date(a.fecha_creado)
-    );
-    setFilteredInvoices(sorted);
-  }, [invoices]);
+  // Ordena invoices por fecha_creado DESC
+  const sortedInvoices = invoices
+    ? [...invoices].sort(
+        (a, b) =>
+          new Date(b.fecha_creado || b.fecha_emision) -
+          new Date(a.fecha_creado || a.fecha_emision)
+      )
+    : [];
 
   return (
     <AccordionItem
@@ -88,8 +88,23 @@ const ProveedoresDetailAccordionFacturacion = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredInvoices.length > 0 ? (
-                filteredInvoices.map((factura) => (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-4">
+                    Cargando facturas...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className="text-center py-4 text-red-500"
+                  >
+                    Error al cargar facturas.
+                  </TableCell>
+                </TableRow>
+              ) : sortedInvoices.length > 0 ? (
+                sortedInvoices.map((factura) => (
                   <TableRow
                     key={factura.id_factura}
                     className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer"
@@ -141,7 +156,6 @@ const ProveedoresDetailAccordionFacturacion = ({
                         )}
                       </div>
                     </TableCell>
-
                     <TableCell className="py-3 text-right font-medium">
                       <div className="flex items-center justify-start gap-1">
                         <span>$</span>
@@ -172,7 +186,6 @@ const ProveedoresDetailAccordionFacturacion = ({
                         "-"
                       )}
                     </TableCell>
-
                     <TableCell className="py-3 text-center text-center w-[100px]">
                       <AdjuntosBadgePopover
                         adjuntos={

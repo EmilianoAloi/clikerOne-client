@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Calendar, ReceiptText, Info } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
 import {
@@ -29,25 +29,17 @@ const ProveedoresDetailAccordionOp = ({
   currentProveedores,
   paymentItems = [],
   payments = [],
+  isLoading = false,
+  error = null,
 }) => {
-  const [filteredPayments, setFilteredPayments] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const pagosFiltrados = payments.filter(
-      (p) => p.id_proveedor === currentProveedores.id_proveedor
-    );
-    setFilteredPayments(pagosFiltrados);
-  }, [payments, currentProveedores.id_proveedor]);
-
+  // Construcción de facturas y pagos asociados por pago
   const facturasPorPago = useMemo(() => {
     const map = {};
-
     (paymentItems || []).forEach((item) => {
-      console.log("🧾 Item payment:", item);
       if (typeof item.id_pago !== "number") return;
       if (!map[item.id_pago]) map[item.id_pago] = [];
-
       const yaExiste = map[item.id_pago].some(
         (f) => f.numero_factura === item.numero_factura
       );
@@ -64,18 +56,14 @@ const ProveedoresDetailAccordionOp = ({
         });
       }
     });
-
     return map;
   }, [paymentItems]);
 
   const pagosPorPago = useMemo(() => {
     const map = {};
-
     (paymentItems || []).forEach((item) => {
       if (typeof item.id_pago !== "number") return;
-
       if (!map[item.id_pago]) map[item.id_pago] = [];
-
       map[item.id_pago].push({
         id_pago: item.id_pago,
         id_proveedor: item.id_proveedor,
@@ -89,9 +77,10 @@ const ProveedoresDetailAccordionOp = ({
         estado: item.estado_pago || item.estado || "-",
       });
     });
-
     return map;
   }, [paymentItems]);
+
+  const pagos = payments;
 
   return (
     <AccordionItem
@@ -101,7 +90,7 @@ const ProveedoresDetailAccordionOp = ({
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <ReceiptText className="mr-2 h-5 w-5 text-green-700 group-hover:text-green-800 transition-colors" />
-          <span className="font-semibold text-lg">Ordenes de Pago</span>
+          <span className="font-semibold text-lg">Órdenes de Pago</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
@@ -115,7 +104,6 @@ const ProveedoresDetailAccordionOp = ({
                 <TableHead className="font-semibold text-slate-700">
                   N° Comprobante
                 </TableHead>
-
                 <TableHead className="font-semibold text-slate-700">
                   Documentos cancelados
                 </TableHead>
@@ -137,10 +125,25 @@ const ProveedoresDetailAccordionOp = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPayments.length > 0 ? (
-                filteredPayments.map((pago) => {
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-4">
+                    Cargando órdenes de pago...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center py-4 text-red-500"
+                  >
+                    Error al cargar órdenes de pago.
+                  </TableCell>
+                </TableRow>
+              ) : pagos.length > 0 ? (
+                pagos.map((pago) => {
                   const facturas = facturasPorPago[pago.id_pago] ?? [];
-                  const pagos = pagosPorPago[pago.id_pago] ?? [];
+                  const pagosAsociados = pagosPorPago[pago.id_pago] ?? [];
 
                   return (
                     <TableRow
@@ -173,7 +176,7 @@ const ProveedoresDetailAccordionOp = ({
                       </TableCell>
 
                       <TableCell>
-                        <PagosBadgePopOver pagos={pagos} />
+                        <PagosBadgePopOver pagos={pagosAsociados} />
                       </TableCell>
 
                       <TableCell className="text-right">

@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCreateArticuloMutation } from "@/hooks/react-query/useArticulosMutation";
-import { useArticulosStore } from "@/stores/articulosStore";
 
 const CATEGORIAS = [
   "Materia prima",
@@ -66,7 +65,6 @@ export default function ArticulosMultiFormModal({
 }) {
   const [items, setItems] = useState([{ ...EMPTY_ARTICULO, id: Date.now() }]);
   const mutation = useCreateArticuloMutation(idProveedor);
-  const addArticulo = useArticulosStore((s) => s.addArticulo);
 
   // --- Handlers ---
   const handleAddItem = () =>
@@ -90,14 +88,10 @@ export default function ArticulosMultiFormModal({
     e.preventDefault();
     for (const { id, ...values } of items) {
       // Si querés validar acá podés usar Zod o lo que prefieras antes de enviar
-      await mutation.mutateAsync(values, {
-        onSuccess: (data) => {
-          addArticulo?.(data);
-        },
-      });
+      await mutation.mutateAsync(values);
     }
     setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
-    onCreated?.();
+    onCreated?.(); // Para que el padre haga refetch (invalidateQueries)
     onClose();
   };
 

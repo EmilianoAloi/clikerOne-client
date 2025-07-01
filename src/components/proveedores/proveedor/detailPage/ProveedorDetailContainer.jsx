@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import ProveedorDetailInfo from "./ProveedorDetailInfo";
-import { useProveedor } from "@/contexts/ProveedorContext";
 import BackButton from "@/components/ui/back-button";
 import ProveedorCurrentAccountContainer from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccountContainer";
 import ProveedorAccordionContainer from "../ProveedorAccordionContainer";
@@ -13,19 +10,21 @@ const ProveedorDetailContainer = ({
   paymentItems,
   articles,
   compras,
+  // los nuevos props de loading/error
+  loadingArticulos,
+  errorArticulos,
+  loadingFacturas,
+  errorFacturas,
+  loadingOP,
+  errorOP,
+  loadingCompras,
+  errorCompras,
 }) => {
-  const { proveedores = [] } = useProveedor() || {};
-  const { id } = useParams();
-  const [currentProveedor, setCurrentProveedor] = useState(currentProveedores);
-
-  useEffect(() => {
-    const idNum = Number(id);
-    const updatedProveedor = proveedores.find((p) => p.id_proveedor === idNum);
-    if (updatedProveedor) setCurrentProveedor(updatedProveedor);
-  }, [proveedores, id]);
+  const currentProveedor = currentProveedores;
 
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8 mb-10">
+      {/* Info principal */}
       <div className="rounded-lg border text-card-foreground shadow-sm p-6">
         <div className="flex justify-between items-start">
           <div className="flex flex-col space-y-1.5 mb-7">
@@ -46,20 +45,30 @@ const ProveedorDetailContainer = ({
         <ProveedorDetailInfo proveedor={currentProveedor} />
       </div>
 
+      {/* Cuenta corriente */}
       <ProveedorCurrentAccountContainer
         currentProveedor={currentProveedor}
         paymentItems={paymentItems}
         invoices={invoices}
         payments={payments}
-        compras={compras}
       />
 
+      {/* Accordion con los loaders y errores */}
       <ProveedorAccordionContainer
         currentProveedores={currentProveedor}
         invoices={invoices}
+        isLoadingInvoices={loadingFacturas}
+        errorInvoices={errorFacturas}
         payments={payments}
-        paymentItems={paymentItems}
+        isLoadingPayments={loadingOP}
+        errorPayments={errorOP}
         articles={articles || []}
+        isLoadingArticles={loadingArticulos}
+        errorArticles={errorArticulos}
+        compras={compras}
+        isLoadingCompras={loadingCompras}
+        errorCompras={errorCompras}
+        paymentItems={paymentItems}
       />
     </div>
   );

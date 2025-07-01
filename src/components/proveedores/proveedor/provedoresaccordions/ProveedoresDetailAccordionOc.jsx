@@ -1,5 +1,3 @@
-"use client";
-
 import {
   AccordionContent,
   AccordionItem,
@@ -29,40 +27,28 @@ import {
   HandCoins,
   Hash,
 } from "lucide-react";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
-import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 import { toast } from "sonner";
 import ActionCell from "../detailPage/ActionCell";
 
-const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
+const ProveedoresDetailAccordionOc = ({
+  currentProveedores,
+  compras = [],
+  isLoading = false,
+  error = null,
+  onDeleteCompra, // optional: handler para eliminar OC (puede usar queryClient.invalidateQueries)
+}) => {
   const navigate = useNavigate();
 
-  const {
-    getComprasForProveedor,
-    refreshProveedorCompras,
-    deleteCompra,
-    loading,
-  } = useProveedorCompras();
-
-  const supplierOrders = getComprasForProveedor(
-    currentProveedores.id_proveedor
-  );
-
-  useEffect(() => {
-    if (currentProveedores.id_proveedor) {
-      refreshProveedorCompras(currentProveedores.id_proveedor);
-    }
-  }, [currentProveedores.id_proveedor]);
-
   const handleDeleteOc = async (id_orden_compra) => {
-    const ok = await deleteCompra(id_orden_compra);
-    if (ok) {
-      toast.error(`Orden de compra #${id_orden_compra} eliminada`);
-      await refreshProveedorCompras(currentProveedores.id_proveedor, true);
-    } else {
-      toast.error("No se pudo eliminar la orden de compra");
+    if (onDeleteCompra) {
+      const ok = await onDeleteCompra(id_orden_compra);
+      if (ok) {
+        toast.error(`Orden de compra #${id_orden_compra} eliminada`);
+      } else {
+        toast.error("No se pudo eliminar la orden de compra");
+      }
     }
   };
 
@@ -74,7 +60,7 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <FileText className="mr-2 h-5 w-5 text-blue-500 group-hover:text-blue-600 transition-colors" />
-          <span className="font-semibold text-lg">Ordenes de Compra</span>
+          <span className="font-semibold text-lg">Órdenes de Compra</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
@@ -117,14 +103,23 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
+              {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={9} className="text-center py-4">
                     Cargando órdenes...
                   </TableCell>
                 </TableRow>
-              ) : supplierOrders.length > 0 ? (
-                supplierOrders.map((oc) => (
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className="text-center py-4 text-red-500"
+                  >
+                    Error al cargar órdenes de compra.
+                  </TableCell>
+                </TableRow>
+              ) : compras.length > 0 ? (
+                compras.map((oc) => (
                   <TableRow
                     key={oc.id_orden_compra}
                     className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer "
@@ -137,27 +132,27 @@ const ProveedoresDetailAccordionOc = ({ currentProveedores }) => {
                     <TableCell className="py-3 font-medium text-left ps-3">
                       #{oc.id_orden_compra}
                     </TableCell>
-                    <TableCell className="py-3 text-left  ps-3">
+                    <TableCell className="py-3 text-left ps-3">
                       {oc.fecha_emision
                         ? new Date(oc.fecha_emision).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left  ps-3">
+                    <TableCell className="py-3 text-left ps-3">
                       {oc.fecha_entrega
                         ? new Date(oc.fecha_entrega).toLocaleDateString("es-AR")
                         : "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left font-medium  ps-3">
+                    <TableCell className="py-3 text-left font-medium ps-3">
                       $
                       {oc.monto_total?.toLocaleString("es-AR", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell className="py-3 text-left  ps-3">
+                    <TableCell className="py-3 text-left ps-3">
                       {oc.condicion_pago || "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-left  ">
+                    <TableCell className="py-3 text-left">
                       <BadgeEstado estado={oc.estado_compra ?? ""} />
                     </TableCell>
                     <TableCell className="py-3 text-center">

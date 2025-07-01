@@ -1,4 +1,3 @@
-import { useProveedores } from "../../contexts/ProveedorContext";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -12,14 +11,42 @@ import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import React, { useState } from "react";
 import ProveedoresDeleteDialog from "./ProveedorDeleteDialog";
 import ProveedoresActivateDialog from "./ProveedorActivateDialog";
+
 import { Link, useNavigate } from "react-router-dom";
+import { useActivateProveedor } from "@/queries/proveedores/useActivateProveedor";
+import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
 
 const ProveedoresTableActions = ({ Proveedor }) => {
-  const { removeProveedor, activateProveedor } = useProveedores();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
+  const removeProveedorMutation = useRemoveProveedor();
+  const activateProveedorMutation = useActivateProveedor();
+
   const isInactivo = !Proveedor.estado_logico;
+
+  const handleActivate = async () => {
+    activateProveedorMutation.mutate(Proveedor.id_proveedor, {
+      onSuccess: () => {
+        // setOpen(false);
+        if (onActivate) onActivate(); // para manejar UI padre si hace falta
+      },
+      onError: (error) => {
+        console.error("Error activando proveedor", error);
+        // toast.error o mostrar mensaje
+      },
+    });
+  };
+
+  const handleDelete = async () => {
+    try {
+      await removeProveedorMutation.mutateAsync(Proveedor.id_proveedor);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error eliminando proveedor", error);
+    }
+  };
+
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
@@ -78,24 +105,12 @@ const ProveedoresTableActions = ({ Proveedor }) => {
         {isInactivo ? (
           <ProveedoresActivateDialog
             Proveedor={Proveedor}
-            onActivate={async () => {
-              await activateProveedor(
-                Proveedor.id_proveedor,
-                Proveedor.nombre || "Proveedor"
-              );
-              setIsOpen(false);
-            }}
+            onActivate={handleActivate}
           />
         ) : (
           <ProveedoresDeleteDialog
             Proveedor={Proveedor}
-            onDelete={() => {
-              removeProveedor(
-                Proveedor.id_proveedor,
-                Proveedor.nombre || "Desconocido"
-              );
-              setIsOpen(false);
-            }}
+            onDelete={handleDelete}
           />
         )}
       </DropdownMenuContent>

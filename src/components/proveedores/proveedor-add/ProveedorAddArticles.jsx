@@ -171,25 +171,16 @@ const ProveedorAddArticles = ({
               </div>
               {/* Color */}
               <div>
-                <Select
+                <Input
                   value={item.color ?? ""}
-                  onValueChange={(value) =>
-                    handleItemChange(item.id, "color", value)
+                  onChange={(e) =>
+                    handleItemChange(item.id, "color", e.target.value)
                   }
-                >
-                  <SelectTrigger className={`${inputStyle} w-full bg-white`}>
-                    <SelectValue placeholder="Color" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Rojo">Rojo</SelectItem>
-                    <SelectItem value="Azul">Azul</SelectItem>
-                    <SelectItem value="Verde">Verde</SelectItem>
-                    <SelectItem value="Negro">Negro</SelectItem>
-                    <SelectItem value="Blanco">Blanco</SelectItem>
-                    <SelectItem value="Otro">Otro</SelectItem>
-                  </SelectContent>
-                </Select>
+                  placeholder="Color"
+                  className={`${inputStyle} w-full bg-white`}
+                />
               </div>
+
               {/* Descripción */}
               <div>
                 <Input

@@ -1,148 +1,74 @@
-// import { useEffect, useMemo } from "react";
-// import { useParams } from "react-router-dom";
-
-// import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
-// import { useProveedorOP } from "@/contexts/ProveedorOPContext";
-// import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
-// import { useProveedor } from "@/contexts/ProveedorContext";
-// import { useProveedorArticles } from "@/contexts/ProveedorArticlesContext";
-// import ProveedorDetailContainer from "@/components/proveedores/proveedor/detailPage/ProveedorDetailContainer";
-
-// export default function ProveedoresIDPage() {
-//   const params = useParams();
-//   const idProveedor = Number(params.id);
-
-//   const { proveedor, loading } = useProveedor(idProveedor);
-
-//   const { getInvoicesForProveedor, refreshProveedorInvoices } =
-//     useProveedorInvoices();
-//   const {
-//     getPaymentsForProveedor,
-//     getPaymentItemsForProveedor,
-//     refreshProveedorPayments,
-//   } = useProveedorOP();
-//   const { getComprasForProveedor, refreshProveedorCompras } =
-//     useProveedorCompras();
-//   const { getArticlesForProveedor, loadArticlesByProveedor } =
-//     useProveedorArticles();
-
-//   useEffect(() => {
-//     if (idProveedor) {
-//       refreshProveedorPayments(idProveedor);
-//       loadArticlesByProveedor(idProveedor);
-//     }
-//   }, [idProveedor]);
-
-//   const invoices = useMemo(
-//     () => getInvoicesForProveedor(idProveedor),
-//     [getInvoicesForProveedor, idProveedor]
-//   );
-//   const payments = getPaymentsForProveedor(idProveedor);
-//   const paymentItems = getPaymentItemsForProveedor(idProveedor);
-//   const compras = getComprasForProveedor(idProveedor);
-//   const articles = getArticlesForProveedor(idProveedor);
-
-//   useEffect(() => {
-//     if (invoices.length === 0) refreshProveedorInvoices(idProveedor);
-//     if (payments.length === 0) refreshProveedorPayments(idProveedor);
-//     if (!compras.length) refreshProveedorCompras(idProveedor);
-//   }, [idProveedor]);
-
-//   if (loading) return <div className="p-6">Cargando proveedor...</div>;
-//   if (!proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
-
-//   const paymentItemsValidos = paymentItems.filter(
-//     (item) => typeof item.id_pago === "number"
-//   );
-
-//   return (
-//     <ProveedorDetailContainer
-//       currentProveedores={proveedor}
-//       invoices={invoices}
-//       payments={payments}
-//       paymentItems={paymentItemsValidos}
-//       articles={articles}
-//       // compras={compras} // si algún child lo necesita
-//     />
-//   );
-// }
-
-import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
-import { useProveedorOP } from "@/contexts/ProveedorOPContext";
-import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
-import { useProveedor } from "@/contexts/ProveedorContext";
-import { useProveedorArticles } from "@/contexts/ProveedorArticlesContext";
 import ProveedorDetailContainer from "@/components/proveedores/proveedor/detailPage/ProveedorDetailContainer";
+import { useProveedor } from "@/queries/proveedores/useProveedor";
+import { useArticulosByProveedor } from "@/queries/proveedores/useArticulosByProveedor";
+import { useFacturasByProveedor } from "@/queries/proveedores/useFacturasByProveedor";
+import { useOPByProveedor } from "@/queries/proveedores/useOPByProveedor";
+import { useComprasByProveedor } from "@/queries/proveedores/useComprasByProveedor";
+import { usePagoItemsByProveedor } from "@/queries/proveedores/usePagoItemsByProveedor";
 
 export default function ProveedoresIDPage() {
-  const params = useParams();
-  const idProveedor = Number(params.id);
+  const { id } = useParams();
+  const idProveedor = Number(id);
 
-  const { proveedor, loading } = useProveedor(idProveedor);
-
-  const { getInvoicesForProveedor, refreshProveedorInvoices } =
-    useProveedorInvoices();
+  // Queries
   const {
-    getPaymentsForProveedor,
-    getPaymentItemsForProveedor,
-    refreshProveedorPayments,
-  } = useProveedorOP();
-  const { getComprasForProveedor, refreshProveedorCompras } =
-    useProveedorCompras();
-  const { getArticlesForProveedor, loadArticlesByProveedor } =
-    useProveedorArticles();
+    data: proveedor,
+    isLoading: loadingProveedor,
+    error: errorProveedor,
+  } = useProveedor(idProveedor);
+  const {
+    data: articulos,
+    isLoading: loadingArticulos,
+    error: errorArticulos,
+  } = useArticulosByProveedor(idProveedor);
+  const {
+    data: facturas,
+    isLoading: loadingFacturas,
+    error: errorFacturas,
+  } = useFacturasByProveedor(idProveedor);
+  const {
+    data: ordenesPago,
+    isLoading: loadingOP,
+    error: errorOP,
+  } = useOPByProveedor(idProveedor);
+  const {
+    data: compras,
+    isLoading: loadingCompras,
+    error: errorCompras,
+  } = useComprasByProveedor(idProveedor);
 
-  useEffect(() => {
-    if (!idProveedor || isNaN(idProveedor)) return;
+  const {
+    data: paymentItems,
+    isLoading: loadingPaymentItems,
+    error: errorPaymentItems,
+  } = usePagoItemsByProveedor(idProveedor);
 
-    (async () => {
-      try {
-        await Promise.all([
-          refreshProveedorInvoices(idProveedor).catch((err) =>
-            console.error("❌ Error al obtener facturas:", err)
-          ),
-          refreshProveedorPayments(idProveedor).catch((err) =>
-            console.error("❌ Error al obtener pagos:", err)
-          ),
-          refreshProveedorCompras(idProveedor).catch((err) =>
-            console.error("❌ Error al obtener compras:", err)
-          ),
-          loadArticlesByProveedor(idProveedor).catch((err) =>
-            console.error("❌ Error al obtener artículos:", err)
-          ),
-        ]);
-      } catch (err) {
-        console.error("❌ Error general cargando proveedor:", err);
-      }
-    })();
-  }, [idProveedor]);
+  // Render
 
-  const invoicesRaw = getInvoicesForProveedor(idProveedor);
-  const invoices = Array.isArray(invoicesRaw) ? invoicesRaw : [];
-
-  const payments = getPaymentsForProveedor(idProveedor);
-  const paymentItems = getPaymentItemsForProveedor(idProveedor);
-  const compras = getComprasForProveedor(idProveedor);
-  const articles = getArticlesForProveedor(idProveedor);
-
-  if (loading) return <div className="p-6">Cargando proveedor...</div>;
+  if (loadingProveedor) return <div className="p-6">Cargando proveedor...</div>;
+  if (errorProveedor)
+    return <div className="p-6">Error al cargar proveedor.</div>;
   if (!proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
-
-  const paymentItemsValidos = paymentItems.filter(
-    (item) => typeof item.id_pago === "number"
-  );
 
   return (
     <ProveedorDetailContainer
       currentProveedores={proveedor}
-      invoices={invoices}
-      payments={payments}
-      paymentItems={paymentItemsValidos}
-      articles={articles}
-      // compras={compras} // lo podés habilitar si lo necesitás
+      articles={articulos || []}
+      invoices={facturas || []}
+      payments={ordenesPago || []}
+      compras={compras || []}
+      paymentItems={paymentItems || []}
+      loadingPaymentItems={loadingPaymentItems}
+      errorPaymentItems={errorPaymentItems}
+      loadingArticulos={loadingArticulos}
+      errorArticulos={errorArticulos}
+      loadingFacturas={loadingFacturas}
+      errorFacturas={errorFacturas}
+      loadingOP={loadingOP}
+      errorOP={errorOP}
+      loadingCompras={loadingCompras}
+      errorCompras={errorCompras}
     />
   );
 }

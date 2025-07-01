@@ -12,13 +12,15 @@ import {
 } from "../ui/alert-dialog"; // Ruta relativa desde 'proveedores'
 import { Trash } from "lucide-react";
 import { Button } from "../ui/button"; // Ruta relativa desde 'proveedores'
+import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
 
 // No más typescript, solo props JS
 const ProveedoressDeleteDialog = ({ Proveedor, onDelete }) => {
   const [open, setOpen] = useState(false);
+  const removeProveedorMutation = useRemoveProveedor();
 
-  const handleConfirmDelete = () => {
-    onDelete();
+  const handleConfirmDelete = async () => {
+    await removeProveedorMutation.mutateAsync(Proveedor.id_proveedor);
     setOpen(false);
   };
 

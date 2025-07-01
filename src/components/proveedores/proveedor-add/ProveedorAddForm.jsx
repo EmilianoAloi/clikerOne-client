@@ -28,13 +28,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useProveedores } from "@/contexts/ProveedorContext";
 import ProveedorAddArticles from "./ProveedorAddArticles";
 import { useNavigate } from "react-router-dom";
+import { useCreateProveedorWithArticles } from "@/queries/proveedores/useCreateProveedorWithArticles";
 
 const ProveedorAddForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const createProveedorMutation = useCreateProveedorWithArticles();
+
   const inputStyle = {
     className:
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
@@ -45,9 +47,6 @@ const ProveedorAddForm = () => {
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
   };
 
-  const { createProveedorWithArticles } = useProveedores();
-
-  // Artículo vacío inicial
   const createEmptyArticulo = () => ({
     id: crypto.randomUUID(),
     cantidad: 1,
@@ -80,7 +79,6 @@ const ProveedorAddForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "cuit") {
-      // Solo permitir números en CUIT
       const numericValue = value.replace(/[^0-9]/g, "");
       setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
@@ -107,43 +105,45 @@ const ProveedorAddForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      if (!formData.nombre || !formData.cuit) {
-        toast.error("El nombre y el CUIT del proveedor son obligatorios.");
-        return;
-      }
 
-      await createProveedorWithArticles(formData, articulos);
-
-      toast.success(`Proveedor creado con éxito.`);
-      navigate("/proveedores", { state: { refresh: true } });
-
-      // Reset formulario proveedor
-      setFormData({
-        nombre: "",
-        razon_social: "",
-        contacto: "",
-        telefono: "",
-        email: "",
-        direccion: "",
-        web: "",
-        cuit: "",
-        iva_condicion: "",
-        iva_predeterminado: "",
-        observaciones: "",
-        provincia: "",
-        categoria: "",
-        estado_logico: true,
-      });
-
-      // Reset artículos
-      setArticulos([createEmptyArticulo()]);
-    } catch (error) {
-      toast.error(`Error al crear proveedor, ${error}`);
-    } finally {
-      setIsSubmitting(false);
+    if (!formData.nombre || !formData.cuit) {
+      toast.error("El nombre y el CUIT del proveedor son obligatorios.");
+      return;
     }
+
+    setIsSubmitting(true);
+    createProveedorMutation.mutate(
+      { proveedor: formData, articulos },
+      {
+        onSuccess: () => {
+          toast.success(`Proveedor creado con éxito.`);
+          navigate("/proveedores", { state: { refresh: true } });
+          setFormData({
+            nombre: "",
+            razon_social: "",
+            contacto: "",
+            telefono: "",
+            email: "",
+            direccion: "",
+            web: "",
+            cuit: "",
+            iva_condicion: "",
+            iva_predeterminado: "",
+            observaciones: "",
+            provincia: "",
+            categoria: "",
+            estado_logico: true,
+          });
+          setArticulos([]);
+        },
+        onError: (error) => {
+          toast.error(`Error al crear proveedor: ${error?.message || error}`);
+        },
+        onSettled: () => {
+          setIsSubmitting(false);
+        },
+      }
+    );
   };
 
   return (
@@ -436,10 +436,10 @@ const ProveedorAddForm = () => {
         </Button>
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || createProveedorMutation.isLoading}
           className="text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
         >
-          {isSubmitting ? (
+          {isSubmitting || createProveedorMutation.isLoading ? (
             <>
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               Guardando...

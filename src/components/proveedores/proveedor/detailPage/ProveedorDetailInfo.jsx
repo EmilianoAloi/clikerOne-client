@@ -16,21 +16,12 @@ import {
 } from "lucide-react";
 
 import ProveedorDetailItem from "./ProveedorDetailItem";
-import { useProveedor } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import ProveedorDeleteDialog from "./ProveedorDeleteDialog";
-import { useProveedores } from "@/contexts/ProveedorContext";
 
 const ProveedorDetailInfo = ({ proveedor }) => {
-  const { proveedores = [], removeProveedor } = useProveedores() || {};
-
-  // Busca el proveedor actualizado (si cambia en el contexto), si no, usa la prop
-  const currentProveedor =
-    proveedores.find((p) => p.id_proveedor === proveedor.id_proveedor) ||
-    proveedor;
-
-  if (!currentProveedor) {
+  if (!proveedor) {
     return <div className="p-6">Proveedor no encontrado.</div>;
   }
 
@@ -70,75 +61,75 @@ const ProveedorDetailInfo = ({ proveedor }) => {
         <ProveedorDetailItem
           icon={UserCog}
           label="Nombre"
-          value={currentProveedor.nombre}
+          value={proveedor.nombre}
         />
         <ProveedorDetailItem
           icon={User}
           label="Persona de Contacto"
-          value={currentProveedor.contacto}
+          value={proveedor.contacto}
         />
         <ProveedorDetailItem
           icon={Phone}
           label="Teléfono"
-          value={currentProveedor.telefono}
+          value={proveedor.telefono}
         />
         <ProveedorDetailItem
           icon={MapPin}
           label="Dirección"
-          value={currentProveedor.direccion}
+          value={proveedor.direccion}
         />
         <ProveedorDetailItem
           icon={Globe}
           label="Sitio Web"
-          value={currentProveedor.web}
+          value={proveedor.web}
         />
         <ProveedorDetailItem
           icon={Mail}
           label="Correo electrónico"
-          value={currentProveedor.email}
+          value={proveedor.email}
         />
         <ProveedorDetailItem
           icon={Boxes}
           label="Artículos"
           value={
-            Array.isArray(currentProveedor.articulos) &&
-            currentProveedor.articulos.length > 0
-              ? `${currentProveedor.articulos.length} artículo(s)`
+            Array.isArray(proveedor.articulos) && proveedor.articulos.length > 0
+              ? `${proveedor.articulos.length} artículo(s)`
               : "Sin Artículos"
           }
         />
         <ProveedorDetailItem
           icon={Landmark}
           label="Razón Social"
-          value={currentProveedor.razon_social}
+          value={proveedor.razon_social}
         />
         <ProveedorDetailItem
           icon={Fingerprint}
           label="CUIT"
-          value={mostrarCampo(currentProveedor.cuit)}
+          value={mostrarCampo(proveedor.cuit)}
         />
         <ProveedorDetailItem
           icon={Info}
           label="Condición IVA"
-          value={currentProveedor.iva_condicion}
+          value={proveedor.iva_condicion}
         />
         <ProveedorDetailItem
           icon={Percent}
           label="IVA predeterminado"
-          value={mostrarIvaPredeterminado(currentProveedor.iva_predeterminado)}
+          value={mostrarIvaPredeterminado(proveedor.iva_predeterminado)}
         />
         <ProveedorDetailItem
           icon={Calendar1}
           label="Último movimiento"
           value={
-            esFechaMovimientoValida(currentProveedor.fecha_ultimo_movimiento)
-              ? new Date(
-                  currentProveedor.fecha_ultimo_movimiento
-                ).toLocaleDateString("es-AR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })
+            esFechaMovimientoValida(proveedor.fecha_ultimo_movimiento)
+              ? new Date(proveedor.fecha_ultimo_movimiento).toLocaleDateString(
+                  "es-AR",
+                  {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  }
+                )
               : "Sin movimientos"
           }
         />
@@ -151,7 +142,7 @@ const ProveedorDetailInfo = ({ proveedor }) => {
           <div>
             <h3 className="text-lg font-medium ">Observaciones</h3>
             <p className="text-sm text-muted-foreground xl:max-w-xl break-words">
-              {currentProveedor.observaciones}
+              {proveedor.observaciones}
             </p>
           </div>
           <div className="flex items-center  mb-[-6px]">
@@ -159,22 +150,16 @@ const ProveedorDetailInfo = ({ proveedor }) => {
               size="sm"
               variant="ghost"
               onClick={() =>
-                navigate(`/proveedores/${currentProveedor.id_proveedor}/editar`)
+                navigate(`/proveedores/${proveedor.id_proveedor}/editar`)
               }
               className="text-sm cursor-pointer pe-0"
             >
               <Pencil className="w-4 h-4 " />
             </Button>
 
-            <ProveedorDeleteDialog
-              proveedor={currentProveedor}
-              onDelete={() =>
-                removeProveedor(
-                  currentProveedor.id_proveedor,
-                  currentProveedor.nombre || "Proveedor"
-                )
-              }
-            />
+            {/* Si tu lógica de borrar proveedor sigue en Context, 
+                pasale por prop un onDelete que haga el removeProveedor */}
+            <ProveedorDeleteDialog proveedor={proveedor} />
           </div>
         </div>
       </div>

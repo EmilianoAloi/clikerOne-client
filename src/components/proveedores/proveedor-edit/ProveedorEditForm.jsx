@@ -30,18 +30,19 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useProveedores } from "@/contexts/ProveedorContext";
 
 import ProveedorAddArticles from "../proveedor-add/ProveedorAddArticles";
 import { useNavigate } from "react-router-dom";
+import { useEditProveedor } from "@/queries/proveedores/useEditProveedor";
 
 const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
-  const { editProveedor, refreshProveedores } = useProveedores();
   const [formData, setFormData] = useState(proveedor);
   const [articulos, setArticulos] = useState(articulosProp || []);
-  const navigate = useNavigate();
   const [deletedArticles, setDeletedArticles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const editProveedorMutation = useEditProveedor();
 
   useEffect(() => {
     setFormData(proveedor);
@@ -103,35 +104,33 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    try {
-      if (!formData.id_proveedor) {
-        toast.error("Falta el ID del proveedor");
-        setIsSubmitting(false);
-        return;
-      }
-
-      const result = await editProveedor(
-        formData.id_proveedor,
-        formData,
-        articulos,
-        deletedArticles
-      );
-
-      if (result?.error) {
-        toast.error(result.error);
-      } else {
-        toast.success(`Proveedor ${formData.nombre} actualizado con exito`);
-        navigate(`/proveedores/${formData.id_proveedor}`),
-          { state: { refresh: true } };
-      }
-    } catch (error) {
-      toast.error("Error al actualizar proveedor");
-      console.error("❌ Error en edición:", error);
-    } finally {
+    if (!formData.id_proveedor) {
+      toast.error("Falta el ID del proveedor");
       setIsSubmitting(false);
+      return;
     }
-  };
 
+    editProveedorMutation.mutate(
+      {
+        id: formData.id_proveedor,
+        proveedor: formData,
+        articulos,
+        articulosEliminados: deletedArticles,
+      },
+      {
+        onSuccess: () => {
+          toast.success(`Proveedor ${formData.nombre} actualizado con éxito`);
+          navigate(`/proveedores/${formData.id_proveedor}`);
+        },
+        onError: (error) => {
+          toast.error(error.message || "Error al actualizar proveedor");
+        },
+        onSettled: () => {
+          setIsSubmitting(false);
+        },
+      }
+    );
+  };
   const inputStyle = {
     className:
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
@@ -141,16 +140,6 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
     className:
       "mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm",
   };
-
-  useEffect(() => {
-    if (proveedor) {
-      console.log("Proveedor cargado desde el contexto:", proveedor);
-    } else {
-      console.log(
-        "Proveedor no encontrado en el contexto, realizando fetch..."
-      );
-    }
-  }, [proveedor]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mx-8 mb-6">
@@ -430,19 +419,11 @@ const ProveedorEditForm = ({ proveedor, articulos: articulosProp }) => {
 
       <div className="col-span-full flex justify-end gap-4 mt-6">
         <Button
-          variant="outline"
-          type="button"
-          className="text-slate-700 cursor-pointer font-semibold py-5"
-          onClick={() => router.back()}
-        >
-          Cancelar
-        </Button>
-        <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || editProveedorMutation.isLoading}
           className="text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
         >
-          {isSubmitting ? (
+          {isSubmitting || editProveedorMutation.isLoading ? (
             <>
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               Modificando...

@@ -9,16 +9,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog"; // Cambia según tu carpeta real
+} from "../ui/alert-dialog";
 import { CheckCircle } from "lucide-react";
-import { Button } from "../ui/button"; // Cambia según tu carpeta real
+import { Button } from "../ui/button";
+import { useActivateProveedor } from "@/queries/proveedores/useActivateProveedor";
 
 const ProveedoresActivateDialog = ({ Proveedor, onActivate }) => {
   const [open, setOpen] = useState(false);
+  const activateProveedorMutation = useActivateProveedor();
 
   const handleConfirmActivate = () => {
-    onActivate();
-    setOpen(false);
+    activateProveedorMutation.mutate(Proveedor.id_proveedor, {
+      onSuccess: () => {
+        setOpen(false);
+        if (onActivate) onActivate();
+      },
+      onError: (error) => {
+        console.error("Error en activar proveedor:", error);
+      },
+    });
   };
 
   return (

@@ -1,30 +1,58 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
-import { useProveedores } from "@/contexts/ProveedorContext";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
+import { useProveedores } from "@/queries/proveedores/useProveedores";
 
 export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { proveedores, refreshProveedores } = useProveedores();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Animación solo para estado vacío
+  // 1. Traer proveedores desde React Query
+  const {
+    data: proveedores = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useProveedores();
+
+  // 2. Si venís de un alta/edición, forzá el refetch y limpiá el state del router
   useEffect(() => {
-    if (proveedores.length === 0) {
+    if (location.state?.refresh) {
+      refetch();
+      navigate(location.pathname, { replace: true });
+    }
+    // eslint-disable-next-line
+  }, [location.state, location.pathname, navigate, refetch]);
+
+  // 3. Filtrado
+  const filteredProveedores = (proveedores || []).filter((s) => {
+    const query = searchTerm.toLowerCase().trim();
+    return (
+      Object.values(s)
+        .filter((val) => typeof val === "string" || typeof val === "number")
+        .some((val) => String(val).toLowerCase().includes(query)) ||
+      s.facturasText?.toLowerCase().trim().includes(query) ||
+      s.saldoText?.toLowerCase().trim().includes(query)
+    );
+  });
+
+  // 4. Animación para estado vacío (opcional, tu lógica original)
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    if (proveedores.length === 0 && !isLoading) {
       const timer = setTimeout(() => setIsLoaded(true), 50);
       return () => clearTimeout(timer);
     } else {
       setIsLoaded(false);
     }
-  }, [proveedores]);
+  }, [proveedores, isLoading]);
 
-  // -- CLASES ANIMACIÓN SOLO SI ESTÁ VACÍO --
   const mainClass =
     proveedores.length === 0
       ? `container mx-auto py-5 space-y-6 fade-in stagger-2${
@@ -38,38 +66,8 @@ export default function ProveedoresTable() {
         }`
       : "flex flex-col md:flex-row md:items-center md:justify-between gap-4";
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Refresca solo si venís de un alta (o edición)
-  useEffect(() => {
-    if (location.state?.refresh) {
-      refreshProveedores(true); // <<---- Forzá el fetch de la API
-      navigate(location.pathname, { replace: true });
-    }
-  }, [location.state, location.pathname, navigate, refreshProveedores]);
-
-  useEffect(() => {
-    if (proveedores.length > 0) setIsLoading(false);
-  }, [proveedores]);
-
-  const filteredProveedores = proveedores.filter((s) => {
-    const query = searchTerm.toLowerCase().trim();
-
-    return (
-      Object.values(s)
-        .filter((val) => typeof val === "string" || typeof val === "number")
-        .some((val) => String(val).toLowerCase().includes(query)) ||
-      s.facturasText?.toLowerCase().trim().includes(query) ||
-      false ||
-      s.saldoText?.toLowerCase().trim().includes(query) ||
-      false
-    );
-  });
-
   return (
     <div className={mainClass}>
-      {/* Header de tabla: búsqueda + agregar */}
       <div className={headerClass}>
         <Input
           type="text"
@@ -88,6 +86,8 @@ export default function ProveedoresTable() {
 
       {isLoading ? (
         <ProveedoresTableSkeleton />
+      ) : isError ? (
+        <div className="text-red-500 p-6">Error al cargar proveedores</div>
       ) : (
         <DataTable
           idField="id_proveedor"

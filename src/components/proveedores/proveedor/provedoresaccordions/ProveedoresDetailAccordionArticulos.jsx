@@ -21,7 +21,7 @@ import {
   CircleDollarSign,
   Plus,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ArticulosFormModal from "../../articulos/ArticulosAddModal";
 import { Link } from "react-router-dom";
@@ -29,23 +29,10 @@ import { Link } from "react-router-dom";
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
   articles = [],
+  isLoading = false,
+  error = null,
 }) => {
-  const [filteredArticles, setFilteredArticles] = useState([]);
   const [showArticuloModal, setShowArticuloModal] = useState(false);
-  const [showHistorialModal, setShowHistorialModal] = useState(false);
-
-  useEffect(() => {
-    // Filtra artículos para este proveedor
-    if (articles.length && currentProveedores?.id_proveedor) {
-      setFilteredArticles(
-        articles.filter(
-          (a) => a.id_proveedor === currentProveedores.id_proveedor
-        )
-      );
-    } else {
-      setFilteredArticles([]);
-    }
-  }, [articles, currentProveedores]);
 
   return (
     <AccordionItem
@@ -66,14 +53,13 @@ const ProveedoresDetailAccordionArticulos = ({
             open={showArticuloModal}
             onClose={() => setShowArticuloModal(false)}
             idProveedor={currentProveedores.id_proveedor}
-            // onCreated={refreshArticles}
+            // onCreated={refetch} // Podés usar invalidateQueries aquí
           />
         </div>
         <div className="border rounded-lg overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50">
-                {/* ...todas tus columnas, incluyendo Acciones... */}
                 <TableHead className="text-slate-700 font-semibold">
                   <span className="inline-flex items-center gap-1">
                     <Hash className="w-4 h-4" /> Código
@@ -115,61 +101,85 @@ const ProveedoresDetailAccordionArticulos = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredArticles.map((articulo) => (
-                <TableRow
-                  key={articulo.id_articulo}
-                  className="hover:bg-slate-50 transition-colors"
-                >
-                  <TableCell className="py-3 ps-3">
-                    {articulo.codigo_interno ?? "-"}
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-4">
+                    Cargando artículos...
                   </TableCell>
-                  <TableCell className="py-3 font-medium">
-                    {articulo.nombre}
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center py-4 text-red-500"
+                  >
+                    Error al cargar artículos.
                   </TableCell>
-                  <TableCell className="py-3 ps-3">
-                    {articulo.categoria || "-"}
-                  </TableCell>
-                  <TableCell className="py-3 ps-3">
-                    {articulo.color || "-"}
-                  </TableCell>
-                  <TableCell className="py-3 ps-3">
-                    {articulo.descripcion || "-"}
-                  </TableCell>
-                  <TableCell className="py-3 ps-4">
-                    {articulo.unidad_de_medida || "-"}
-                  </TableCell>
-                  <TableCell className="py-3 text-right">
-                    ${" "}
-                    {articulo.precio_unitario?.toLocaleString("es-AR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </TableCell>
-                  <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
-                    <Link
-                      to={`/proveedores/${currentProveedores.id_proveedor}/historial-precios`}
-                    >
+                </TableRow>
+              ) : articles.length > 0 ? (
+                articles.map((articulo) => (
+                  <TableRow
+                    key={articulo.id_articulo}
+                    className="hover:bg-slate-50 transition-colors"
+                  >
+                    <TableCell className="py-3 ps-3">
+                      {articulo.codigo_interno ?? "-"}
+                    </TableCell>
+                    <TableCell className="py-3 font-medium">
+                      {articulo.nombre}
+                    </TableCell>
+                    <TableCell className="py-3 ps-3">
+                      {articulo.categoria || "-"}
+                    </TableCell>
+                    <TableCell className="py-3 ps-3">
+                      {articulo.color || "-"}
+                    </TableCell>
+                    <TableCell className="py-3 ps-3">
+                      {articulo.descripcion || "-"}
+                    </TableCell>
+                    <TableCell className="py-3 ps-4">
+                      {articulo.unidad_de_medida || "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right">
+                      ${" "}
+                      {articulo.precio_unitario?.toLocaleString("es-AR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </TableCell>
+                    <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
+                      <Link
+                        to={`/proveedores/${currentProveedores.id_proveedor}/historial-precios`}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-indigo-500 !p-0"
+                          title="Ver historial de precios"
+                        >
+                          <CircleDollarSign className="w-4 h-4" />
+                        </Button>
+                      </Link>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-indigo-500 !p-0"
-                        title="Ver historial de precios"
+                        onClick={() => setShowArticuloModal(true)}
+                        className="text-amber-500 !p-0"
+                        title="Editar artículo"
                       >
-                        <CircleDollarSign className="w-4 h-4" />
+                        <FileText className="w-4 h-4" />
                       </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowArticuloModal(true)}
-                      className="text-amber-500 !p-0"
-                      title="Editar artículo"
-                    >
-                      <FileText className="w-4 h-4" />
-                    </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className="group">
+                  <TableCell colSpan={8} className="text-center py-4">
+                    No hay artículos asociados.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
+              {/* Fila de agregar artículo */}
               <TableRow className="group">
                 <TableCell colSpan={8} className="p-0">
                   <div
