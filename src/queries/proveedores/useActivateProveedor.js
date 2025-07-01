@@ -1,28 +1,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { mutationFetchWithAuth } from "@/lib/utils";
+
+const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
 export function useActivateProveedor() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id_proveedor) => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/proveedores/${id_proveedor}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proveedor: { estado_logico: 1 } }),
-        }
-      );
-      if (!res.ok) throw new Error("No se pudo activar el proveedor");
-      return res.json();
+      return mutationFetchWithAuth({
+        url: `${API_URL}/${id_proveedor}`,
+        method: "PUT",
+        body: { proveedor: { estado_logico: 1 } },
+      });
     },
     // Optimistic update para que UI se actualice instantáneo
     onMutate: async (id_proveedor) => {
-      await queryClient.cancelQueries(["proveedores"]);
+      await queryClient.cancelQueries([API_URL]);
 
-      const previousProveedores = queryClient.getQueryData(["proveedores"]);
+      const previousProveedores = queryClient.getQueryData([API_URL]);
 
-      queryClient.setQueryData(["proveedores"], (old = []) =>
+      queryClient.setQueryData([API_URL], (old = []) =>
         old.map((p) =>
           p.id_proveedor === id_proveedor ? { ...p, estado_logico: 1 } : p
         )
@@ -31,14 +29,12 @@ export function useActivateProveedor() {
       return { previousProveedores };
     },
     onError: (err, id_proveedor, context) => {
-      // Si falla la mutación, revertir al estado anterior
       if (context?.previousProveedores) {
-        queryClient.setQueryData(["proveedores"], context.previousProveedores);
+        queryClient.setQueryData([API_URL], context.previousProveedores);
       }
     },
     onSettled: () => {
-      // Siempre invalidar para asegurar la data fresca
-      queryClient.invalidateQueries(["proveedores"]);
+      queryClient.invalidateQueries([API_URL]);
     },
   });
 }

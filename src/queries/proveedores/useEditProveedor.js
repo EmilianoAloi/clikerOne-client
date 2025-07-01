@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { mutationFetchWithAuth } from "@/lib/utils";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
@@ -12,39 +13,31 @@ export function useEditProveedor() {
       if (articulosEliminados)
         payload.articulosEliminados = articulosEliminados;
 
-      const res = await fetch(`${API_URL}/${id}`, {
+      return mutationFetchWithAuth({
+        url: `${API_URL}/${id}`,
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: payload,
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData?.error || "Error al actualizar proveedor");
-      }
-
-      return res.json(); // Proveedor actualizado
     },
 
     onMutate: async (variables) => {
-      await queryClient.cancelQueries(["proveedores"]);
-      await queryClient.cancelQueries(["proveedor", variables.id]);
+      await queryClient.cancelQueries([API_URL]);
+      await queryClient.cancelQueries([`${API_URL}/${variables.id}`]);
 
-      const previousProveedores = queryClient.getQueryData(["proveedores"]);
+      const previousProveedores = queryClient.getQueryData([API_URL]);
       const previousProveedor = queryClient.getQueryData([
-        "proveedor",
-        variables.id,
+        `${API_URL}/${variables.id}`,
       ]);
 
       // Actualizar lista localmente con nuevo proveedor editado
-      queryClient.setQueryData(["proveedores"], (old = []) =>
+      queryClient.setQueryData([API_URL], (old = []) =>
         old.map((p) =>
           p.id_proveedor === variables.id ? { ...p, ...variables.proveedor } : p
         )
       );
 
       // Actualizar proveedor individual localmente
-      queryClient.setQueryData(["proveedor", variables.id], (old) => ({
+      queryClient.setQueryData([`${API_URL}/${variables.id}`], (old) => ({
         ...old,
         ...variables.proveedor,
       }));
@@ -53,22 +46,20 @@ export function useEditProveedor() {
     },
 
     onError: (err, variables, context) => {
-      // Revertir cambios en caso de error
       if (context?.previousProveedores) {
-        queryClient.setQueryData(["proveedores"], context.previousProveedores);
+        queryClient.setQueryData([API_URL], context.previousProveedores);
       }
       if (context?.previousProveedor) {
         queryClient.setQueryData(
-          ["proveedor", variables.id],
+          [`${API_URL}/${variables.id}`],
           context.previousProveedor
         );
       }
     },
 
     onSettled: (data, error, variables) => {
-      // Refrescar datos para mantener sincronización con backend
-      queryClient.invalidateQueries(["proveedores"]);
-      queryClient.invalidateQueries(["proveedor", variables.id]);
+      queryClient.invalidateQueries([API_URL]);
+      queryClient.invalidateQueries([`${API_URL}/${variables.id}`]);
     },
   });
 }

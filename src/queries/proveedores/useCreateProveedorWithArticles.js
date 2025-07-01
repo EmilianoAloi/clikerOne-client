@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { mutationFetchWithAuth } from "@/lib/utils";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 
@@ -7,20 +8,14 @@ export function useCreateProveedorWithArticles() {
 
   return useMutation({
     mutationFn: async ({ proveedor, articulos }) => {
-      const res = await fetch(API_URL, {
+      return mutationFetchWithAuth({
+        url: API_URL,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proveedor, articulos }),
+        body: { proveedor, articulos },
       });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data?.error || "Error al crear proveedor");
-      }
-      return data;
     },
     onSuccess: () => {
-      // Refresca automáticamente el listado al volver
-      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+      queryClient.invalidateQueries([API_URL]);
     },
   });
 }

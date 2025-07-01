@@ -14,3 +14,37 @@ export const formatCurrency = (valor) => {
     minimumFractionDigits: 2,
   });
 };
+
+// Fetchs React Query con autenticación
+
+export const queryFetchWithAuth = async ({ queryKey }) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(queryKey[0], {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(errorBody.message || "Network error");
+  }
+  return res.json();
+};
+
+export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(errorBody.message || "Network error");
+  }
+  return res.json();
+};
