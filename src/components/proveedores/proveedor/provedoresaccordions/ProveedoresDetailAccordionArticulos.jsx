@@ -23,8 +23,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import ArticulosFormModal from "../../articulos/ArticulosAddModal";
 import { Link } from "react-router-dom";
+import ArticulosMultiFormModal from "../../articulos/ArticulosAddModal";
 
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
@@ -49,7 +49,7 @@ const ProveedoresDetailAccordionArticulos = ({
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 ">
         <div className="flex justify-end gap-2 mb-3">
-          <ArticulosFormModal
+          <ArticulosMultiFormModal
             open={showArticuloModal}
             onClose={() => setShowArticuloModal(false)}
             idProveedor={currentProveedores.id_proveedor}

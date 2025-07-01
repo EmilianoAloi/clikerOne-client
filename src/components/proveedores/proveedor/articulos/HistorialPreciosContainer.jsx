@@ -128,10 +128,11 @@ export default function HistorialPreciosContainer() {
   };
 
   const getPriceChangeBadge = (oldPrice, newPrice) => {
+    // Si es el primer precio registrado (sin anterior)
     if (oldPrice === null || oldPrice === undefined) {
       return (
-        <span className="inline-block px-4 py-1 rounded-full bg-gray-100 text-gray-500 font-semibold text-sm">
-          -
+        <span className="inline-block px-4 py-1 rounded-full bg-gray-50 text-gray-500 font-semibold text-sm border border-gray-200">
+          Inicial
         </span>
       );
     }

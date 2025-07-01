@@ -21,7 +21,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useState } from "react";
-import { useCreateArticuloMutation } from "@/hooks/react-query/useArticulosMutation";
+import { useCreateArticuloMutation } from "@/queries/proveedores/useArticulosMutation";
 
 const CATEGORIAS = [
   "Materia prima",
@@ -66,7 +66,7 @@ export default function ArticulosMultiFormModal({
   const [items, setItems] = useState([{ ...EMPTY_ARTICULO, id: Date.now() }]);
   const mutation = useCreateArticuloMutation(idProveedor);
 
-  // --- Handlers ---
+  // Handlers para agregar/eliminar/cambiar items
   const handleAddItem = () =>
     setItems((prev) => [
       ...prev,
@@ -83,27 +83,34 @@ export default function ArticulosMultiFormModal({
       prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
     );
 
-  // --- Guardar todos ---
+  // Submit masivo: crea uno o muchos
   const handleSubmit = async (e) => {
     e.preventDefault();
-    for (const { id, ...values } of items) {
-      // Si querés validar acá podés usar Zod o lo que prefieras antes de enviar
-      await mutation.mutateAsync(values);
+    // Armá los artículos a enviar, sin el campo "id" local
+    const articulos = items.map(({ id, ...rest }) => ({
+      ...rest,
+      precio_unitario: Number(rest.precio_unitario), // siempre como número
+      id_proveedor: idProveedor, // asegúrate que esté
+    }));
+    try {
+      await mutation.mutateAsync(articulos);
+      setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
+      onCreated?.();
+      onClose();
+    } catch (err) {
+      // El toast lo maneja el hook
     }
+  };
+
+  // Cuando el modal se cierra, resetea el form
+  const handleClose = () => {
     setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
-    onCreated?.(); // Para que el padre haga refetch (invalidateQueries)
     onClose();
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={() => {
-        setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
-        onClose();
-      }}
-    >
-      <DialogContent className="!max-w-[90vw] p-8 ">
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="!max-w-[90vw] p-8">
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="flex justify-between items-start mb-2">
             <div>
@@ -111,10 +118,10 @@ export default function ArticulosMultiFormModal({
                 <Boxes className="h-5 w-5 text-slate-600" />
                 Ingreso de nuevos artículos
               </DialogTitle>
-              <p className="text-slate-500 text-sm  ">
-                Completá los datos de cada articulo para este proveedor.
+              <p className="text-slate-500 text-sm">
+                Completá los datos de cada artículo para este proveedor.
               </p>
-              <p className="text-slate-500 text-sm  mb-4">
+              <p className="text-slate-500 text-sm mb-4">
                 Usá el botón “Agregar más” para cargar más productos antes de
                 guardar.
               </p>
@@ -123,7 +130,8 @@ export default function ArticulosMultiFormModal({
               type="button"
               variant="outline"
               onClick={handleAddItem}
-              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100  mt-6"
+              className="font-semibold cursor-pointer flex items-center border-slate-300 text-slate-700 hover:bg-slate-100 mt-6"
+              disabled={mutation.isPending}
             >
               <Plus className="h-4 w-4 mr-1" /> Agregar más
             </Button>
@@ -167,7 +175,7 @@ export default function ArticulosMultiFormModal({
             </div>
             <div style={{ width: 44 }}></div>
           </div>
-          {/* Filas */}
+          {/* Filas de artículos */}
           <div className="space-y-2">
             {items.map((item, idx) => (
               <div
@@ -221,7 +229,7 @@ export default function ArticulosMultiFormModal({
                       </SelectContent>
                     </Select>
                   </div>
-                  {/* Color (input de texto) */}
+                  {/* Color */}
                   <div>
                     <Input
                       value={item.color ?? ""}
@@ -288,7 +296,7 @@ export default function ArticulosMultiFormModal({
                       size="icon"
                       onClick={() => handleRemoveItem(item.id)}
                       className="hover:bg-gray-200 hover:text-red-500 cursor-pointer text-red-500"
-                      disabled={items.length === 1}
+                      disabled={items.length === 1 || mutation.isPending}
                       tabIndex={-1}
                     >
                       <Trash2 className="h-5 w-5" />
@@ -303,10 +311,7 @@ export default function ArticulosMultiFormModal({
             <Button
               type="button"
               variant="outline"
-              onClick={() => {
-                setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
-                onClose();
-              }}
+              onClick={handleClose}
               disabled={mutation.isPending}
             >
               Cancelar
@@ -316,7 +321,7 @@ export default function ArticulosMultiFormModal({
               className="bg-black text-white font-semibold"
               disabled={mutation.isPending}
             >
-              {mutation.isPending ? "Guardando..." : "Guardar Artículos"}
+              {mutation.isPending ? "Guardando..." : "Guardar Artículo(s)"}
             </Button>
           </div>
         </form>
