@@ -20,11 +20,14 @@ import {
   Ruler,
   CircleDollarSign,
   Plus,
+  User,
+  Pencil,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ArticulosMultiFormModal from "../../articulos/ArticulosAddModal";
+import ArticulosEditModal from "../../articulos/ArticulosEditModal";
 
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
@@ -33,6 +36,7 @@ const ProveedoresDetailAccordionArticulos = ({
   error = null,
 }) => {
   const [showArticuloModal, setShowArticuloModal] = useState(false);
+  const [editingArticulo, setEditingArticulo] = useState(false);
 
   return (
     <AccordionItem
@@ -53,7 +57,12 @@ const ProveedoresDetailAccordionArticulos = ({
             open={showArticuloModal}
             onClose={() => setShowArticuloModal(false)}
             idProveedor={currentProveedores.id_proveedor}
-            // onCreated={refetch} // Podés usar invalidateQueries aquí
+          />
+          <ArticulosEditModal
+            open={!!editingArticulo}
+            onClose={() => setEditingArticulo(null)}
+            articulo={editingArticulo}
+            idProveedor={currentProveedores.id_proveedor}
           />
         </div>
         <div className="border rounded-lg overflow-hidden shadow-sm">
@@ -90,9 +99,14 @@ const ProveedoresDetailAccordionArticulos = ({
                     <Ruler className="w-4 h-4" /> U. medida
                   </span>
                 </TableHead>
-                <TableHead className="text-slate-700 font-semibold text-right">
+                <TableHead className="text-slate-700 font-semibold ">
                   <span className="inline-flex items-center gap-1 justify-end">
                     <CircleDollarSign className="w-4 h-4" /> Precio Unitario
+                  </span>
+                </TableHead>
+                <TableHead className="text-slate-700 font-semibold text-right">
+                  <span className="inline-flex items-center gap-1">
+                    <User className="w-4 h-4" /> Usuario
                   </span>
                 </TableHead>
                 <TableHead className="text-slate-700 font-semibold text-center w-32">
@@ -140,12 +154,17 @@ const ProveedoresDetailAccordionArticulos = ({
                     <TableCell className="py-3 ps-4">
                       {articulo.unidad_de_medida || "-"}
                     </TableCell>
-                    <TableCell className="py-3 text-right">
+                    <TableCell className="py-3 ">
                       ${" "}
                       {articulo.precio_unitario?.toLocaleString("es-AR", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
+                    </TableCell>
+                    <TableCell className="py-3 text-right">
+                      {articulo.modificador?.nombre ||
+                        articulo.creador?.nombre ||
+                        "-"}
                     </TableCell>
                     <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
                       <Link
@@ -154,7 +173,7 @@ const ProveedoresDetailAccordionArticulos = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-indigo-500 !p-0"
+                          className="text-indigo-500 !p-0 cursor-pointer"
                           title="Ver historial de precios"
                         >
                           <CircleDollarSign className="w-4 h-4" />
@@ -163,11 +182,11 @@ const ProveedoresDetailAccordionArticulos = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setShowArticuloModal(true)}
-                        className="text-amber-500 !p-0"
+                        onClick={() => setEditingArticulo(articulo)}
+                        className="text-amber-500 !p-0 cursor-pointer"
                         title="Editar artículo"
                       >
-                        <FileText className="w-4 h-4" />
+                        <Pencil className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
