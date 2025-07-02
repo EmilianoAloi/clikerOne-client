@@ -46,25 +46,45 @@ function RedirectToProveedor() {
   return <Navigate to={`/proveedores/${id}`} replace />;
 }
 
+// Helper fetch con token
+const fetchWithAuth = async (url, options = {}) => {
+  const token = localStorage.getItem("token");
+  const headers = {
+    ...(options.headers || {}),
+    Authorization: token ? `Bearer ${token}` : "",
+    "Content-Type": "application/json",
+  };
+  const res = await fetch(url, { ...options, headers });
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  return res.json();
+};
+
 function App() {
   // const isAuthenticated = localStorage.getItem("token") !== null;
 
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null indica que aún estamos verificando el token
 
-  // Verificar el token al inicio
+  const [proveedores, setProveedores] = useState([]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsAuthenticated(true); // Usuario autenticado
+      setIsAuthenticated(true);
+
+      // Traer proveedores con token
+      fetchWithAuth("https://clikerone-server.up.railway.app/api/proveedores")
+        .then(setProveedores)
+        .catch(() => {
+          // Si token inválido o error, logout
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+        });
     } else {
-      setIsAuthenticated(false); // No autenticado
+      setIsAuthenticated(false);
     }
   }, []);
 
-  // Mientras verificamos el token, no renderizamos nada
-  if (isAuthenticated === null) {
-    return <div>Cargando...</div>; // O un spinner aquí
-  }
+  if (isAuthenticated === null) return <div>Cargando...</div>;
 
   return (
     <ProveedorProvider>
@@ -218,6 +238,12 @@ function App() {
                       element={<RedirectToProveedor />}
                     />
                   </Route>
+
+                  {/* Catch-all para rutas no definidas */}
+                  {/* <Route
+                    path="*"
+                    element={<Navigate to="/proveedores" replace />}
+                  /> */}
                 </Routes>
               </BrowserRouter>
             </ProveedorArticlesProvider>
