@@ -12,26 +12,30 @@ import {
   Users,
   FileText,
 } from "lucide-react";
-import { authenticateUser } from "@/utils/authenticate-user";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginSplitScreen() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+
     startTransition(async () => {
-      const response = await authenticateUser(formData);
-      if (response.token) {
-        setResult({ success: true, message: "Inicio de sesión exitoso" });
-        localStorage.setItem("token", response.token);
+      try {
+        await login(formData);
+        setResult({ success: true, message: "¡Bienvenido!" });
         navigate("/proveedores");
-      } else {
-        setResult({ success: false, message: "Credenciales incorrectas" });
+      } catch (err) {
+        setResult({
+          success: false,
+          message: err.message || "Credenciales incorrectas",
+        });
       }
     });
   };

@@ -37,7 +37,7 @@ import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
 import PrivateRoute from "./components/login/PrivateRoute";
-import { useLogin } from "./components/login/LoginProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -46,9 +46,10 @@ function RedirectToProveedor() {
 }
 
 function App() {
-  const { isAuthenticated } = useLogin();
+  const { user, loading } = useAuth();
+  if (loading) return <div>Cargando...</div>;
+  const isAuthenticated = Boolean(user);
 
-  if (isAuthenticated === null) return <div>Cargando...</div>;
   return (
     <ProveedorProvider>
       <ProveedorInvoicesProvider>

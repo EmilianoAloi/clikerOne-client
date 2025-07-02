@@ -1,3 +1,5 @@
+// src/layout/nav-user.jsx
+import React from "react";
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -15,8 +17,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 
-export function NavUser({ user }) {
+export default function NavUser({ name, email, avatar, onLogout }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -29,48 +32,58 @@ export function NavUser({ user }) {
               className="!cursor-pointer data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">AD</AvatarFallback>
+                <AvatarFallback className="rounded-lg">{avatar}</AvatarFallback>
               </Avatar>
+
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{name}</span>
+                <span className="truncate text-xs">{email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto h-4 w-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
+            className="min-w-[180px] rounded-lg"
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <div className="flex items-center gap-2 px-2 py-2 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">AD</AvatarFallback>
+                  {avatar.startsWith("http") ? (
+                    <AvatarImage src={avatar} alt={name} />
+                  ) : (
+                    <AvatarFallback className="rounded-lg">
+                      {avatar}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{name}</span>
+                  <span className="truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Cuenta
+              <DropdownMenuItem disabled className="cursor-pointer">
+                <BadgeCheck className="mr-2 h-4 w-4" />
+                Ir a Cliker2
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
+              <DropdownMenuItem disabled>
+                <Bell className="mr-2 h-4 w-4" />
                 Notificaciones
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+
+            <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4" />
               Salir
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -79,5 +92,3 @@ export function NavUser({ user }) {
     </SidebarMenu>
   );
 }
-
-export default NavUser;
