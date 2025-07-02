@@ -11,8 +11,9 @@ import ProveedorInvoiceArticle from "./ProveedorInvoiceArticle";
 import ProveedorInvoiceExtra from "./ProveedorInvoiceExtra";
 import ProveedorInvoiceActions from "./ProveedorInvoiceActions";
 import { Separator } from "@/components/ui/separator";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import ProveedorInvoiceImpuestos from "./ProveedorInvoiceImpuestos";
+import { useCreateFactura } from "@/queries/proveedores/factura/useCreateFactura";
+import { useUpdateFactura } from "@/queries/proveedores/factura/useUpdateFactura";
 
 export default function ProveedorInvoiceForm({
   modo,
@@ -27,6 +28,8 @@ export default function ProveedorInvoiceForm({
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const createFacturaMutation = useCreateFactura();
+  const updateFacturaMutation = useUpdateFactura();
 
   const methods = useForm({
     resolver: zodResolver(invoiceFormSchema),
@@ -137,9 +140,6 @@ export default function ProveedorInvoiceForm({
   const descuentoTotal = calcDescuentoTotal(items);
   const total = subtotal + iva + iibb;
 
-  const { createSupplierInvoice, updateSupplierInvoice } =
-    useProveedorInvoices();
-
   const onSubmit = async (form) => {
     try {
       setIsSubmitting(true);
@@ -167,10 +167,14 @@ export default function ProveedorInvoiceForm({
       );
 
       if (modo === "editar" && factura?.id_factura) {
-        await updateSupplierInvoice(factura.id_factura, data);
+        console.log("Payload enviado a /api/proveedores/facturas:", data);
+        await updateFacturaMutation.mutateAsync({
+          id: factura.id_factura,
+          data,
+        });
         toast.success("Factura modificada correctamente");
       } else {
-        await createSupplierInvoice(data);
+        await createFacturaMutation.mutateAsync(data);
         toast.success("Factura cargada correctamente");
       }
       navigate(`/proveedores/${idProveedor}`, { state: { refresh: true } });

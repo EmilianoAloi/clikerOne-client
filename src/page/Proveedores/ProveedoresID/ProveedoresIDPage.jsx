@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import ProveedorDetailContainer from "@/components/proveedores/proveedor/detailPage/ProveedorDetailContainer";
 import { useProveedor } from "@/queries/proveedores/useProveedor";
 import { useArticulosByProveedor } from "@/queries/proveedores/useArticulosByProveedor";
-import { useFacturasByProveedor } from "@/queries/proveedores/useFacturasByProveedor";
+import { useFacturasByProveedor } from "@/queries/proveedores/factura/useFacturasByProveedor";
 import { useOPByProveedor } from "@/queries/proveedores/useOPByProveedor";
 import { useComprasByProveedor } from "@/queries/proveedores/useComprasByProveedor";
 import { usePagoItemsByProveedor } from "@/queries/proveedores/usePagoItemsByProveedor";

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import ProveedorInvoiceViewContainer from "@/components/proveedores/proveedor/invoicePage/invoiceview/ProveedorInvoiceViewContainer";
-import { useFacturaById } from "@/queries/proveedores/useFacturaById";
+import { useFacturaById } from "@/queries/proveedores/factura/useFacturaById";
 
 export default function ProveedorInvoiceViewPage() {
   const { idFactura } = useParams();
