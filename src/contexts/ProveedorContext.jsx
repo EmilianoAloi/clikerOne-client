@@ -27,7 +27,6 @@ export const ProveedorProvider = ({ children }) => {
         );
       } else {
         const enriched = data.map((p) => {
-          console.log("Proveedor:", p.nombre, "Saldo bruto:", p.saldo);
           const facturas = p.facturas_pendientes ?? 0;
           const saldo = p.saldo ?? 0;
           return {

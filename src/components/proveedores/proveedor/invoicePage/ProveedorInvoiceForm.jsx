@@ -15,19 +15,19 @@ import ProveedorInvoiceImpuestos from "./ProveedorInvoiceImpuestos";
 import { useCreateFactura } from "@/queries/proveedores/factura/useCreateFactura";
 import { useUpdateFactura } from "@/queries/proveedores/factura/useUpdateFactura";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const inputStyle = "bg-white border border-gray-300 rounded-md shadow-sm ";
+
 export default function ProveedorInvoiceForm({
   modo,
   factura,
   idProveedor,
   proveedor,
 }) {
-  const inputStyle = "bg-white border border-gray-300 rounded-md shadow-sm ";
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
-
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
   const createFacturaMutation = useCreateFactura();
   const updateFacturaMutation = useUpdateFactura();
 
@@ -48,7 +48,6 @@ export default function ProveedorInvoiceForm({
           proveedor: idProveedor?.toString() || "",
           numero_factura: "",
           condicion_venta: "",
-          iibb_porcentaje: 0,
           tipo_comprobante: "",
           percepcion_iibb: "0",
           items: [
@@ -105,46 +104,46 @@ export default function ProveedorInvoiceForm({
   const ivaDelProveedor = proveedor?.iva_predeterminado ?? "";
 
   const items = methods.watch("items") || [];
-  const iibbPorcentaje = methods.watch("iibb_porcentaje") ?? 0;
+  const impuestos = methods.watch("impuestos") || [];
+  const iibbPorcentaje = Number(methods.watch("percepcion_iibb") ?? 0);
 
-  function calcSubtotal(items) {
-    return items.reduce((acc, item) => {
-      const cantidad = Number(item.cantidad) || 0;
-      const precio = Number(item.precio_unitario) || 0;
-      const descuento = Number(item.valor_descuento) || 0;
-      const neto =
-        cantidad * precio * (1 - (descuento > 0 ? descuento : 0) / 100);
-      return acc + neto;
-    }, 0);
-  }
-  function calcIVA(items) {
-    return items.reduce((acc, item) => {
-      const cantidad = Number(item.cantidad) || 0;
-      const precio = Number(item.precio_unitario) || 0;
-      const descuento = Number(item.valor_descuento) || 0;
-      const iva = Number(item.iva) || 0;
-      const neto =
-        cantidad * precio * (1 - (descuento > 0 ? descuento : 0) / 100);
-      return acc + (neto * iva) / 100;
-    }, 0);
-  }
-  function calcIIBB(subtotal, iibbPorcentaje) {
-    return subtotal * (Number(iibbPorcentaje) / 100);
-  }
-  function calcDescuentoTotal(items) {
-    return items.reduce((acc, item) => {
-      const cantidad = Number(item.cantidad) || 0;
-      const precio = Number(item.precio_unitario) || 0;
-      const descuento = Number(item.valor_descuento) || 0;
-      return acc + (cantidad * precio * (descuento > 0 ? descuento : 0)) / 100;
-    }, 0);
-  }
+  const subtotal = items.reduce((acc, item) => {
+    const cantidad = Number(item.cantidad) || 0;
+    const precio = Number(item.precio_unitario) || 0;
+    const descuento = Number(item.valor_descuento) || 0;
+    const neto = cantidad * precio * (1 - descuento / 100);
+    return acc + neto;
+  }, 0);
 
-  const subtotal = calcSubtotal(items);
-  const iva = calcIVA(items);
-  const iibb = calcIIBB(subtotal, iibbPorcentaje);
-  const descuentoTotal = calcDescuentoTotal(items);
-  const total = subtotal + iva + iibb;
+  const iva = items.reduce((acc, item) => {
+    const cantidad = Number(item.cantidad) || 0;
+    const precio = Number(item.precio_unitario) || 0;
+    const descuento = Number(item.valor_descuento) || 0;
+    const iva = Number(item.iva) || 0;
+    const neto = cantidad * precio * (1 - descuento / 100);
+    return acc + (neto * iva) / 100;
+  }, 0);
+
+  const descuentoTotal = items.reduce((acc, item) => {
+    const cantidad = Number(item.cantidad) || 0;
+    const precio = Number(item.precio_unitario) || 0;
+    const descuento = Number(item.valor_descuento) || 0;
+    return acc + (cantidad * precio * descuento) / 100;
+  }, 0);
+
+  const iibb = subtotal * (iibbPorcentaje / 100);
+
+  const otrosImpuestos = impuestos.reduce((acc, imp) => {
+    const monto =
+      imp.monto !== undefined
+        ? Number(imp.monto) || 0
+        : ((parseFloat(imp.base_imponible) || 0) *
+            (parseFloat(imp.alicuota) || 0)) /
+          100;
+    return acc + monto;
+  }, 0);
+
+  const totalFinal = subtotal + iva + iibb + otrosImpuestos;
 
   const onSubmit = async (form) => {
     try {
@@ -229,7 +228,8 @@ export default function ProveedorInvoiceForm({
           subtotal={subtotal}
           iva={iva}
           iibb={iibb}
-          total={total}
+          otrosImpuestos={otrosImpuestos}
+          total={totalFinal}
           descuentoTotal={descuentoTotal}
           files={files}
           setFiles={setFiles}

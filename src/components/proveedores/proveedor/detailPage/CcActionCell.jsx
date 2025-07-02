@@ -12,10 +12,8 @@ import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "sonner";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
-import { useProveedorOP } from "@/contexts/ProveedorOPContext";
 import CcDeleteDialog from "./CcDeleteDialog";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useRemoveFactura } from "@/queries/proveedores/factura/useRemoveFactura";
 
 // Utilidad para limpiar el prefijo del ID
 function getIdLimpio(movement) {
@@ -30,13 +28,22 @@ function getIdLimpio(movement) {
 
 const CcActionCell = ({ movement, currentProveedor }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { refreshProveedorInvoices } = useProveedorInvoices();
-  const { refreshProveedorPayments } = useProveedorOP();
-  const { refreshProveedores } = useProveedores();
+  const { mutateAsync: removeFactura } = useRemoveFactura(
+    currentProveedor.id_proveedor
+  );
 
   const navigate = useNavigate();
-  const BASE_URL = import.meta.env.VITE_API_URL;
   const id = getIdLimpio(movement);
+
+  const handleDelete = async () => {
+    setIsOpen(false);
+    try {
+      await removeFactura(getIdLimpio(movement));
+      toast.error("Factura eliminada correctamente");
+    } catch (e) {
+      toast.error("Error al eliminar");
+    }
+  };
 
   // Ajustá las rutas según tu sistema
   const viewHref =
@@ -56,47 +63,6 @@ const CcActionCell = ({ movement, currentProveedor }) => {
       : movement.type === "Nota de Débito"
       ? `/proveedores/${currentProveedor.id_proveedor}/notadebito/editar-nd/${id}`
       : `/proveedores/${currentProveedor.id_proveedor}/pagos/${id}/editar-pago`;
-
-  const handleDelete = async () => {
-    setIsOpen(false);
-
-    try {
-      const id = getIdLimpio(movement);
-
-      // Endpoint para eliminar según tipo
-      const endpoint =
-        movement.type === "Factura" ||
-        movement.type === "Nota de Crédito" ||
-        movement.type === "Nota de Débito"
-          ? `${BASE_URL}/api/proveedores/facturas/${id}`
-          : `${BASE_URL}/api/proveedores/pagos/${id}`;
-
-      const res = await fetch(endpoint, { method: "DELETE" });
-
-      if (!res.ok) throw new Error("Error al eliminar");
-
-      if (
-        movement.type === "Factura" ||
-        movement.type === "Nota de Crédito" ||
-        movement.type === "Nota de Débito"
-      ) {
-        await refreshProveedorInvoices(currentProveedor.id_proveedor, true);
-      } else {
-        await refreshProveedorPayments(currentProveedor.id_proveedor, true);
-        await refreshProveedorInvoices(currentProveedor.id_proveedor, true);
-      }
-      await refreshProveedores(true);
-      toast.error(`${movement.type} eliminada correctamente`, {
-        description: movement.comprobante,
-      });
-    } catch (error) {
-      console.error("Error eliminando:", error);
-      toast.error("Error al eliminar el movimiento", {
-        description: movement.comprobante,
-      });
-      await refreshProveedores(true);
-    }
-  };
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
