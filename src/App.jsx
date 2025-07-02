@@ -49,7 +49,7 @@ function RedirectToProveedor() {
 function App() {
   // const isAuthenticated = localStorage.getItem("token") !== null;
 
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // Usamos null para indicar que aún estamos verificando
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null indica que aún estamos verificando el token
 
   // Verificar el token al inicio
   useEffect(() => {
@@ -61,9 +61,9 @@ function App() {
     }
   }, []);
 
-  // Mientras verificamos el token, no mostramos nada
+  // Mientras verificamos el token, no renderizamos nada
   if (isAuthenticated === null) {
-    return null; // O puedes mostrar un loader o spinner aquí
+    return <div>Cargando...</div>; // O un spinner aquí
   }
 
   return (
