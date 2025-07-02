@@ -1,4 +1,4 @@
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +21,16 @@ export default function LoginSplitScreen() {
   const [result, setResult] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+
+  // LOGIN AUTOMÁTICO SI HAY TOKEN EN LA URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/proveedores", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
