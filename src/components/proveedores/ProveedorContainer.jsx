@@ -1,5 +1,5 @@
 import ProveedoresTitle from "./Proveedor";
-import ProveedoresTable from "./ProveedorTable";
+import ProveedoresTable from "./ProveedoresTable";
 
 const ProveedorContainer = () => {
   return (

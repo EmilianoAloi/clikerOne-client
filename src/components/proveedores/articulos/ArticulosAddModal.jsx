@@ -21,7 +21,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useState } from "react";
-import { useCreateArticuloMutation } from "@/queries/proveedores/useArticulosMutation";
+import { useCreateArticuloMutation } from "@/queries/proveedores/articulo/useArticulosMutation";
 
 const CATEGORIAS = [
   "Materia prima",

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { queryFetchWithAuth } from "@/lib/utils"; // O la ruta correcta
+import { queryFetchWithAuth } from "@/lib/utils";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
 

@@ -19,7 +19,7 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useArticuloUpdateMutation } from "@/queries/proveedores/useArticuloUpdateMutation";
+import { useArticuloUpdateMutation } from "@/queries/proveedores/articulo/useArticuloUpdateMutation";
 
 const CATEGORIAS = [
   "Materia prima",

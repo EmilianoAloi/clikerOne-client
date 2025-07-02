@@ -10,7 +10,6 @@ const ProveedorDetailContainer = ({
   paymentItems,
   articles,
   compras,
-  // los nuevos props de loading/error
   loadingArticulos,
   errorArticulos,
   loadingFacturas,

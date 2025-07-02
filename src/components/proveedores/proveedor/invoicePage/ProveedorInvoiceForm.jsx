@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceFormSchema } from "@/schemas/invoice-form-schema";
-import { mapFormToApi } from "@/utils/invoice-form-mapper";
+import { mapFormToApi } from "@/mappers/invoice-form-mapper";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -30,6 +30,7 @@ export default function ProveedorInvoiceForm({
   const navigate = useNavigate();
   const createFacturaMutation = useCreateFactura();
   const updateFacturaMutation = useUpdateFactura();
+  const ivaDelProveedor = proveedor?.iva_predeterminado ?? "";
 
   const methods = useForm({
     resolver: zodResolver(invoiceFormSchema),
@@ -55,18 +56,15 @@ export default function ProveedorInvoiceForm({
               id_articulo: -2,
               nombre_manual: "",
               cantidad: 1,
+              iva: Number(ivaDelProveedor) || 21,
               precio_unitario: 0,
               valor_descuento: 0,
-              iva: "",
+              iva: Number(ivaDelProveedor) || 21,
               color: "",
               unidad_de_medida: "",
             },
           ],
-          impuestos: [
-            { detalle: "", base_imponible: "", alicuota: "" },
-            { detalle: "", base_imponible: "", alicuota: "" },
-            { detalle: "", base_imponible: "", alicuota: "" },
-          ],
+          impuestos: [{ detalle: "", base_imponible: "", alicuota: "" }],
           url_factura_comprobante: null,
           observaciones: "",
           fecha_emision: "",
@@ -112,8 +110,6 @@ export default function ProveedorInvoiceForm({
         .filter((a) => a.id_articulo > 0) ?? [],
     [proveedor]
   );
-
-  const ivaDelProveedor = proveedor?.iva_predeterminado ?? "";
 
   const items = methods.watch("items") || [];
   const impuestos = methods.watch("impuestos") || [];
@@ -222,7 +218,7 @@ export default function ProveedorInvoiceForm({
           setOpen={setOpen}
           disabledProveedor={!!idProveedor}
         />
-        {/* Otros componentes */}
+
         <Separator className="my-10" />
         <ProveedorInvoiceArticle
           articulos={articulos}

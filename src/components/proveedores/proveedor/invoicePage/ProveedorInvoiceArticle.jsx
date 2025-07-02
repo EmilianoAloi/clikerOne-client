@@ -235,6 +235,7 @@ export default function ProveedorInvoiceArticle({
                               const selected = articulos.find(
                                 (a) => a.id_articulo === selectedId
                               );
+                              console.log("Artículo seleccionado:", selected);
                               field.onChange(selectedId);
                               setValue(`items.${idx}.nombre_manual`, "");
                               setValue(
@@ -357,9 +358,9 @@ export default function ProveedorInvoiceArticle({
                           ))}
                         </SelectContent>
                       </Select>
-                      {errors.items?.[idx]?.unidad_medida?.message && (
+                      {errors.items?.[idx]?.unidad_de_medida?.message && (
                         <span className="text-xs text-red-500">
-                          {errors.items?.[idx]?.unidad_medida?.message}
+                          {errors.items?.[idx]?.unidad_de_medida?.message}
                         </span>
                       )}
                     </>

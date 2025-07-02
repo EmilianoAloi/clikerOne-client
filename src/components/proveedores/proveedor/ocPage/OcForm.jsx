@@ -5,7 +5,7 @@ import { ocFormSchema } from "@/schemas/oc-form-schema";
 import { Form } from "@/components/ui/form";
 
 import { v4 as uuidv4 } from "uuid";
-import { toFormData } from "@/utils/oc-form-mapper";
+import { toFormData } from "@/mappers/oc-form-mapper";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import OCproveedorInfo from "./OCproveedorInfo";
