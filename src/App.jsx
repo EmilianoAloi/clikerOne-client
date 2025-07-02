@@ -38,7 +38,7 @@ import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
 import PrivateRoute from "./components/login/PrivateRoute";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // Función para redirigir
 function RedirectToProveedor() {
