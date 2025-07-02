@@ -46,45 +46,23 @@ function RedirectToProveedor() {
   return <Navigate to={`/proveedores/${id}`} replace />;
 }
 
-// Helper fetch con token
-const fetchWithAuth = async (url, options = {}) => {
-  const token = localStorage.getItem("token");
-  const headers = {
-    ...(options.headers || {}),
-    Authorization: token ? `Bearer ${token}` : "",
-    "Content-Type": "application/json",
-  };
-  const res = await fetch(url, { ...options, headers });
-  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-  return res.json();
-};
-
 function App() {
   // const isAuthenticated = localStorage.getItem("token") !== null;
 
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null indica que aún estamos verificando el token
 
-  const [proveedores, setProveedores] = useState([]);
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get("token");
+    if (tokenFromUrl) {
+      localStorage.setItem("token", tokenFromUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
       setIsAuthenticated(true);
-
-      // Traer proveedores con token
-      fetchWithAuth("https://clikerone-server.up.railway.app/api/proveedores")
-        .then(setProveedores)
-        .catch(() => {
-          // Si token inválido o error, logout
-          localStorage.removeItem("token");
-          setIsAuthenticated(false);
-        });
     } else {
-      setIsAuthenticated(false);
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
     }
   }, []);
-
-  if (isAuthenticated === null) return <div>Cargando...</div>;
 
   return (
     <ProveedorProvider>
