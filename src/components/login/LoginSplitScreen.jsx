@@ -36,11 +36,6 @@ export default function LoginSplitScreen() {
     });
   };
 
-  const demoCredentials = [
-    { user: "admin", pass: "123456", role: "Administrador" },
-    { user: "demo", pass: "demo", role: "Usuario Demo" },
-  ];
-
   return (
     <div className="min-h-screen flex ">
       {/* Left Side - Branding */}

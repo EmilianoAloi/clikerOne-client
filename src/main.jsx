@@ -5,13 +5,16 @@ import "@fontsource/inter";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import "./index.css";
 import App from "./App.jsx";
+import { LoginProvider } from "./components/login/LoginProvider";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <LoginProvider>
+        <App />
+      </LoginProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>

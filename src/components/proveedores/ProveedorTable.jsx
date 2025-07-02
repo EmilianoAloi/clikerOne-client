@@ -42,7 +42,7 @@ export default function ProveedoresTable() {
     );
   });
 
-  // 4. Animación para estado vacío (opcional, tu lógica original)
+  // 4. Animación para estado vacío
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     if (proveedores.length === 0 && !isLoading) {

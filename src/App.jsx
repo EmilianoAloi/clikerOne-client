@@ -38,7 +38,7 @@ import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
 import PrivateRoute from "./components/login/PrivateRoute";
-import { useEffect, useState } from "react";
+import { useLogin } from "./components/login/LoginProvider";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -47,23 +47,9 @@ function RedirectToProveedor() {
 }
 
 function App() {
-  // const isAuthenticated = localStorage.getItem("token") !== null;
+  const { isAuthenticated } = useLogin();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // null indica que aún estamos verificando el token
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tokenFromUrl = params.get("token");
-    if (tokenFromUrl) {
-      localStorage.setItem("token", tokenFromUrl);
-      window.history.replaceState({}, document.title, window.location.pathname);
-      setIsAuthenticated(true);
-    } else {
-      const token = localStorage.getItem("token");
-      setIsAuthenticated(!!token);
-    }
-  }, []);
-
+  if (isAuthenticated === null) return <div>Cargando...</div>;
   return (
     <ProveedorProvider>
       <ProveedorInvoicesProvider>
