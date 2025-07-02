@@ -38,6 +38,7 @@ import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresN
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
 import PrivateRoute from "./components/login/PrivateRoute";
+import { useEffect } from "react";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -46,7 +47,24 @@ function RedirectToProveedor() {
 }
 
 function App() {
-  const isAuthenticated = localStorage.getItem("token") !== null;
+  // const isAuthenticated = localStorage.getItem("token") !== null;
+
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // Usamos null para indicar que aún estamos verificando
+
+  // Verificar el token al inicio
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true); // Usuario autenticado
+    } else {
+      setIsAuthenticated(false); // No autenticado
+    }
+  }, []);
+
+  // Mientras verificamos el token, no mostramos nada
+  if (isAuthenticated === null) {
+    return null; // O puedes mostrar un loader o spinner aquí
+  }
 
   return (
     <ProveedorProvider>
