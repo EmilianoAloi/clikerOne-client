@@ -65,5 +65,17 @@ export const mapFormToApi = (form, proveedor) => {
       subtotal_manual: item.subtotal_manual ?? null,
       iva: Number(item.iva) || 0,
     })),
+    impuestos: Array.isArray(form.impuestos)
+      ? form.impuestos.map((imp) => ({
+          tipo: imp.detalle || "",
+          descripcion: imp.detalle || "",
+          base_imponible: parseFloat(imp.base_imponible) || 0,
+          alicuota: parseFloat(imp.alicuota) || 0,
+          monto:
+            ((parseFloat(imp.base_imponible) || 0) *
+              (parseFloat(imp.alicuota) || 0)) /
+            100,
+        }))
+      : [],
   };
 };

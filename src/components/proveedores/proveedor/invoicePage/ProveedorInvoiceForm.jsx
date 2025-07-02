@@ -81,6 +81,12 @@ export default function ProveedorInvoiceForm({
         fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
         tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "factura",
         percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
+        impuestos:
+          factura.impuestos?.map((imp) => ({
+            detalle: imp.tipo || imp.descripcion || "",
+            base_imponible: imp.base_imponible || "",
+            alicuota: imp.alicuota || "",
+          })) ?? [],
       });
     }
   }, [factura]);
@@ -167,13 +173,14 @@ export default function ProveedorInvoiceForm({
       );
 
       if (modo === "editar" && factura?.id_factura) {
-        console.log("Payload enviado a /api/proveedores/facturas:", data);
+        console.log("DATA AL BACKEND", data);
         await updateFacturaMutation.mutateAsync({
           id: factura.id_factura,
           data,
         });
         toast.success("Factura modificada correctamente");
       } else {
+        console.log("DATA AL BACKEND", data);
         await createFacturaMutation.mutateAsync(data);
         toast.success("Factura cargada correctamente");
       }

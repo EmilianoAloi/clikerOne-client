@@ -1,5 +1,23 @@
 import { z } from "zod";
 
+const impuestoSchema = z.object({
+  detalle: z.string().optional().nullable(),
+  base_imponible: z
+    .preprocess(
+      (v) => (v === "" ? 0 : Number(v)),
+      z.number().min(0, "Base >= 0")
+    )
+    .optional()
+    .nullable(),
+  alicuota: z
+    .preprocess(
+      (v) => (v === "" ? 0 : Number(v)),
+      z.number().min(0, "Alicuota >= 0")
+    )
+    .optional()
+    .nullable(),
+});
+
 export const invoiceItemSchema = z.object({
   id_articulo: z.union([
     z.number().int().positive(),
@@ -53,4 +71,5 @@ export const invoiceFormSchema = z.object({
   fecha_vencimiento: z.string().optional().nullable(),
   fecha_contable: z.string().optional().nullable(),
   percepcion_iibb: z.string().optional().nullable(),
+  impuestos: z.array(impuestoSchema).optional().default([]),
 });
