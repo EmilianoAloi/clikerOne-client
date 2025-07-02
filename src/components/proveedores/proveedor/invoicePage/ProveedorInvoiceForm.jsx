@@ -40,7 +40,7 @@ export default function ProveedorInvoiceForm({
           fecha_emision: factura.fecha_emision?.split("T")[0] ?? "",
           fecha_vencimiento: factura.fecha_vencimiento?.split("T")[0] ?? "",
           fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
-          tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "",
+          tipo_comprobante: factura.tipo_comprobante?.toLowerCase() || "",
           percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
           impuestos: factura.impuestos ?? [],
         }
@@ -58,9 +58,15 @@ export default function ProveedorInvoiceForm({
               precio_unitario: 0,
               valor_descuento: 0,
               iva: "",
+              color: "",
+              unidad_de_medida: "",
             },
           ],
-          impuestos: [],
+          impuestos: [
+            { detalle: "", base_imponible: "", alicuota: "" },
+            { detalle: "", base_imponible: "", alicuota: "" },
+            { detalle: "", base_imponible: "", alicuota: "" },
+          ],
           url_factura_comprobante: null,
           observaciones: "",
           fecha_emision: "",
@@ -80,6 +86,12 @@ export default function ProveedorInvoiceForm({
         fecha_contable: factura.fecha_contable?.split("T")[0] ?? "",
         tipo_comprobante: factura.tipo_comprobante?.toLowerCase() ?? "factura",
         percepcion_iibb: factura.percepcion_iibb?.toString() ?? "0",
+        items:
+          factura.items?.map((item) => ({
+            ...item,
+            color: item.color || "",
+            unidad_de_medida: item.unidad_de_medida || "",
+          })) || [],
         impuestos:
           factura.impuestos?.map((imp) => ({
             detalle: imp.tipo || imp.descripcion || "",

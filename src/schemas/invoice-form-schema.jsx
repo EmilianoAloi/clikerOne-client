@@ -45,6 +45,8 @@ export const invoiceItemSchema = z.object({
       z.number().min(0).max(100)
     )
     .nullable(),
+  color: z.string().optional().nullable(),
+  unidad_de_medida: z.string().optional().nullable(),
 });
 
 export const invoiceFormSchema = z.object({

@@ -31,11 +31,7 @@ export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
   const initialized = useRef(false);
   useEffect(() => {
     if (!initialized.current && fields.length === 0) {
-      append({
-        detalle: "",
-        base_imponible: "",
-        alicuota: "",
-      });
+      append({ detalle: "", base_imponible: "", alicuota: "" });
       initialized.current = true;
     }
     // eslint-disable-next-line
