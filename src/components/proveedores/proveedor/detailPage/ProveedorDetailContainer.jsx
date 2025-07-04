@@ -23,6 +23,7 @@ const ProveedorDetailContainer = ({
 
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8 mb-10">
+      <p>adasdasdas</p>
       {/* Info principal */}
       <div className="rounded-lg border text-card-foreground shadow-sm p-6">
         <div className="flex justify-between items-start">

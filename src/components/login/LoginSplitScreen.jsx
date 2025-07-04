@@ -18,7 +18,6 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function LoginSplitScreen() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState(null);
-  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
