@@ -17,7 +17,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 const tableHeaderClass = "text-gray-700 font-semibold bg-slate-50";
-const cellClass = "py-3 px-2";
 const rightCellClass = "py-3 px-2 text-right";
 const monoCellClass = "py-3 px-2";
 const descCellClass = "py-3 px-2 max-w-xs truncate";

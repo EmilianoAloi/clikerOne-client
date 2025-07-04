@@ -8,7 +8,7 @@ const formatCurrency = (amount) =>
     minimumFractionDigits: 2,
   }).format(Number(amount));
 
-export default function NCviewItem({ notaCredito, items }) {
+export default function NCviewItem({ items }) {
   return (
     <Card className="mt-5 border-none shadow-none md:border md:shadow-md px-0 md:px-4">
       <CardHeader className="px-0">

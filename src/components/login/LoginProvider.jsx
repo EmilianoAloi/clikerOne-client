@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 
 const LoginContext = createContext();
 
@@ -20,7 +20,7 @@ export const LoginProvider = ({ children }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Cargando...</div>; // acá podés poner un spinner si querés
+    return <div>Cargando...</div>;
   }
 
   return (
@@ -29,5 +29,3 @@ export const LoginProvider = ({ children }) => {
     </LoginContext.Provider>
   );
 };
-
-export const useLogin = () => useContext(LoginContext);

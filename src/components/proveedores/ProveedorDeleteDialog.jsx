@@ -15,7 +15,7 @@ import { Button } from "../ui/button"; // Ruta relativa desde 'proveedores'
 import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
 
 // No más typescript, solo props JS
-const ProveedoressDeleteDialog = ({ Proveedor, onDelete }) => {
+const ProveedoressDeleteDialog = ({ Proveedor }) => {
   const [open, setOpen] = useState(false);
   const removeProveedorMutation = useRemoveProveedor();
 

@@ -22,7 +22,7 @@ export default function ProveedoresNDviewPage() {
       .then((data) => setNotaDebito(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [idND]);
+  }, [idND, API_URL]);
 
   if (loading) return <div>Cargando nota de débito...</div>;
   if (error) return <div className="text-red-500">{error}</div>;

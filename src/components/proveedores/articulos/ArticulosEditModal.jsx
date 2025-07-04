@@ -73,7 +73,9 @@ export default function ArticulosEditModal({
       });
       onUpdated?.();
       onClose();
-    } catch {}
+    } catch (err) {
+      console.error("Error al guardar el artículo:", err);
+    }
   };
 
   const handleClose = () => {

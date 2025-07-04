@@ -19,14 +19,16 @@ import ProveedorDetailItem from "./ProveedorDetailItem";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import ProveedorDeleteDialog from "./ProveedorDeleteDialog";
+import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
+import ProveedoresDeleteDialog from "./ProveedorDeleteDialog";
 
 const ProveedorDetailInfo = ({ proveedor }) => {
+  const removeProveedor = useRemoveProveedor();
+  const navigate = useNavigate();
+
   if (!proveedor) {
     return <div className="p-6">Proveedor no encontrado.</div>;
   }
-
-  const navigate = useNavigate();
-
   function esFechaMovimientoValida(fecha) {
     if (!fecha) return false;
     const lower = fecha.toLowerCase?.() || fecha;
@@ -159,7 +161,14 @@ const ProveedorDetailInfo = ({ proveedor }) => {
 
             {/* Si tu lógica de borrar proveedor sigue en Context, 
                 pasale por prop un onDelete que haga el removeProveedor */}
-            <ProveedorDeleteDialog proveedor={proveedor} />
+            <ProveedoresDeleteDialog
+              proveedor={proveedor}
+              onDelete={() =>
+                removeProveedor.mutate(proveedor.id_proveedor, {
+                  onSuccess: () => navigate("/proveedores"),
+                })
+              }
+            />
           </div>
         </div>
       </div>

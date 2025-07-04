@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NDeditContainer from "@/components/proveedores/proveedor/ndPage/ndedit/NDeditContainer";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -98,7 +99,6 @@ export default function ProveedoresNDeditPage() {
     };
 
     fetchData();
-    // eslint-disable-next-line
   }, [
     id,
     idND,

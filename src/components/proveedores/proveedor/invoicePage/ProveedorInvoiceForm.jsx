@@ -59,7 +59,6 @@ export default function ProveedorInvoiceForm({
               iva: Number(ivaDelProveedor) || 21,
               precio_unitario: 0,
               valor_descuento: 0,
-              iva: Number(ivaDelProveedor) || 21,
               color: "",
               unidad_de_medida: "",
             },
@@ -98,7 +97,7 @@ export default function ProveedorInvoiceForm({
           })) ?? [],
       });
     }
-  }, [factura]);
+  }, [factura, methods]);
 
   const articulos = useMemo(
     () =>

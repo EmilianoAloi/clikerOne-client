@@ -41,6 +41,7 @@ const CcActionCell = ({ movement, currentProveedor }) => {
       await removeFactura(getIdLimpio(movement));
       toast.error("Factura eliminada correctamente");
     } catch (e) {
+      console.log("Error al eliminar factura:", e);
       toast.error("Error al eliminar");
     }
   };

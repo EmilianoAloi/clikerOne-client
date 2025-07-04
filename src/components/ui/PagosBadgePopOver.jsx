@@ -5,11 +5,8 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 export default function PagosBadgePopover({ pagos = [] }) {
-  const navigate = useNavigate();
-
   if (!pagos || pagos.length === 0) {
     return (
       <span className="text-xs text-muted-foreground italic">Sin pagos</span>

@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import ProveedorNDcontainer from "@/components/proveedores/proveedor/ndPage/ProveedorNDcontainer";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -33,6 +34,7 @@ export default function ProveedoresNDPage() {
         const data = await res.json();
         setProveedor(data);
       } catch (err) {
+        console.error("Error al obtener proveedor:", err);
         setProveedor(null);
       } finally {
         setLoading(false);

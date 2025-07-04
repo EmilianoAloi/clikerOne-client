@@ -11,7 +11,7 @@ import {
 import { Calendar } from "lucide-react";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
-const InputMonto = memo(({ value, disabled, onChange }) => (
+const InputMonto = memo(({ value, onChange }) => (
   <Input
     type="text"
     inputMode="decimal"

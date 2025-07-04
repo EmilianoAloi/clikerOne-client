@@ -87,7 +87,7 @@ export default function ArticulosMultiFormModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Armá los artículos a enviar, sin el campo "id" local
-    const articulos = items.map(({ id, ...rest }) => ({
+    const articulos = items.map(({ ...rest }) => ({
       ...rest,
       precio_unitario: Number(rest.precio_unitario),
       id_proveedor: idProveedor,
@@ -97,7 +97,10 @@ export default function ArticulosMultiFormModal({
       setItems([{ ...EMPTY_ARTICULO, id: Date.now() }]);
       onCreated?.();
       onClose();
-    } catch (err) {}
+    } catch (err) {
+      console.error("Error :", err);
+      // opcional: setError(err.message || "Error inesperado");
+    }
   };
 
   // Cuando el modal se cierra, resetea el form
@@ -175,7 +178,7 @@ export default function ArticulosMultiFormModal({
           </div>
           {/* Filas de artículos */}
           <div className="space-y-2">
-            {items.map((item, idx) => (
+            {items.map((item) => (
               <div
                 key={item.id}
                 className="bg-slate-50 border border-slate-200 rounded-md px-4 py-2"

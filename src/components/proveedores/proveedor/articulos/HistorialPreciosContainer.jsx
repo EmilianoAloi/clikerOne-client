@@ -163,7 +163,7 @@ export default function HistorialPreciosContainer() {
     return (
       <div className="p-6 text-red-500">Error al cargar el historial.</div>
     );
-  const getPriceChangeIcon = (oldPrice, newPrice) => null;
+  const getPriceChangeIcon = () => null;
   return (
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
       <HistorialPreciosTitle />

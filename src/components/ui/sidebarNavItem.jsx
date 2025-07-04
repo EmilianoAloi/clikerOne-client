@@ -4,8 +4,7 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-
-const SidebarNavItem = ({ title, href, icon: Icon, isActive, disabled }) => {
+const SidebarNavItem = ({ title, href, icon: Icon, disabled, isActive }) => {
   const navigate = useNavigate();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -34,7 +33,7 @@ const SidebarNavItem = ({ title, href, icon: Icon, isActive, disabled }) => {
               isCollapsed ? "size-5" : "size-6"
             }`}
           >
-            <Icon className="transition-all size-5" />
+            {Icon && <Icon className="transition-all size-5" />}
           </div>
           {!isCollapsed && (
             <span className="truncate transition-opacity duration-200">
@@ -46,5 +45,4 @@ const SidebarNavItem = ({ title, href, icon: Icon, isActive, disabled }) => {
     </SidebarMenuItem>
   );
 };
-
 export default SidebarNavItem;

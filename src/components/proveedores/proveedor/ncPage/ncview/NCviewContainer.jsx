@@ -8,7 +8,7 @@ import NCviewItem from "./NCviewItem";
 import NCviewHeader from "./NCviewHeader";
 import NCviewExtras from "./NCviewExtras";
 
-export default function NCviewContainer({ notaCredito, proveedorId }) {
+export default function NCviewContainer({ notaCredito }) {
   const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrint = () => {

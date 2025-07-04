@@ -5,7 +5,6 @@ import ProveedoresEditForm from "./ProveedorEditForm";
 
 const ProveedorEditContainer = ({ proveedor }) => {
   const [proveedorData, setProveedorData] = useState(proveedor);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (proveedor) {
@@ -13,7 +12,7 @@ const ProveedorEditContainer = ({ proveedor }) => {
     }
   }, [proveedor]);
 
-  if (loading || !proveedorData) {
+  if (!proveedorData) {
     return (
       <div className="p-6">
         <Skeleton className="h-6 w-1/3 mb-4" />

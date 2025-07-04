@@ -29,7 +29,7 @@ const ProveedoresTableActions = ({ Proveedor }) => {
     activateProveedorMutation.mutate(Proveedor.id_proveedor, {
       onSuccess: () => {
         // setOpen(false);
-        if (onActivate) onActivate(); // para manejar UI padre si hace falta
+        // if (onActivate) onActivate(); // para manejar UI padre si hace falta
       },
       onError: (error) => {
         console.error("Error activando proveedor", error);

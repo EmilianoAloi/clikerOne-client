@@ -1,5 +1,6 @@
 import ProveedoresOPeditContainer from "@/components/proveedores/proveedor/opPage/opedit/ProveedoresOPeditContainer";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -24,7 +25,7 @@ const ProveedoresOPeditPage = () => {
         .then((res) => res.json())
         .then((data) => setProveedor(data));
     }
-  }, [id, proveedores]);
+  }, [id, proveedores, API_URL]);
 
   // Buscar datos del pago
   useEffect(() => {
@@ -34,7 +35,7 @@ const ProveedoresOPeditPage = () => {
       .then((res) => res.json())
       .then((data) => setPagoData(data))
       .finally(() => setLoading(false));
-  }, [idOP]);
+  }, [idOP, API_URL]);
 
   if (loading || !proveedor || !pagoData) return <div>Cargando...</div>;
 

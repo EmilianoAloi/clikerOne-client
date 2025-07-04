@@ -240,7 +240,7 @@ export default function ProveedorInvoiceArticle({
                               setValue(`items.${idx}.nombre_manual`, "");
                               setValue(
                                 `items.${idx}.precio_unitario`,
-                                Number(selected?.precio_unitario) ?? 0
+                                Number(selected?.precio_unitario)
                               );
                               setValue(`items.${idx}.cantidad`, 1);
                               setValue(`items.${idx}.valor_descuento`, 0);

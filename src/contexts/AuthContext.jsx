@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -23,7 +22,6 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  // login normal de formulario
   const login = async (formData) => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
       method: "POST",
@@ -45,14 +43,12 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    // 1) leo token de URL o localStorage
     const params = new URLSearchParams(window.location.search);
     const tokenParam = params.get("token");
     const token = tokenParam || localStorage.getItem("token");
 
     if (tokenParam) {
       localStorage.setItem("token", tokenParam);
-      // limpio la URL para no volver a procesarlo
       window.history.replaceState({}, "", window.location.pathname);
     }
 

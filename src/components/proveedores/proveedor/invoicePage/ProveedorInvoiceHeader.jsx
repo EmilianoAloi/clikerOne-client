@@ -36,7 +36,6 @@ import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Controller, useFormContext } from "react-hook-form";
-import { useEffect } from "react";
 
 export default function ProveedorInvoiceHeader({
   proveedores,
@@ -46,7 +45,6 @@ export default function ProveedorInvoiceHeader({
   disabledProveedor,
 }) {
   const {
-    control,
     register,
     setValue,
     watch,
@@ -54,7 +52,6 @@ export default function ProveedorInvoiceHeader({
   } = useFormContext();
 
   const proveedor = watch("proveedor");
-  const numero_factura = watch("numero_factura");
   const tipo_comprobante = watch("tipo_comprobante");
   const condicion_venta = watch("condicion_venta");
   const fecha_emision = watch("fecha_emision");

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
 
 const ProveedoresTitle = () => {
   const { proveedores } = useProveedores();

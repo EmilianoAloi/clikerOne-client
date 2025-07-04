@@ -116,15 +116,6 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         return;
       }
 
-      const totalFacturas = facturasNormalizadas.reduce(
-        (acc, f) => acc + f.monto_a_saldar,
-        0
-      );
-      const totalPagos = itemsNormalizados.reduce(
-        (acc, item) => acc + item.monto_aplicado,
-        0
-      );
-
       // 1. Subir comprobantes si existen
       const uploadedFiles = await Promise.all(
         (formData.comprobantes || []).map(async (file) => {

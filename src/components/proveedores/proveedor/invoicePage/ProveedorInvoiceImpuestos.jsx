@@ -15,12 +15,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
 export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
-  const {
-    control,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useFormContext();
+  const { control, watch } = useFormContext();
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: "impuestos",

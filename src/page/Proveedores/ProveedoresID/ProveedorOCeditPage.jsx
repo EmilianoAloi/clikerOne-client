@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
 import OCcontainer from "@/components/proveedores/proveedor/ocPage/OCcontainer";
 
@@ -9,7 +10,7 @@ export default function ProveedorOCeditPage() {
   const { proveedores } = useProveedores();
   const {
     getComprasForProveedor,
-    refreshProveedorCompras,
+
     getCompraById,
     loading: loadingCompras,
   } = useProveedorCompras();

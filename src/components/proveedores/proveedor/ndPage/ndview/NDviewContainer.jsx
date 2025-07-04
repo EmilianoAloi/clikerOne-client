@@ -9,7 +9,7 @@ import NDviewExtras from "./NDviewExtras";
 import NDviewItem from "./NDviewItem";
 import NDviewHeader from "./NDviewHeader";
 
-const NDviewContainer = ({ notaDebito, proveedorId }) => {
+const NDviewContainer = ({ notaDebito }) => {
   const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrint = () => {

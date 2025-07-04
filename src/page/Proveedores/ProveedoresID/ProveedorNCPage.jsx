@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import ProveedorNCcontainer from "@/components/proveedores/proveedor/ncPage/ProveedorNCcontainer";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -33,6 +34,7 @@ export default function ProveedorNCPage() {
         const data = await res.json();
         setProveedor(data);
       } catch (err) {
+        console.error("Error:", err);
         setProveedor(null);
       } finally {
         setLoading(false);

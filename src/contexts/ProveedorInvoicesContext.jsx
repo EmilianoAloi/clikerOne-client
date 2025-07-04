@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
-import { useProveedores } from "./ProveedorContext";
-
+import { useProveedores } from "@/utils/useProveedores";
 // --------- API BASE ---------
 const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/facturas`;
 

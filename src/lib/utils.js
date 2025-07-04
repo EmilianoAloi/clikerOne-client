@@ -15,8 +15,6 @@ export const formatCurrency = (valor) => {
   });
 };
 
-// Fetchs React Query con autenticación
-
 export const queryFetchWithAuth = async ({ queryKey }) => {
   const token = localStorage.getItem("token");
   const res = await fetch(queryKey[0], {

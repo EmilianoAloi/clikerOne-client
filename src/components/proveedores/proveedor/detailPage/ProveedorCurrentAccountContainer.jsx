@@ -18,11 +18,6 @@ export default function ProveedorCurrentAccountContainer({
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  // Defensa: Si no hay proveedor, salimos
-  if (!currentProveedor || !currentProveedor.id_proveedor) {
-    return <div className="p-6">Cargando proveedor...</div>;
-  }
-
   useEffect(() => {
     const getFileNameFromUrl = (url) => {
       if (!url) return "";

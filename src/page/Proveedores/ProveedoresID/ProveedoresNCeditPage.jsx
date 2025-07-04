@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NCeditContainer from "@/components/proveedores/proveedor/ncPage/ncedit/NCeditContainer";
-import { useProveedores } from "@/contexts/ProveedorContext";
+import { useProveedores } from "@/utils/useProveedores";
+
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -135,7 +136,6 @@ export default function ProveedoresNCeditPage() {
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     id,
     idNC,

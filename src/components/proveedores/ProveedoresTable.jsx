@@ -27,7 +27,7 @@ export default function ProveedoresTable() {
       refetch();
       navigate(location.pathname, { replace: true });
     }
-    // eslint-disable-next-line
+     
   }, [location.state, location.pathname, navigate, refetch]);
 
   // 3. Filtrado
