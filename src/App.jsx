@@ -38,8 +38,8 @@ import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresO
 import PrivateRoute from "./components/login/PrivateRoute";
 
 import { useAuth } from "@/contexts/AuthContext";
-import HistorialPreciosGlobalContainer from "./components/Proveedores/Proveedor/articulos/global/HistorialPreciosGlobalContainer";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
+import HistorialPreciosGlobalContainer from "./components/Proveedores/Proveedor/articulos/global/HistorialPreciosGlobalContainer";
 
 // Función para redirigir
 function RedirectToProveedor() {
