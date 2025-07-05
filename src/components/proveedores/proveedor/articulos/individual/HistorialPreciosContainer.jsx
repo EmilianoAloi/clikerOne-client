@@ -6,6 +6,7 @@ import HistorialPreciosFiltros from "./HistorialPreciosFiltros";
 import HistorialPreciosTable from "./HistorialPreciosTable";
 import { useState, useMemo } from "react";
 import { useProveedor } from "@/queries/proveedores/useProveedor";
+import { Separator } from "@/components/ui/separator";
 
 export default function HistorialPreciosContainer() {
   const { id } = useParams(); // idProveedor
@@ -177,6 +178,7 @@ export default function HistorialPreciosContainer() {
         id={proveedor?.id_proveedor}
         estado={proveedor?.estado_logico}
       />
+      <Separator className="mt-6 " />
       <HistorialPreciosCards filteredHistory={filteredHistory} />
       <HistorialPreciosFiltros
         searchTerm={searchTerm}

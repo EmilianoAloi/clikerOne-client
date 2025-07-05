@@ -15,8 +15,8 @@ const HistorialPreciosCards = ({ filteredHistory }) => {
   ).length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-6 my-8 ">
-      <Card className="justify-center items-start px-2 ps-6 py-4 rounded   max-w-[300px]   ">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-0 px-6 my-8 mb-10 mx-7 ">
+      <Card className="justify-center items-start px-2 ps-6 py-6 rounded   max-w-[300px]   ">
         <CardContent className="p-0">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-gray-100 rounded-md">
@@ -69,7 +69,7 @@ const HistorialPreciosCards = ({ filteredHistory }) => {
         </CardContent>
       </Card>
 
-      <Card className="justify-center items-start px-2 ps-6 py-4 rounded max-w-[300px]">
+      <Card className="justify-center items-start px-2 ps-6 pe-6 py-4 rounded max-w-[300px]">
         <CardContent className="p-0">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-green-100 rounded-md">

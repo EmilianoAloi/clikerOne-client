@@ -1,6 +1,13 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Calendar1, CalendarCheck, PackageCheck, Search } from "lucide-react";
+import {
+  CalendarCheck,
+  PackageCheck,
+  Search,
+  Users,
+  Boxes,
+  User,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -14,22 +21,29 @@ import { Label } from "@/components/ui/label";
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
-const HistorialPreciosFiltros = ({
+export default function HistorialPreciosGlobalFiltros({
   searchTerm,
   setSearchTerm,
+  selectedProvider,
+  setSelectedProvider,
+  selectedCategory,
+  setSelectedCategory,
   selectedArticle,
   setSelectedArticle,
-  sortBy,
-  setSortBy,
-  uniqueArticles,
+  selectedUser,
+  setSelectedUser,
   fechaDesde,
   setFechaDesde,
   fechaHasta,
   setFechaHasta,
-}) => {
+  uniqueProviders,
+  uniqueCategories,
+  uniqueArticles,
+  uniqueUsers,
+}) {
   return (
     <div className="mx-6 px-4 py-3 pb-6 bg-slate-50 border border-slate-200 rounded-lg mt-8 mb-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
         {/* Buscar */}
         <div>
           <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-2">
@@ -37,11 +51,63 @@ const HistorialPreciosFiltros = ({
             Buscar
           </Label>
           <Input
-            placeholder="Código, nombre, categoría o usuario..."
+            placeholder="Código, nombre, proveedor, categoría, usuario..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={`mt-1 ${inputStyle}`}
           />
+        </div>
+        {/* Proveedor */}
+        <div>
+          <Label className="text-sm flex items-center gap-2 font-semibold text-gray-700 mb-2">
+            <Users className="h-4 w-4 text-gray-700" />
+            Proveedor
+          </Label>
+          <Select value={selectedProvider} onValueChange={setSelectedProvider}>
+            <SelectTrigger
+              className={cn(
+                "w-full mt-1 cursor-pointer",
+                inputStyle,
+                !selectedProvider && "text-muted-foreground"
+              )}
+            >
+              <SelectValue placeholder="Seleccionar proveedor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos los proveedores</SelectItem>
+              {uniqueProviders.map((prov) => (
+                <SelectItem key={prov.id} value={prov.id}>
+                  {prov.nombre}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Categoría */}
+        <div>
+          <Label className="text-sm flex items-center gap-2 font-semibold text-gray-700 mb-2">
+            <Boxes className="h-4 w-4 text-gray-700" />
+            Categoría
+          </Label>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger
+              className={cn(
+                "w-full mt-1 cursor-pointer",
+                inputStyle,
+                !selectedCategory && "text-muted-foreground"
+              )}
+            >
+              <SelectValue placeholder="Seleccionar categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas las categorías</SelectItem>
+              {uniqueCategories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         {/* Artículo */}
         <div>
@@ -69,25 +135,29 @@ const HistorialPreciosFiltros = ({
             </SelectContent>
           </Select>
         </div>
-        {/* Ordenar */}
+        {/* Usuario */}
         <div>
           <Label className="text-sm flex items-center gap-2 font-semibold text-gray-700 mb-2">
-            <Calendar1 className="h-4 w-4 text-gray-700" />
-            Ordenar Por
+            <User className="h-4 w-4 text-gray-700" />
+            Usuario
           </Label>
-          <Select value={sortBy} onValueChange={setSortBy}>
+          <Select value={selectedUser} onValueChange={setSelectedUser}>
             <SelectTrigger
-              className={`w-full mt-1 ${inputStyle} cursor-pointer`}
+              className={cn(
+                "w-full mt-1 cursor-pointer",
+                inputStyle,
+                !selectedUser && "text-muted-foreground"
+              )}
             >
-              <SelectValue />
+              <SelectValue placeholder="Seleccionar usuario" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="fecha-desc">Fecha (más reciente)</SelectItem>
-              <SelectItem value="fecha-asc">Fecha (más antigua)</SelectItem>
-              <SelectItem value="precio-desc">
-                Precio (mayor a menor)
-              </SelectItem>
-              <SelectItem value="precio-asc">Precio (menor a mayor)</SelectItem>
+              <SelectItem value="all">Todos los usuarios</SelectItem>
+              {uniqueUsers.map((usuario) => (
+                <SelectItem key={usuario} value={usuario}>
+                  {usuario}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -121,6 +191,4 @@ const HistorialPreciosFiltros = ({
       </div>
     </div>
   );
-};
-
-export default HistorialPreciosFiltros;
+}
