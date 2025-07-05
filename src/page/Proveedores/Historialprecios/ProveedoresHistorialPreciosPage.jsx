@@ -1,4 +1,4 @@
-import HistorialPreciosContainer from "@/components/proveedores/proveedor/articulos/HistorialPreciosContainer";
+import HistorialPreciosContainer from "@/components/proveedores/proveedor/articulos/individual/HistorialPreciosContainer";
 import React from "react";
 
 const ProveedoresHistorialPreciosPage = () => {

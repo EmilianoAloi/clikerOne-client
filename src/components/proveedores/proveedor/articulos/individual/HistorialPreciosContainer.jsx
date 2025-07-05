@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useHistorialPreciosByProveedor } from "@/queries/proveedores/historial-precios/useHistorialPreciosByProveedor";
+import { useHistorialPreciosByProveedor } from "@/queries/proveedores/articulo/historial-precios/useHistorialPreciosByProveedor";
 import HistorialPreciosTitle from "./HistorialPreciosTitle";
 import HistorialPreciosCards from "./HistorialPreciosCards";
 import HistorialPreciosFiltros from "./HistorialPreciosFiltros";

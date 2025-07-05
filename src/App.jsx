@@ -35,9 +35,11 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
-import ProveedoresHistorialPreciosPage from "./page/Proveedores/ProveedoresID/ProveedoresHistorialPreciosPage";
+import ProveedoresHistorialPreciosPage from "./page/proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
 import PrivateRoute from "./components/login/PrivateRoute";
+
 import { useAuth } from "@/contexts/AuthContext";
+import HistorialPreciosGlobalContainer from "./components/Proveedores/Proveedor/articulos/global/HistorialPreciosGlobalContainer";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -177,6 +179,11 @@ function App() {
                   <Route
                     path="/proveedores/:id/historial-precios"
                     element={<ProveedoresHistorialPreciosPage />}
+                  />
+
+                  <Route
+                    path="/proveedores/historial-precios-global"
+                    element={<HistorialPreciosGlobalContainer />}
                   />
 
                   {/* Redirecciones específicas */}

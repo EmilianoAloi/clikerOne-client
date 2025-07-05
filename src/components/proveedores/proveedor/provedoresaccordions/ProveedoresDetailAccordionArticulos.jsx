@@ -26,8 +26,8 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import ArticulosMultiFormModal from "../../articulos/ArticulosAddModal";
-import ArticulosEditModal from "../../articulos/ArticulosEditModal";
+import ArticulosMultiFormModal from "../articulos/individual/ArticulosAddModal";
+import ArticulosEditModal from "../articulos/individual/ArticulosEditModal";
 
 const ProveedoresDetailAccordionArticulos = ({
   currentProveedores,
