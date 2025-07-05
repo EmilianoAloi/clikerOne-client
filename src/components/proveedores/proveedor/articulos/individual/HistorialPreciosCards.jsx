@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Eye, TrendingUp, TrendingDown } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar } from "lucide-react";
 import React from "react";
 
 const HistorialPreciosCards = ({ filteredHistory }) => {

@@ -4,7 +4,6 @@ import {
   Trash2,
   Plus,
   Receipt,
-  Hash,
   Percent,
   CircleDollarSign,
   Layers,
@@ -29,7 +28,6 @@ export default function ProveedorInvoiceImpuestos({ inputStyle = "" }) {
       append({ detalle: "", base_imponible: "", alicuota: "" });
       initialized.current = true;
     }
-    // eslint-disable-next-line
   }, []);
 
   // Calcula el importe por fila

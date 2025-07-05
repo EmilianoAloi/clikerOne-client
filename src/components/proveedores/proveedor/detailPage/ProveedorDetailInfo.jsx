@@ -18,7 +18,6 @@ import {
 import ProveedorDetailItem from "./ProveedorDetailItem";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import ProveedorDeleteDialog from "./ProveedorDeleteDialog";
 import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
 import ProveedoresDeleteDialog from "./ProveedorDeleteDialog";
 

@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import ProveedorNDheader from "./ProveedorNDheader";
 import ProveedorNDItem from "./ProveedorNDItem";
 import ProveedorNDExtras from "./ProveedorNDExtras";
-import ProveedorNDButtons from "./ndview/ProveedorNDButtons";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import ProveedorNDbuttons from "./ProveedorNDbuttons";
 

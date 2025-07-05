@@ -3,7 +3,6 @@ import {
   Package,
   Building,
   TrendingUp,
-  Truck,
   Calendar,
   Activity,
   ArrowUp,

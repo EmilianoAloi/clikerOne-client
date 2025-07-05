@@ -1,4 +1,3 @@
-// src/layout/nav-user.jsx
 import React from "react";
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +16,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
 
 export default function NavUser({ name, email, avatar, onLogout }) {
   const { isMobile } = useSidebar();
