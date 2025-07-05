@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, LineChart, PieChart } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
@@ -27,7 +27,6 @@ export default function ProveedoresTable() {
       refetch();
       navigate(location.pathname, { replace: true });
     }
-     
   }, [location.state, location.pathname, navigate, refetch]);
 
   // 3. Filtrado
@@ -76,12 +75,29 @@ export default function ProveedoresTable() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:max-w-sm"
         />
-        <Link to="/proveedores/agregar">
-          <Button className="text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
-            <Plus className="h-4 w-4 mr-2" />
-            Agregar Proveedor
+        <div className="flex gap-2">
+          <Link to="/proveedores/agregar">
+            <Button className="gap-2 py-5 border border-gray-200  text-sm font-semibold rounded-sm cursor-pointer">
+              <Plus className="h-4 w-4" />
+              Agregar Proveedor
+            </Button>
+          </Link>
+          <Button
+            className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+            onClick={() => navigate("/proveedores/historial-precios-global")}
+          >
+            <LineChart className="h-4 w-4" />
+            Historial de Precios
           </Button>
-        </Link>
+
+          <Button
+            disabled
+            className="gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold rounded-sm py-5"
+          >
+            <PieChart className="h-4 w-4" />
+            Ver Estadísticas
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
