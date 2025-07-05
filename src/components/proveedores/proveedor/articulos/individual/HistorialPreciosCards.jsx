@@ -3,67 +3,86 @@ import { Calendar, Eye, TrendingUp, TrendingDown } from "lucide-react";
 import React from "react";
 
 const HistorialPreciosCards = ({ filteredHistory }) => {
+  const totalChanges = filteredHistory.length;
+  const uniqueArticlesCount = new Set(
+    filteredHistory.map((item) => item.codigo)
+  ).size;
+  const increases = filteredHistory.filter(
+    (item) => item.precioNuevo > item.precioAnterior
+  ).length;
+  const decreases = filteredHistory.filter(
+    (item) => item.precioNuevo < item.precioAnterior
+  ).length;
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 !mx-auto px-6 my-6">
-      <Card className="gap-1 py-4 rounded-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
-          <CardTitle className="text-sm font-semibold">Total Cambios</CardTitle>
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent className="">
-          <div className="text-2xl font-bold">{filteredHistory.length}</div>
-          <p className="text-xs text-muted-foreground">
-            En el período seleccionado
-          </p>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-6 my-8 ">
+      <Card className="justify-center items-start px-2 ps-6 py-4 rounded   max-w-[300px]   ">
+        <CardContent className="p-0">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-gray-100 rounded-md">
+              <Calendar className="h-6 w-6 text-gray-600" />
+            </div>
+            <div>
+              <p style={{ fontWeight: 600 }} className="text-sm text-gray-600">
+                Total Cambios
+              </p>
+              <p className="text-2xl font-bold text-gray-900">{totalChanges}</p>
+              <p className="text-xs text-gray-500">
+                En el período seleccionado
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="justify-center items-start px-2 ps-6 py-4 rounded   max-w-[300px]   ">
+        <CardContent className="p-0">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <span className="text-blue-600">👁️</span>
+            </div>
+            <div>
+              <p style={{ fontWeight: 600 }} className="text-sm text-gray-600">
+                Artículos Afectados
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {uniqueArticlesCount}
+              </p>
+              <p className="text-xs text-gray-500">Artículos únicos</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="justify-center items-start px-2 ps-6 py-4 rounded max-w-[300px]">
+        <CardContent className="p-0">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-red-100 rounded-md">
+              <span className="text-red-600">📈</span>
+            </div>
+            <div>
+              <p style={{ fontWeight: 600 }} className="text-sm text-gray-600">
+                Aumentos
+              </p>
+              <p className="text-2xl font-bold text-red-600">{increases}</p>
+              <p className="text-xs text-gray-500">Cambios al alza</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      <Card className="gap-1 py-4 rounded-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
-          <CardTitle className="text-sm font-semibold">
-            Artículos Afectados
-          </CardTitle>
-          <Eye className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {new Set(filteredHistory.map((item) => item.codigo)).size}
+      <Card className="justify-center items-start px-2 ps-6 py-4 rounded max-w-[300px]">
+        <CardContent className="p-0">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-green-100 rounded-md">
+              <span className="text-green-600">📉</span>
+            </div>
+            <div>
+              <p style={{ fontWeight: 600 }} className="text-sm text-gray-600">
+                Reducciones
+              </p>
+              <p className="text-2xl font-bold text-green-600">{decreases}</p>
+              <p className="text-xs text-gray-500">Cambios a la baja</p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">Artículos únicos</p>
-        </CardContent>
-      </Card>
-
-      <Card className="gap-1 py-4 rounded-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
-          <CardTitle className="text-sm font-semibold">Aumentos</CardTitle>
-          <TrendingUp className="h-4 w-4 text-red-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-red-500">
-            {
-              filteredHistory.filter(
-                (item) => item.precioNuevo > item.precioAnterior
-              ).length
-            }
-          </div>
-          <p className="text-xs text-muted-foreground">Cambios al alza</p>
-        </CardContent>
-      </Card>
-
-      <Card className="gap-1 py-4 rounded-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
-          <CardTitle className="text-sm font-semibold">Reducciones</CardTitle>
-          <TrendingDown className="h-4 w-4 text-green-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-green-500">
-            {
-              filteredHistory.filter(
-                (item) => item.precioNuevo < item.precioAnterior
-              ).length
-            }
-          </div>
-          <p className="text-xs text-muted-foreground">Cambios a la baja</p>
         </CardContent>
       </Card>
     </div>

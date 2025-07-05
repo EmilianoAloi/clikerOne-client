@@ -5,6 +5,7 @@ import HistorialPreciosCards from "./HistorialPreciosCards";
 import HistorialPreciosFiltros from "./HistorialPreciosFiltros";
 import HistorialPreciosTable from "./HistorialPreciosTable";
 import { useState, useMemo } from "react";
+import { useProveedor } from "@/queries/proveedores/useProveedor";
 
 export default function HistorialPreciosContainer() {
   const { id } = useParams(); // idProveedor
@@ -13,6 +14,8 @@ export default function HistorialPreciosContainer() {
   const [sortBy, setSortBy] = useState("fecha-desc");
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
+
+  const { data: proveedor, isLoading: loadingProveedor } = useProveedor(id);
 
   // React Query!
   const {
@@ -166,7 +169,14 @@ export default function HistorialPreciosContainer() {
   const getPriceChangeIcon = () => null;
   return (
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
-      <HistorialPreciosTitle />
+      <HistorialPreciosTitle
+        nombre={proveedor?.nombre}
+        razonSocial={proveedor?.razon_social}
+        loading={loadingProveedor}
+        cuit={proveedor?.cuit}
+        id={proveedor?.id_proveedor}
+        estado={proveedor?.estado_logico}
+      />
       <HistorialPreciosCards filteredHistory={filteredHistory} />
       <HistorialPreciosFiltros
         searchTerm={searchTerm}
