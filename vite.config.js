@@ -12,4 +12,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  test: {
+    environment: "jsdom", // Para testear componentes React que usan DOM
+    globals: true,
+    setupFiles: "./src/testing/setupTests.cjs", // Opcional, para utilidades globales de test
+  },
 });

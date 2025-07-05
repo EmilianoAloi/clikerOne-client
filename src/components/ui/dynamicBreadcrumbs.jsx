@@ -8,7 +8,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { useProveedores } from "@/utils/useProveedores";
+import { useProveedores } from "@/queries/proveedores/useProveedores";
 
 const breadcrumbNames = {
   home: "Inicio",
@@ -40,7 +40,8 @@ const breadcrumbNames = {
 export default function DynamicBreadcrumbs() {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
-  const { proveedores } = useProveedores();
+
+  const { data: proveedores = [] } = useProveedores();
 
   let accumulatedPath = "";
 
