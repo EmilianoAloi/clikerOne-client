@@ -25,9 +25,14 @@ export default function LoginSplitScreen() {
     e.preventDefault();
     const formData = new FormData(e.target);
 
+    const data = {
+      usuario: formData.get("usuario"),
+      password: formData.get("password"),
+    };
+
     startTransition(async () => {
       try {
-        await login(formData);
+        await login(data);
         setResult({ success: true, message: "¡Bienvenido!" });
         navigate("/proveedores");
       } catch (err) {
