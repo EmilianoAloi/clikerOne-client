@@ -39,7 +39,7 @@ import PrivateRoute from "./components/login/PrivateRoute";
 
 import { useAuth } from "@/contexts/AuthContext";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
-import HistorialPreciosGlobalContainer from "./components/Proveedores/Proveedor/articulos/global/HistorialPreciosGlobalContainer";
+import HistorialPreciosGlobalContainer from "./components/proveedores/proveedor/articulos/global/HistorialPreciosGlobalContainer";
 
 // Función para redirigir
 function RedirectToProveedor() {
