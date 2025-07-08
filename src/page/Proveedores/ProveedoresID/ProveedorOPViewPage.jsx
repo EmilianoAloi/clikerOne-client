@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import OPviewContainer from "@/components/proveedores/proveedor/opPage/opview/OPviewContainer";
-import { useOPById } from "@/queries/proveedores/useOPById";
+import { useOPById } from "@/queries/proveedores/pagos/useOPById";
 
 export default function ProveedorOPViewPage() {
   const { idOP } = useParams();

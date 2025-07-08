@@ -6,11 +6,20 @@ export function useCreateFactura() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data) => {
+      // --- AGREGADO: leer el token desde localStorage (o desde donde lo guardes) ---
+      const token = localStorage.getItem("token"); // o el nombre que uses
+      const headers = {
+        "Content-Type": "application/json",
+        // Solo agregá Authorization si hay token
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+
       const res = await fetch(`${API_URL}/api/proveedores/facturas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(data),
       });
+
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Error crear factura:", errorText);
@@ -19,7 +28,7 @@ export function useCreateFactura() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["facturas"] }); // O la query de facturas por proveedor
+      queryClient.invalidateQueries({ queryKey: ["facturas"] });
     },
   });
 }

@@ -43,7 +43,7 @@ export default function ProveedorCurrentAccountContainer({
         idPrefix = "nd-";
         amount = Math.abs(amount);
       }
-
+      const usuario = f.modificador_nombre || f.creador_nombre || "-";
       return {
         id: `${idPrefix}${f.id_factura}`,
         type,
@@ -69,6 +69,7 @@ export default function ProveedorCurrentAccountContainer({
               },
             ]
           : [],
+        usuario,
       };
     });
 

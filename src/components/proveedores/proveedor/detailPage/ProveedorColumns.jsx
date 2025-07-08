@@ -166,6 +166,17 @@ export const columnsCC = (currentProveedor) => [
     },
   },
   {
+    accessorKey: "usuario",
+    header: () => <span className="block text-center px-2">Usuario</span>,
+    cell: ({ row }) => (
+      <span className="text-xs text-center">{row.original.usuario || "-"}</span>
+    ),
+    meta: {
+      className: "text-center w-[120px]",
+    },
+  },
+
+  {
     id: "actions",
     header: () => <span className="block text-center px-2">Acciones</span>,
     cell: ({ row }) => (

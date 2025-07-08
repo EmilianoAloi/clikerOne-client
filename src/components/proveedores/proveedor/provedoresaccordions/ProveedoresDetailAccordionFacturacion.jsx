@@ -41,6 +41,7 @@ const ProveedoresDetailAccordionFacturacion = ({
           new Date(a.fecha_creado || a.fecha_emision)
       )
     : [];
+  console.log("invoices", invoices);
 
   return (
     <AccordionItem

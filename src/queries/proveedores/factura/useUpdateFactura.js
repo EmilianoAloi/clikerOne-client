@@ -6,9 +6,13 @@ export function useUpdateFactura() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }) => {
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/proveedores/facturas/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error("Error al actualizar factura");

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { mutationFetchWithAuth } from "@/lib/utils"; // Ajustá path si hace falta
+import { mutationFetchWithAuth } from "@/lib/utils";
 
 export const useArticuloUpdateMutation = (idProveedor) => {
   const queryClient = useQueryClient();

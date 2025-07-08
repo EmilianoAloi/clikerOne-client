@@ -52,7 +52,6 @@ export const mapFormToApi = (form, proveedor) => {
     observaciones_nota: "",
     url_factura_comprobante: form.url_factura_comprobante ?? null,
     estado_logico: 1,
-    creado_por: 1,
     sync_origen: "clikerOne",
     alicuota_iva: form.alicuota_iva?.toString() ?? null,
     percepcion_iibb: form.percepcion_iibb ?? null,
