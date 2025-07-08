@@ -1,42 +1,39 @@
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
-  normalizePaymentPayload,
-  useProveedorOP,
-} from "@/contexts/ProveedorOPContext";
+import { normalizePaymentPayload } from "@/contexts/ProveedorOPContext";
 import { useNavigate } from "react-router-dom";
 import ProveedorOPExtras from "./ProveedorOPExtras";
 import ProveedorOPButtons from "./ProveedorOPButtons";
 import ProveedorOPpagos from "./ProveedorOPpagos";
 import ProveedorOPinvoices from "./ProveedorOPinvoices";
 import ProveedorOPheader from "./ProveedorOPheader";
+import { useCrearOP } from "@/queries/proveedores/pagos/useCrearOP";
 import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 
 export default function ProveedorOPform({ modo, proveedor, pagoData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [items, setItems] = useState([]);
-  const navigate = useNavigate();
-  const { createMultipleSupplierPayments } = useProveedorOP();
   const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
+  const navigate = useNavigate();
   const { refreshProveedorInvoices } = useProveedorInvoices();
+  const crearOPMutation = useCrearOP();
 
-  // EDIT: Fetch de facturas cuando se monta el form y cambia el proveedor
+  // Fetch de facturas cuando cambia el proveedor
   useEffect(() => {
     if (proveedor?.id_proveedor) {
       refreshProveedorInvoices(proveedor.id_proveedor);
     }
   }, [proveedor?.id_proveedor, refreshProveedorInvoices]);
 
-  // EDIT: Prellenar datos
+  // Prellenar datos al editar
   useEffect(() => {
     if (modo === "editar" && pagoData) {
       setFormData((prev) => ({
         ...prev,
         observaciones: pagoData.observaciones ?? "",
-        comprobantes: [], // Si querés mostrar links, manejalo aparte
+        comprobantes: [],
       }));
-      // El backend te da .facturas y .pagos (o .items)
       setItems(
         (pagoData.pagos || pagoData.items || []).map((item) => ({
           ...item,
@@ -47,13 +44,11 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       setFacturasSeleccionadas(
         (pagoData.facturas || []).map((f) => ({
           ...f,
-          monto: f.monto_a_saldar ?? f.monto_total ?? "", // Esto para que aparezca en el input "A pagar"
+          monto: f.monto_a_saldar ?? f.monto_total ?? "",
         }))
       );
     }
   }, [modo, pagoData]);
-
-  //////////// Form ////////////////
 
   const [formData, setFormData] = useState({
     observaciones: "",
@@ -72,6 +67,11 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
     }));
   };
 
+  function montoSeguro(val) {
+    const n = Number(val);
+    return !isNaN(n) && isFinite(n) ? n : 0;
+  }
+
   const resumen = {
     facturasSeleccionadas: facturasSeleccionadas.length,
     totalFacturas: facturasSeleccionadas.reduce(
@@ -83,12 +83,6 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       0
     ),
   };
-
-  /////// HandleSubmit ////////////
-  function montoSeguro(val) {
-    const n = Number(val);
-    return !isNaN(n) && isFinite(n) ? n : 0;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,7 +100,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         monto_a_saldar: montoSeguro(f.monto),
       }));
 
-      // Validación: todos los montos deben ser válidos
+      // Validación de montos
       const invalidMonto =
         itemsNormalizados.some((item) => isNaN(item.monto_aplicado)) ||
         facturasNormalizadas.some((f) => isNaN(f.monto_a_saldar));
@@ -116,7 +110,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         return;
       }
 
-      // 1. Subir comprobantes si existen
+      // Subida de comprobantes si existen
       const uploadedFiles = await Promise.all(
         (formData.comprobantes || []).map(async (file) => {
           const data = new FormData();
@@ -144,7 +138,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         })
       );
 
-      // 2. Normalizar payload para backend
+      // Normalizar payload para backend
       const payload = normalizePaymentPayload({
         items: itemsNormalizados,
         facturas: facturasNormalizadas,
@@ -153,23 +147,16 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         archivos: uploadedFiles,
       });
 
-      // 3. Enviar al backend y esperar confirmación
-      const success = await createMultipleSupplierPayments(
-        payload,
+      // Enviar al backend usando React Query mutation
+      await crearOPMutation.mutateAsync(payload);
 
-        (idProveedor) => refreshProveedorInvoices(idProveedor, true)
-      );
-      if (success) {
-        toast.success("Orden de pago guardada correctamente.");
-        navigate(`/proveedores/${proveedor.id_proveedor}`, {
-          state: { refresh: true },
-        });
-      } else {
-        toast.error("No se pudo guardar la orden de pago.");
-      }
+      toast.success("Orden de pago guardada correctamente.");
+      navigate(`/proveedores/${proveedor.id_proveedor}`, {
+        state: { refresh: true },
+      });
     } catch (error) {
       console.error("❌ Error en handleSubmit:", error);
-      toast.error("Error al guardar la orden de pago.");
+      toast.error(error?.message || "Error al guardar la orden de pago.");
     } finally {
       setIsSubmitting(false);
     }

@@ -9,7 +9,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Calendar } from "lucide-react";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
+import { useFactura } from "@/queries/proveedores/factura/useFactura"; // <--- Usá el hook nuevo
 
 const InputMonto = memo(({ value, onChange }) => (
   <Input
@@ -29,8 +29,9 @@ const ProveedorOPinvoices = ({
   setFacturasSeleccionadas,
   modo,
 }) => {
-  const { invoicesByProveedor } = useProveedorInvoices();
-  const facturasDelProveedor = invoicesByProveedor[idProveedor] || [];
+  // Usá el hook nuevo:
+  const { data: facturasDelProveedor = [], isLoading } =
+    useFactura(idProveedor);
 
   const facturasSeleccionadasIds = facturasSeleccionadas.map(
     (f) => f.id_factura
@@ -57,7 +58,6 @@ const ProveedorOPinvoices = ({
   };
 
   const handleMontoChange = (id, monto) => {
-    // Si está vacío, simplemente guardalo vacío
     if (monto === "") {
       setFacturasSeleccionadas((prev) =>
         prev.map((f) => (f.id_factura === id ? { ...f, monto: "" } : f))
@@ -69,9 +69,8 @@ const ProveedorOPinvoices = ({
     const saldo = factura?.saldo_restante ?? factura?.monto_total ?? 0;
     let montoNum = parseFloat(monto.replace(",", "."));
 
-    if (isNaN(montoNum)) montoNum = ""; // no debería pasar, pero por las dudas
+    if (isNaN(montoNum)) montoNum = "";
 
-    // No permitir más que el saldo
     if (montoNum > saldo) montoNum = saldo;
 
     setFacturasSeleccionadas((prev) =>
@@ -99,6 +98,11 @@ const ProveedorOPinvoices = ({
       );
     }
   };
+
+  // Loading
+  if (isLoading) {
+    return <div className="p-4">Cargando facturas...</div>;
+  }
 
   return (
     <div className="overflow-hidden ">
@@ -137,7 +141,6 @@ const ProveedorOPinvoices = ({
           <TableBody>
             {facturasFiltradas.length > 0 ? (
               facturasFiltradas.map((factura) => {
-                console.log("🧾 Factura mostrada:", factura);
                 const selected = isSelected(factura.id_factura);
                 const monto = getMonto(factura.id_factura);
 

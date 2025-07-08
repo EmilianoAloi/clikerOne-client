@@ -24,8 +24,9 @@ export const queryFetchWithAuth = async ({ queryKey }) => {
     },
   });
   if (!res.ok) {
-    const errorBody = await res.json().catch(() => ({}));
-    throw new Error(errorBody.message || "Network error");
+    const errorText = await res.text();
+    console.error("❌ Error en fetch:", res.status, errorText);
+    throw new Error(errorText || "Network error");
   }
   return res.json();
 };

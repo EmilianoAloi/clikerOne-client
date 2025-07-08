@@ -16,11 +16,7 @@ export default function ProveedorOPPage() {
   );
 
   // 2. Si no está en contexto, buscá por API usando React Query
-  const {
-    data: proveedor,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: proveedor, isLoading } = useQuery({
     queryKey: [`${API_URL}/api/proveedores/${id}`],
     queryFn: queryFetchWithAuth,
     enabled: !!id && !proveedorFromContext,
