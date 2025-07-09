@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ocFormSchema } from "@/schemas/oc-form-schema";
 
 import { Form } from "@/components/ui/form";
-
 import { v4 as uuidv4 } from "uuid";
 import { toFormData } from "@/mappers/oc-form-mapper";
 import { toast } from "sonner";
@@ -12,16 +11,18 @@ import OCproveedorInfo from "./OCproveedorInfo";
 import OCarticle from "./OCarticle";
 import OCextras from "./OCextras";
 import OCbuttons from "./OCbuttons";
-import { useProveedorCompras } from "@/contexts/ProveedorOCContext";
+
+import { useCreateCompra } from "@/queries/proveedores/compras/useCreateCompra";
+import { useUpdateCompra } from "@/queries/proveedores/compras/useUpdateCompra";
 
 export default function OCForm({ proveedor, compra, modo }) {
   const isEdit = modo === "editar";
   const navigate = useNavigate();
   const ivaPredeterminado = proveedor?.iva_predeterminado?.toString() || "21";
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
-  const { refreshProveedorCompras } = useProveedorCompras();
 
-  // useForm CON SCHEMA
+  const createCompraMutation = useCreateCompra();
+  const updateCompraMutation = useUpdateCompra();
+
   const form = useForm({
     resolver: zodResolver(ocFormSchema),
     mode: "onBlur",
@@ -124,26 +125,17 @@ export default function OCForm({ proveedor, compra, modo }) {
       items,
     };
 
-    const isEdit = modo === "editar";
-    const endpoint = isEdit
-      ? `${API_BASE}/api/proveedores/compras/${compra?.id_orden_compra}`
-      : `${API_BASE}/api/proveedores/compras`;
-    const method = isEdit ? "PUT" : "POST";
-
     try {
-      const res = await fetch(endpoint, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || "Error al guardar la orden de compra");
+      let json;
+      if (isEdit) {
+        json = await updateCompraMutation.mutateAsync({
+          id: compra.id_orden_compra,
+          data: dataToSend,
+        });
+      } else {
+        json = await createCompraMutation.mutateAsync(dataToSend);
       }
 
-      const json = await res.json();
-      await refreshProveedorCompras(data.id_proveedor, true);
       toast.success(
         isEdit
           ? "Orden modificada correctamente"
@@ -153,18 +145,16 @@ export default function OCForm({ proveedor, compra, modo }) {
         }
       );
 
-      navigate(`/proveedores/${data.id_proveedor}`),
-        { state: { refresh: true } };
+      navigate(`/proveedores/${data.id_proveedor}`, {
+        state: { refresh: true },
+      });
     } catch (error) {
       toast.error(
         isEdit
           ? "No se pudo modificar la orden de compra"
           : "No se pudo crear la orden de compra",
         {
-          description:
-            error && typeof error === "object" && "message" in error
-              ? error.message || "Error desconocido"
-              : "Error desconocido",
+          description: error?.message || "Error desconocido",
         }
       );
     }

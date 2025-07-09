@@ -59,6 +59,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
             </FormControl>
           </FormItem>
         </div>
+
         {/* CUIT */}
         <div>
           <FormItem>
@@ -75,6 +76,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
             </FormControl>
           </FormItem>
         </div>
+
         {/* Razón Social */}
         <div>
           <FormItem>
@@ -91,7 +93,8 @@ export default function OCproveedorInfo({ form, proveedor }) {
             </FormControl>
           </FormItem>
         </div>
-        {/* Estado de la OC  */}
+
+        {/* Estado de la OC */}
         <div>
           <FormField
             control={control}
@@ -182,8 +185,8 @@ export default function OCproveedorInfo({ form, proveedor }) {
             )}
           />
         </div>
-        {/* Lugar de entrega */}
 
+        {/* Lugar de entrega */}
         <div>
           <FormField
             control={control}
@@ -244,7 +247,6 @@ export default function OCproveedorInfo({ form, proveedor }) {
                         selected={field.value}
                         onSelect={(date) => {
                           if (!date) return;
-                          // No permitir fecha anterior a hoy
                           if (date < today) return;
                           field.onChange(date);
                         }}
@@ -259,58 +261,6 @@ export default function OCproveedorInfo({ form, proveedor }) {
             )}
           />
         </div>
-        {/* Fecha contable */}
-        {/* <div>
-          <FormField
-            control={control}
-            name="fecha_contable"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <CalendarDays className="h-4 w-4 text-slate-500" />
-                  Fecha Contable
-                </FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={`w-full justify-start text-left rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm ${
-                          !field.value && "text-muted-foreground"
-                        }`}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value
-                          ? format(field.value, "dd/MM/yyyy", { locale: es })
-                          : "dd / mm / aaaa"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto p-0"
-                      align="start"
-                      onInteractOutside={field.onBlur}
-                    >
-                      <CalendarDate
-                        mode="single"
-                        locale={es}
-                        selected={field.value}
-                        onSelect={(date) => {
-                          if (!date) return;
-                          // No permitir fecha anterior a hoy
-                          if (date < today) return;
-                          field.onChange(date);
-                        }}
-                        disabled={(date) => date < today}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormMessage className="block min-h-[20px] text-xs ms-2 ml-2 mt-[-4px]" />
-              </FormItem>
-            )}
-          />
-        </div> */}
       </div>
     </>
   );

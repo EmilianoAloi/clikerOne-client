@@ -215,6 +215,7 @@ export default function OCarticle({
                     tabIndex={-1}
                   />
                 </div>
+
                 {/* Descripción */}
                 <div className="col-span-5">
                   <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 mb-1.5">
@@ -236,6 +237,7 @@ export default function OCarticle({
                     )}
                   />
                 </div>
+
                 {/* Unidad de medida */}
                 <div className="col-span-2">
                   <span className="flex items-center gap-1 text-sm font-semibold text-slate-700 mb-1.5">
@@ -458,10 +460,8 @@ export default function OCarticle({
                               } else if (!isNaN(num)) {
                                 field.onChange(num);
                               }
-                              // No hace nada si no es número (ignora letras)
                             }}
                             onKeyDown={(e) => {
-                              // Permite solo números, punto, backspace, delete, tab, arrows
                               if (
                                 !/[0-9.,]/.test(e.key) &&
                                 ![
@@ -499,7 +499,6 @@ export default function OCarticle({
                         Number(watch(`items.${index}.precio_unitario`)) || 0;
                       const valor_descuento =
                         Number(watch(`items.${index}.valor_descuento`)) || 0;
-                      // Asegura rango válido 0-100
                       const porcentaje = Math.max(
                         0,
                         Math.min(valor_descuento, 100)

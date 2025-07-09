@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -9,7 +9,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Calendar } from "lucide-react";
-import { useFactura } from "@/queries/proveedores/factura/useFactura"; // <--- Usá el hook nuevo
+import { useFactura } from "@/queries/proveedores/factura/useFactura";
+import { toast } from "sonner";
 
 const InputMonto = memo(({ value, onChange }) => (
   <Input
@@ -30,8 +31,19 @@ const ProveedorOPinvoices = ({
   modo,
 }) => {
   // Usá el hook nuevo:
-  const { data: facturasDelProveedor = [], isLoading } =
-    useFactura(idProveedor);
+  const {
+    data: facturasDelProveedor = [],
+    isLoading,
+    isError,
+    error,
+  } = useFactura(idProveedor);
+
+  // Mostrar error SOLO si es error real (no 404/array vacío)
+  useEffect(() => {
+    if (isError && error?.message && facturasDelProveedor.length === 0) {
+      toast.error("Error al obtener las facturas del proveedor.");
+    }
+  }, [isError, error, facturasDelProveedor.length]);
 
   const facturasSeleccionadasIds = facturasSeleccionadas.map(
     (f) => f.id_factura

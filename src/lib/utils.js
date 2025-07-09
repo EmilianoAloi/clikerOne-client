@@ -23,6 +23,10 @@ export const queryFetchWithAuth = async ({ queryKey }) => {
       "Content-Type": "application/json",
     },
   });
+  if (res.status === 404) {
+    // Caso: no hay datos, no es error real
+    return [];
+  }
   if (!res.ok) {
     const errorText = await res.text();
     console.error("❌ Error en fetch:", res.status, errorText);

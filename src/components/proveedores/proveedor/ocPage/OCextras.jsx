@@ -197,7 +197,7 @@ export default function OCextras({
               </span>
             </div>
             <div className="flex justify-between">
-              <span>IVA (21%):</span>
+              <span>IVA total:</span>
               <span className="font-semibold">
                 ${resumen.ivaMonto.toFixed(2)}
               </span>

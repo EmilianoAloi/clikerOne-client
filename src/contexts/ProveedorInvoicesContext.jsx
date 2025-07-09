@@ -34,7 +34,6 @@ export const ProveedorInvoicesProvider = ({ children }) => {
       }));
     } catch (error) {
       console.error("❌ Error al obtener facturas:", error);
-      toast.error("Error al obtener las facturas del proveedor.");
       setInvoicesByProveedor((prev) => ({
         ...prev,
         [idProveedor]: [],
