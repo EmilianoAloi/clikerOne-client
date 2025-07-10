@@ -41,7 +41,7 @@ export default function ProveedorInvoiceViewObs({ factura }) {
             <FileText className="w-5 h-5" />
             Observaciones
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="hidden md:block">
             Notas o comentarios adicionales sobre la factura
           </CardDescription>
         </CardHeader>

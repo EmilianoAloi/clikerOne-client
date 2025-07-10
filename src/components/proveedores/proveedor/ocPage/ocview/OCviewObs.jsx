@@ -65,7 +65,7 @@ const OCviewObs = ({ orden }) => {
             <FileText className="w-5 h-5" />
             Observaciones
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="hidden md:block">
             Notas o comentarios adicionales sobre la orden de compra
           </CardDescription>
         </CardHeader>
