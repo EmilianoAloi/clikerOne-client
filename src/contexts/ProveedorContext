@@ -1,0 +1,84 @@
+// // ProveedorContext.jsx
+// import { createContext, useCallback, useEffect, useState } from "react";
+
+// export const ProveedorContext = createContext(undefined);
+
+// const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores`;
+
+// export const ProveedorProvider = ({ children }) => {
+//   const [proveedores, setProveedores] = useState([]);
+//   const [isLoaded, setIsLoaded] = useState(false);
+
+//   const refreshProveedores = useCallback(
+//     async (force = false, updatedProveedor = null) => {
+//       if (isLoaded && !force) return;
+
+//       try {
+//         const response = await fetch(API_URL);
+//         if (!response.ok) throw new Error("Error al obtener proveedores");
+//         const data = await response.json();
+
+//         if (updatedProveedor) {
+//           setProveedores((prevProveedores) =>
+//             prevProveedores.map((p) =>
+//               p.id_proveedor === updatedProveedor.id_proveedor
+//                 ? updatedProveedor
+//                 : p
+//             )
+//           );
+//         } else {
+//           const enriched = data.map((p) => {
+//             const facturas = p.facturas_pendientes ?? 0;
+//             const saldo = p.saldo ?? 0;
+//             return {
+//               ...p,
+//               facturasText:
+//                 facturas === 0 ? "Ninguna" : `${facturas} factura(s)`,
+//               saldoText:
+//                 saldo === 0
+//                   ? "Saldo Cero"
+//                   : saldo > 0
+//                   ? `+ $${saldo.toLocaleString("es-AR")}`
+//                   : `- $${Math.abs(saldo).toLocaleString("es-AR")}`,
+//             };
+//           });
+//           setProveedores(enriched);
+//         }
+//         setIsLoaded(true);
+//       } catch (error) {
+//         console.error("Error al obtener los proveedores:", error);
+//       }
+//     },
+//     [isLoaded]
+//   );
+
+//   useEffect(() => {
+//     refreshProveedores();
+//   }, [refreshProveedores]);
+
+//   const getProveedorByID = async (id) => {
+//     const local = proveedores.find((p) => p.id_proveedor === id);
+//     if (local) return local;
+
+//     try {
+//       const response = await fetch(`${API_URL}/${id}`);
+//       if (!response.ok) throw new Error("Proveedor no encontrado");
+//       return await response.json();
+//     } catch (error) {
+//       console.error("Error al obtener proveedor por ID:", error);
+//       return null;
+//     }
+//   };
+
+//   return (
+//     <ProveedorContext.Provider
+//       value={{
+//         proveedores,
+//         refreshProveedores,
+//         getProveedorByID,
+//       }}
+//     >
+//       {children}
+//     </ProveedorContext.Provider>
+//   );
+// };

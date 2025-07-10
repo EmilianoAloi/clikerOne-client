@@ -139,6 +139,9 @@ export default function ProveedorCurrentAccountContainer({
       m.observaciones.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    console.log({ invoices, payments, paymentItems });
+  }, [invoices, payments, paymentItems]);
   return (
     <section className="rounded-lg border shadow-sm mx-auto px-6 py-4 w-full space-y-6">
       {/* Header */}

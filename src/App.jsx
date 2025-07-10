@@ -9,10 +9,9 @@ import MainLayout from "./layout/MainLayout";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
 // Contexts
-import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
-import { ProveedorOPProvider } from "@/contexts/ProveedorOPContext";
-import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
-import { ProveedorProvider } from "./contexts/ProveedorContext";
+// import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
+// import { ProveedorOPProvider } from "@/contexts/ProveedorOPContext";
+// import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
 
 // Pages
 import LoginPage from "./page/login/LoginPage";
@@ -22,19 +21,19 @@ import ProveedoresEditPage from "./page/Proveedores/ProveedoresID/ProveedoresEdi
 import ProveedorAddPage from "./page/Proveedores/ProveedorAddPage";
 import ProveedorOcPage from "./page/Proveedores/ProveedoresID/ProveedorOcPage";
 import ProveedorInvoicePage from "./page/Proveedores/ProveedoresID/ProveedorInvoicePage";
-import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
-import ProveedorOPPage from "./page/Proveedores/ProveedoresID/ProveedorOPPage";
-import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCviewPage";
 import ProveedorInvoiceViewPage from "./page/Proveedores/ProveedoresID/ProveedorInvoiceViewPage";
-import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
-import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
-import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
-import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
-import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
 import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/ProveedoresInvoiceEditPage";
-import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
-import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
+import ProveedorOPPage from "./page/Proveedores/ProveedoresID/ProveedorOPPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
+import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
+// import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
+import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCviewPage";
+import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
+// import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
+// import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
+// import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
+// import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
+// import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import PrivateRoute from "./components/login/PrivateRoute";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -53,173 +52,160 @@ function App() {
   const isAuthenticated = Boolean(user);
 
   return (
-    <ProveedorProvider>
-      <ProveedorInvoicesProvider>
-        <ProveedorOPProvider>
-          <ProveedorComprasProvider>
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
-                {/* Auth: Login y redirección */}
-                <Route
-                  path="/"
-                  element={
-                    isAuthenticated ? (
-                      <Navigate to="/proveedores" replace />
-                    ) : (
-                      <LoginPage />
-                    )
-                  }
-                />
-                <Route
-                  path="/login"
-                  element={
-                    isAuthenticated ? (
-                      <Navigate to="/proveedores" replace />
-                    ) : (
-                      <LoginPage />
-                    )
-                  }
-                />
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        {/* Auth: Login y redirección */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/proveedores" replace />
+            ) : (
+              <LoginPage />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/proveedores" replace />
+            ) : (
+              <LoginPage />
+            )
+          }
+        />
 
-                {/* Layout y rutas protegidas */}
-                <Route
-                  element={
-                    <PrivateRoute>
-                      <MainLayout />
-                    </PrivateRoute>
-                  }
-                >
-                  {/* Proveedores */}
-                  <Route path="/proveedores" element={<ProveedoresPage />} />
-                  <Route
-                    path="/proveedores/:id"
-                    element={<ProveedoresIDPage />}
-                  />
-                  <Route
-                    path="/proveedores/agregar"
-                    element={<ProveedorAddPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/editar"
-                    element={<ProveedoresEditPage />}
-                  />
+        {/* Layout y rutas protegidas */}
+        <Route
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          {/* Proveedores */}
+          <Route path="/proveedores" element={<ProveedoresPage />} />
+          <Route path="/proveedores/:id" element={<ProveedoresIDPage />} />
+          <Route path="/proveedores/agregar" element={<ProveedorAddPage />} />
+          <Route
+            path="/proveedores/:id/editar"
+            element={<ProveedoresEditPage />}
+          />
 
-                  {/* OC */}
-                  <Route
-                    path="/proveedores/:id/ordencompra/nueva-oc"
-                    element={<ProveedorOcPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/ordencompra/oc-edit/:idOC"
-                    element={<ProveedorOCeditPage />}
-                  />
-                  <Route
-                    path="/proveedores/:idProveedor/ordencompra/:idOC"
-                    element={<ProveedorOCviewPage />}
-                  />
+          {/* OC */}
+          <Route
+            path="/proveedores/:id/ordencompra/nueva-oc"
+            element={<ProveedorOcPage />}
+          />
 
-                  {/* Facturas */}
-                  <Route
-                    path="/proveedores/:id/facturacion/nueva-factura"
-                    element={<ProveedorInvoicePage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/facturacion/:idFactura/editar-factura"
-                    element={<ProveedoresInvoiceEditPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/facturacion/:idFactura"
-                    element={<ProveedorInvoiceViewPage />}
-                  />
+          <Route
+            path="/proveedores/:id/ordencompra/oc-edit/:idOC"
+            element={<ProveedorOCeditPage />}
+          />
+          <Route
+            path="/proveedores/:idProveedor/ordencompra/:idOC"
+            element={<ProveedorOCviewPage />}
+          />
 
-                  {/* Orden de Pago */}
-                  <Route
-                    path="/proveedores/:id/pagos/nuevopago"
-                    element={<ProveedorOPPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/pagos/:idOP/editar-pago"
-                    element={<ProveedoresOPeditPage />}
-                  />
-                  <Route
-                    path="/proveedores/:idProveedor/pagos/:idOP"
-                    element={<ProveedorOPViewPage />}
-                  />
+          {/* Facturas */}
+          <Route
+            path="/proveedores/:id/facturacion/nueva-factura"
+            element={<ProveedorInvoicePage />}
+          />
+          <Route
+            path="/proveedores/:id/facturacion/:idFactura/editar-factura"
+            element={<ProveedoresInvoiceEditPage />}
+          />
+          <Route
+            path="/proveedores/:id/facturacion/:idFactura"
+            element={<ProveedorInvoiceViewPage />}
+          />
 
-                  {/* Nota de Crédito */}
-                  <Route
-                    path="/proveedores/:id/notacredito/nuevanotacredito"
-                    element={<ProveedorNCPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notacredito/editar-nc/:idNC"
-                    element={<ProveedoresNCeditPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notacredito/:idNC"
-                    element={<ProveedorNCviewPage />}
-                  />
+          {/* Orden de Pago */}
+          <Route
+            path="/proveedores/:id/pagos/nuevopago"
+            element={<ProveedorOPPage />}
+          />
+          <Route
+            path="/proveedores/:id/pagos/:idOP/editar-pago"
+            element={<ProveedoresOPeditPage />}
+          />
+          <Route
+            path="/proveedores/:idProveedor/pagos/:idOP"
+            element={<ProveedorOPViewPage />}
+          />
 
-                  {/* Nota de Débito */}
-                  <Route
-                    path="/proveedores/:id/notadebito/nuevanotadebito"
-                    element={<ProveedoresNDPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notadebito/editar-nd/:idND"
-                    element={<ProveedoresNDeditPage />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notadebito/:idND"
-                    element={<ProveedoresNDviewPage />}
-                  />
+          {/* Nota de Crédito */}
+          {/* <Route
+            path="/proveedores/:id/notacredito/nuevanotacredito"
+            element={<ProveedorNCPage />}
+          />
+          <Route
+            path="/proveedores/:id/notacredito/editar-nc/:idNC"
+            element={<ProveedoresNCeditPage />}
+          />
+          <Route
+            path="/proveedores/:id/notacredito/:idNC"
+            element={<ProveedorNCviewPage />}
+          /> */}
 
-                  {/* Historial de Precios */}
-                  <Route
-                    path="/proveedores/:id/historial-precios"
-                    element={<ProveedoresHistorialPreciosPage />}
-                  />
+          {/* Nota de Débito */}
+          {/* <Route
+            path="/proveedores/:id/notadebito/nuevanotadebito"
+            element={<ProveedoresNDPage />}
+          />
+          <Route
+            path="/proveedores/:id/notadebito/editar-nd/:idND"
+            element={<ProveedoresNDeditPage />}
+          />
+          <Route
+            path="/proveedores/:id/notadebito/:idND"
+            element={<ProveedoresNDviewPage />}
+          /> */}
 
-                  <Route
-                    path="/proveedores/historial-precios-global"
-                    element={<HistorialPreciosGlobalContainer />}
-                  />
+          {/* Historial de Precios */}
+          <Route
+            path="/proveedores/:id/historial-precios"
+            element={<ProveedoresHistorialPreciosPage />}
+          />
 
-                  {/* Redirecciones específicas */}
-                  <Route
-                    path="/proveedores/:id/ordencompra"
-                    element={<RedirectToProveedor />}
-                  />
-                  <Route
-                    path="/proveedores/:id/facturacion"
-                    element={<RedirectToProveedor />}
-                  />
-                  <Route
-                    path="/proveedores/:id/pagos"
-                    element={<RedirectToProveedor />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notacredito"
-                    element={<RedirectToProveedor />}
-                  />
-                  <Route
-                    path="/proveedores/:id/notadebito"
-                    element={<RedirectToProveedor />}
-                  />
-                </Route>
+          <Route
+            path="/proveedores/historial-precios-global"
+            element={<HistorialPreciosGlobalContainer />}
+          />
 
-                {/* Catch-all para rutas no definidas */}
-                {/* <Route
+          {/* Redirecciones específicas */}
+          <Route
+            path="/proveedores/:id/ordencompra"
+            element={<RedirectToProveedor />}
+          />
+          <Route
+            path="/proveedores/:id/facturacion"
+            element={<RedirectToProveedor />}
+          />
+          <Route
+            path="/proveedores/:id/pagos"
+            element={<RedirectToProveedor />}
+          />
+          <Route
+            path="/proveedores/:id/notacredito"
+            element={<RedirectToProveedor />}
+          />
+          <Route
+            path="/proveedores/:id/notadebito"
+            element={<RedirectToProveedor />}
+          />
+        </Route>
+
+        {/* Catch-all para rutas no definidas */}
+        {/* <Route
                     path="*"
                     element={<Navigate to="/proveedores" replace />}
                   /> */}
-              </Routes>
-            </BrowserRouter>
-          </ProveedorComprasProvider>
-        </ProveedorOPProvider>
-      </ProveedorInvoicesProvider>
-    </ProveedorProvider>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -5,38 +5,21 @@ export const useCrearOP = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data) => {
-      return mutationFetchWithAuth({
+    mutationFn: (payload) =>
+      mutationFetchWithAuth({
         url: `${import.meta.env.VITE_API_URL}/api/proveedores/pagos`,
         method: "POST",
-        body: data,
-      });
-    },
-    onSuccess: (result, variables) => {
-      // Asegurate que en el payload mandás idProveedor
-      const idProveedor = variables.idProveedor;
-      if (!idProveedor) return;
+        body: payload,
+      }),
+    onSuccess: (_data, payload) => {
+      // 1) Sacamos el id del primer pago
+      const idProv = payload.pagos?.[0]?.id_proveedor;
+      if (!idProv) return;
 
-      // Refresca queries relacionadas
-      queryClient.invalidateQueries({
-        queryKey: [
-          `${
-            import.meta.env.VITE_API_URL
-          }/api/proveedores/pagos/proveedor/${idProveedor}`,
-        ],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [
-          `${import.meta.env.VITE_API_URL}/api/proveedores/${idProveedor}`,
-        ],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [
-          `${
-            import.meta.env.VITE_API_URL
-          }/api/proveedores/pagos/proveedor/${idProveedor}/items`,
-        ],
-      });
+      // 2) Invalidamos con keys simples
+      queryClient.invalidateQueries(["pagos", idProv]);
+      queryClient.invalidateQueries(["pagosItems", idProv]);
+      queryClient.invalidateQueries(["proveedor", idProv]);
     },
   });
 };

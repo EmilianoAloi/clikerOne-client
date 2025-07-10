@@ -51,6 +51,9 @@ export default function ProveedoresIDPage() {
     return <div className="p-6">Error al cargar proveedor.</div>;
   if (!proveedor) return <div className="p-6">Proveedor no encontrado.</div>;
 
+  console.log("facturas", facturas);
+  console.log("pagos", ordenesPago);
+  console.log("paymentItems", paymentItems);
   return (
     <ProveedorDetailContainer
       currentProveedores={proveedor}

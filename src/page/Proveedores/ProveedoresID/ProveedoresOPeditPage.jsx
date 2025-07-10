@@ -1,13 +1,12 @@
 import ProveedoresOPeditContainer from "@/components/proveedores/proveedor/opPage/opedit/ProveedoresOPeditContainer";
-import { useProveedores } from "@/utils/useProveedores";
-
+import { useProveedores } from "@/queries/proveedores/useProveedores";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ProveedoresOPeditPage = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const { id, idOP } = useParams();
-  const { proveedores } = useProveedores();
+  const { data: proveedores } = useProveedores();
   const [proveedor, setProveedor] = useState(null);
   const [pagoData, setPagoData] = useState(null);
   const [loading, setLoading] = useState(true);

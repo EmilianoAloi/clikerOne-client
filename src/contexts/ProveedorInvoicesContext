@@ -1,0 +1,334 @@
+// import { createContext, useContext, useState } from "react";
+// import { toast } from "sonner";
+// import { useProveedores } from "@/utils/useProveedores";
+// // --------- API BASE ---------
+// const API_BASE = `${import.meta.env.VITE_API_URL}/api/proveedores/facturas`;
+
+// // --------- Context ---------
+// const ProveedorInvoicesContext = createContext(undefined);
+
+// export const ProveedorInvoicesProvider = ({ children }) => {
+//   const [invoicesByProveedor, setInvoicesByProveedor] = useState({});
+//   const { refreshProveedores } = useProveedores();
+
+//   // --------- Helpers ---------
+//   const getInvoicesForProveedor = (idProveedor) =>
+//     Array.isArray(invoicesByProveedor[idProveedor])
+//       ? invoicesByProveedor[idProveedor]
+//       : [];
+
+//   // --------- Fetch/Refresh ---------
+//   const refreshProveedorInvoices = async (idProveedor, force = false) => {
+//     if (!idProveedor) {
+//       console.warn("⚠️ refreshProveedorInvoices: idProveedor no válido");
+//       return;
+//     }
+//     if (invoicesByProveedor[idProveedor] && !force) return;
+//     try {
+//       const response = await fetch(`${API_BASE}/proveedor/${idProveedor}`);
+//       if (!response.ok) throw new Error("Error al obtener facturas");
+//       const data = await response.json();
+//       setInvoicesByProveedor((prev) => ({
+//         ...prev,
+//         [idProveedor]: Array.isArray(data) ? data : [], // <- defensa robusta
+//       }));
+//     } catch (error) {
+//       console.error("❌ Error al obtener facturas:", error);
+//       setInvoicesByProveedor((prev) => ({
+//         ...prev,
+//         [idProveedor]: [],
+//       }));
+//     }
+//   };
+
+//   const refreshInvoices = async () => {
+//     try {
+//       const response = await fetch(`${API_BASE}/allFacturas`);
+//       if (!response.ok) throw new Error("Error al obtener todas las facturas");
+//       const data = await response.json();
+//       const porProveedor = {};
+//       data.forEach((f) => {
+//         if (!porProveedor[f.id_proveedor]) porProveedor[f.id_proveedor] = [];
+//         porProveedor[f.id_proveedor].push(f);
+//       });
+//       setInvoicesByProveedor(porProveedor);
+//     } catch (error) {
+//       console.error("Error al obtener facturas globales:", error);
+//       toast.error("Error al obtener todas las facturas.");
+//       setInvoicesByProveedor({});
+//     }
+//   };
+
+//   // --------- CRUD Facturas ---------
+//   const createSupplierInvoice = async (invoice) => {
+//     try {
+//       const response = await fetch(`${API_BASE}`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(invoice),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         toast.error(errorData.error || "Error al crear la factura.");
+//         return;
+//       }
+
+//       if (invoice.id_proveedor) {
+//         await refreshProveedorInvoices(invoice.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("Error creando factura:", error);
+//       toast.error("Hubo un problema al crear la factura.");
+//     }
+//   };
+
+//   const updateSupplierInvoice = async (id, invoice) => {
+//     try {
+//       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
+//         method: "PUT",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           ...invoice,
+//           estado_logico: 1,
+//         }),
+//       });
+
+//       if (!response.ok) throw new Error("Error al actualizar factura");
+
+//       if (invoice.id_proveedor) {
+//         await refreshProveedorInvoices(invoice.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("❌ Error actualizando factura:", error);
+//       toast.error("Hubo un problema al actualizar la factura.");
+//     }
+//   };
+
+//   // --------- Nota de Crédito ---------
+
+//   const removeSupplierInvoice = async (id, idProveedor) => {
+//     try {
+//       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
+//         method: "DELETE",
+//       });
+
+//       if (!response.ok) throw new Error("Error al eliminar factura");
+
+//       toast.success("Factura eliminada correctamente.");
+
+//       if (idProveedor) {
+//         await refreshProveedorInvoices(idProveedor, true);
+//       }
+
+//       await refreshProveedores(true);
+
+//       // Delay para asegurar sincronización antes de seguir
+//       await new Promise((resolve) => setTimeout(resolve, 1500));
+//     } catch (error) {
+//       console.error("Error eliminando factura:", error);
+//       toast.error("Hubo un problema al eliminar la factura.");
+//     }
+//   };
+
+//   const createNotaCredito = async (nota) => {
+//     try {
+//       const response = await fetch(`${API_BASE}`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           ...nota,
+//           tipo_comprobante: "nota de credito",
+//           estado_saldo: "ejecutada",
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         toast.error(errorData.error || "Error al crear la nota de crédito.");
+//         return;
+//       }
+//       if (nota.id_proveedor) {
+//         await refreshProveedorInvoices(nota.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("Error creando nota de crédito:", error);
+//       toast.error("Hubo un problema al crear la nota de crédito.");
+//     }
+//   };
+
+//   const normalizeNotaCreditoPayload = (formData, items) => ({
+//     id_proveedor: formData.id_proveedor,
+//     numero_factura: (formData.numero_factura ?? "").trim(),
+//     fecha_emision: formData.fecha_emision || "",
+//     fecha_vencimiento:
+//       typeof formData.fecha_vencimiento === "string"
+//         ? formData.fecha_vencimiento.trim()
+//         : undefined,
+//     fecha_contable: formData.fecha_contable || "",
+//     fecha_acreditacion: formData.fecha_acreditacion || "",
+//     condicion_venta: formData.condicion_venta?.trim() || "",
+//     tipo_comprobante: "nota de credito",
+//     monto_total: Number(formData.monto_total) || 0,
+//     observaciones: formData.observaciones?.trim() || "",
+//     observaciones_nota: formData.observaciones_nota?.trim() || "",
+//     estado_saldo: "ejecutada",
+//     url_factura_comprobante: formData.url_factura_comprobante ?? null,
+//     alicuota_iva:
+//       typeof formData.alicuota_iva === "string" &&
+//       formData.alicuota_iva.trim() !== ""
+//         ? formData.alicuota_iva.trim()
+//         : null,
+//     percepcion_iibb:
+//       typeof formData.percepcion_iibb === "string" &&
+//       formData.percepcion_iibb.trim() !== ""
+//         ? formData.percepcion_iibb.trim()
+//         : null,
+//     creado_por: formData.creado_por,
+//     sync_origen: formData.sync_origen || "clikerOne",
+//     estado_logico: 1,
+//     items: (items ?? []).map((item) => ({
+//       id_articulo:
+//         item.id_articulo === -1 || item.id_articulo === null
+//           ? null
+//           : item.id_articulo,
+//       nombre_manual:
+//         item.id_articulo === -1 || item.id_articulo === null
+//           ? typeof item.nombre_manual === "string"
+//             ? item.nombre_manual.trim()
+//             : "Item sin nombre"
+//           : undefined,
+//       cantidad: item.cantidad,
+//       precio_unitario: item.precio_unitario,
+//       valor_descuento: item.valor_descuento,
+//       subtotal_manual: item.subtotal_manual ?? undefined,
+//       iva: item.iva ?? "0",
+//     })),
+//   });
+
+//   const updateNotaCredito = async (id, nota) => {
+//     try {
+//       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
+//         method: "PUT",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           ...nota,
+//           tipo_comprobante: "nota de credito",
+//           estado_saldo: "ejecutada",
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         toast.error(
+//           errorData.error || "Error al actualizar la nota de crédito."
+//         );
+//         throw new Error("Error al actualizar la nota de crédito");
+//       }
+
+//       if (nota.id_proveedor) {
+//         await refreshProveedorInvoices(nota.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("❌ Error actualizando nota de crédito:", error);
+//       toast.error("Hubo un problema al actualizar la nota de crédito.");
+//     }
+//   };
+
+//   // --------- Nota de Débito ---------
+//   const createNotaDebito = async (nota) => {
+//     try {
+//       const response = await fetch(`${API_BASE}`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           ...nota,
+//           tipo_comprobante: "nota de debito",
+//           estado_saldo: "ejecutada",
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         toast.error(errorData.error || "Error al crear la nota de débito.");
+//         return;
+//       }
+//       if (nota.id_proveedor) {
+//         await refreshProveedorInvoices(nota.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("Error creando nota de débito:", error);
+//       toast.error("Hubo un problema al crear la nota de débito.");
+//     }
+//   };
+
+//   const normalizeNotaDebitoPayload = normalizeNotaCreditoPayload;
+
+//   const updateNotaDebito = async (id, nota) => {
+//     try {
+//       const response = await fetch(`${API_BASE}/${id}?modificado_por=1`, {
+//         method: "PUT",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           ...nota,
+//           tipo_comprobante: "nota de debito",
+//           estado_saldo: "ejecutada",
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         toast.error(
+//           errorData.error || "Error al actualizar la nota de débito."
+//         );
+//         throw new Error("Error al actualizar la nota de débito");
+//       }
+
+//       if (nota.id_proveedor) {
+//         await refreshProveedorInvoices(nota.id_proveedor, true);
+//         await refreshProveedores(true);
+//       }
+//     } catch (error) {
+//       console.error("❌ Error actualizando nota de débito:", error);
+//       toast.error("Hubo un problema al actualizar la nota de débito.");
+//     }
+//   };
+
+//   // --------- Return Provider ---------
+//   return (
+//     <ProveedorInvoicesContext.Provider
+//       value={{
+//         invoicesByProveedor,
+//         getInvoicesForProveedor,
+//         refreshProveedorInvoices,
+//         refreshInvoices,
+//         createSupplierInvoice,
+//         updateSupplierInvoice,
+//         removeSupplierInvoice,
+//         createNotaCredito,
+//         normalizeNotaCreditoPayload,
+//         updateNotaCredito,
+//         createNotaDebito,
+//         normalizeNotaDebitoPayload,
+//         updateNotaDebito,
+//       }}
+//     >
+//       {children}
+//     </ProveedorInvoicesContext.Provider>
+//   );
+// };
+
+// export const useProveedorInvoices = () => {
+//   const context = useContext(ProveedorInvoicesContext);
+//   if (!context) {
+//     throw new Error(
+//       "useProveedorInvoices debe usarse dentro de un ProveedorInvoicesProvider"
+//     );
+//   }
+//   return context;
+// };

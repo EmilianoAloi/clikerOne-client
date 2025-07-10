@@ -16,19 +16,15 @@ export const formatCurrency = (valor) => {
 };
 
 export const queryFetchWithAuth = async ({ queryKey }) => {
-  console.log(">>> queryKey", queryKey);
-
   const token = localStorage.getItem("token");
-  const res = await fetch(queryKey[0], {
+  const url = queryKey[0];
+  const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   });
-  if (res.status === 404) {
-    // Caso: no hay datos, no es error real
-    return [];
-  }
+  if (res.status === 404) return [];
   if (!res.ok) {
     const errorText = await res.text();
     console.error("❌ Error en fetch:", res.status, errorText);

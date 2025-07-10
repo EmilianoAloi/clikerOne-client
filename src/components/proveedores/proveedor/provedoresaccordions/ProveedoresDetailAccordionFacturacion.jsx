@@ -51,7 +51,7 @@ const ProveedoresDetailAccordionFacturacion = ({
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <FileText className="mr-2 h-5 w-5 text-yellow-500 group-hover:text-yellow-600 transition-colors" />
-          <span className="font-semibold text-lg">Documentos</span>
+          <span className="font-semibold text-lg">Facturas</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
