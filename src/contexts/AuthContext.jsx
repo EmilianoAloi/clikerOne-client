@@ -55,11 +55,11 @@ export function AuthProvider({ children }) {
           setError(result.error || "Error en login");
           throw new Error(result.error || "Error en login");
         }
-        sessionStorage.setItem("token", result.token);
+        localStorage.setItem("token", result.token);
         setUser(result.user || decodeJWT(result.token));
       } else {
         const result = await authenticateUser(data);
-        sessionStorage.setItem("token", result.token);
+        localStorage.setItem("token", result.token);
         setUser(result.user || decodeJWT(result.token));
       }
     } catch (err) {
@@ -69,17 +69,17 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
     setUser(null);
   };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tokenParam = params.get("token");
-    let token = tokenParam || sessionStorage.getItem("token");
+    let token = tokenParam || localStorage.getItem("token");
 
     if (tokenParam) {
-      sessionStorage.setItem("token", tokenParam);
+      localStorage.setItem("token", tokenParam);
       window.history.replaceState({}, "", window.location.pathname);
       token = tokenParam;
     }
