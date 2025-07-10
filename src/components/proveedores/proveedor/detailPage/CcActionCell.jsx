@@ -46,10 +46,9 @@ export default function CcActionCell({ movement, currentProveedor }) {
           idPago: Number(plainId),
           idProveedor,
         });
-        toast.success("Orden de pago eliminada correctamente");
       } else {
         await removeFactura(plainId);
-        toast.success("Factura eliminada correctamente");
+        toast.error("Factura eliminada correctamente");
       }
     } catch (e) {
       console.error("Error al eliminar:", e);

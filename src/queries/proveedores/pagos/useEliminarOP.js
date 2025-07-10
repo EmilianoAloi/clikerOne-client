@@ -35,10 +35,7 @@ export const useEliminarOP = () => {
       qc.invalidateQueries(["pagos", idProveedor]);
       qc.invalidateQueries(["pagosItems", idProveedor]);
       qc.invalidateQueries(["proveedor", idProveedor]);
-      toast.success("Orden de pago eliminada correctamente.");
-    },
-    onError: (err) => {
-      toast.error(`Error al eliminar orden de pago: ${err.message}`);
+      toast.error("Orden de pago eliminada correctamente.");
     },
   });
 };

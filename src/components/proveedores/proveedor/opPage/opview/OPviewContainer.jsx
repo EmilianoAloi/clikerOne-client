@@ -1,19 +1,28 @@
+import React, { useMemo, useState } from "react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import BackButton from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
-import { useState } from "react";
-
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import OPviewTitle from "./OPviewTitle";
 import OPviewHeader from "./OPviewHeader";
+import OPviewSubHeader from "./OPviewSubHeader";
 import OPviewInvoice from "./OPviewInvoice";
 import OPviewPagos from "./OPviewPagos";
 import OPviewObs from "./OPviewObs";
-import OPviewSubHeader from "./OPviewSubHeader";
-import OPviewTitle from "./OPviewTitle";
 
 export default function OPviewContainer({ pago }) {
   const [isPrinting, setIsPrinting] = useState(false);
+
+  const pagos = pago.items;
+  const facturas = useMemo(
+    () =>
+      pagos.map((it) => ({
+        ...it.ProveedorFactura,
+        monto_total: parseFloat(it.ProveedorFactura.monto_total),
+      })),
+    [pagos]
+  );
 
   const handlePrint = () => {
     setIsPrinting(true);
@@ -91,10 +100,10 @@ export default function OPviewContainer({ pago }) {
       }
       return texto;
     }
-    function seccion(n, singular, plural) {
+    function seccion(n, sing, plu) {
       if (n === 0) return "";
-      if (n === 1) return ` ${singular}`;
-      return ` ${convertirGrupo(n)} ${plural}`;
+      if (n === 1) return ` ${sing}`;
+      return ` ${convertirGrupo(n)} ${plu}`;
     }
     const entero = Math.floor(valor);
     const centavos = Math.round((valor - entero) * 100);
@@ -106,30 +115,23 @@ export default function OPviewContainer({ pago }) {
     texto += seccion(miles, "mil", "mil");
     texto += resto ? " " + convertirGrupo(resto) : "";
     texto = texto.trim() || "cero";
-    let textoFinal = `${texto} pesos`;
-    if (centavos === 1) {
-      textoFinal += " con un centavo";
-    } else if (centavos > 1) {
-      textoFinal += ` con ${convertirGrupo(centavos)} centavos`;
-    }
-    return textoFinal.replace(/\s+/g, " ").trim();
+    let resultado = `${texto} pesos`;
+    if (centavos === 1) resultado += " con un centavo";
+    else if (centavos > 1)
+      resultado += ` con ${convertirGrupo(centavos)} centavos`;
+    return resultado.replace(/\s+/g, " ").trim();
   }
 
-  const totalValores = pago.pagos.reduce(
+  const totalValores = pagos.reduce(
     (acc, p) => acc + parseFloat(p.monto_aplicado ?? "0"),
     0
   );
-  console.log(pago.facturas);
+
   return (
     <div className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-0 print:pt-0">
-      <div className="flex justify-end gap-2 md:mt-[-20px] mb-2 me-3 !print:hidden mx-22">
+      <div className="flex justify-end gap-2 mb-2 !print:hidden">
         <BackButton />
-        <Button
-          onClick={handlePrint}
-          disabled={isPrinting}
-          variant="outline"
-          className="cursor-pointer mb-1"
-        >
+        <Button onClick={handlePrint} disabled={isPrinting} variant="outline">
           <Printer className="mr-1 h-4 w-4" />
           {isPrinting ? "Imprimiendo..." : "Imprimir OP"}
         </Button>
@@ -137,13 +139,8 @@ export default function OPviewContainer({ pago }) {
       <OPviewTitle pago={pago} />
       <OPviewHeader pago={pago} />
       <OPviewSubHeader />
-      <OPviewInvoice
-        facturas={pago.facturas.map((factura) => ({
-          ...factura,
-          monto_total: parseFloat(factura.monto_total),
-        }))}
-      />
-      <OPviewPagos pagos={pago.pagos} />
+      <OPviewInvoice facturas={facturas} />
+      <OPviewPagos pagos={pagos} />
       <OPviewObs
         montoEnLetras={numeroALetras(totalValores).toUpperCase()}
         fechaCreacion={fechaCreacion}

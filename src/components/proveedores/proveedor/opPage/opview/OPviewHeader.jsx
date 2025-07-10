@@ -15,11 +15,11 @@ export default function OPviewHeader({ pago }) {
       <div className="flex  md:flex-row justify-between items-center md:items-start gap-4">
         {/* Izquierda: razón social y CUIT */}
         <div>
-          <h2 className="text-5xl  md:font-medium md:text-6xl ">
-            {pago.proveedor_razon_social}
+          <h2 className="text-5xl  md:font-medium md:text-6xl md: mb-4">
+            {pago.proveedor.razon_social}
           </h2>
           <p className="text-sm text-muted-foreground ">
-            CUIT: {pago.proveedor_cuit}
+            CUIT: {pago.proveedor.cuit}
           </p>
         </div>
 

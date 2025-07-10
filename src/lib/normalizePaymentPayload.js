@@ -4,11 +4,8 @@ export default function normalizePaymentPayload({
   observaciones,
   archivos,
   facturas,
-  usuarioId = 1,
   idEmpresa = 1,
 }) {
-  const now = new Date().toISOString();
-
   // Usar la fecha del primer ítem como base para la orden
   const fecha = items[0]?.fecha ? new Date(items[0].fecha) : new Date();
 
@@ -29,10 +26,6 @@ export default function normalizePaymentPayload({
       estado_pago: "ejecutada",
       estado_factura: "sin_factura",
       observaciones,
-      fecha_creada: now,
-      creado_por: usuarioId,
-      modificado_por: usuarioId,
-      fecha_modificacion: now,
       sync_origen: "manual",
       estado_logico: 1,
       id_empresa: idEmpresa,

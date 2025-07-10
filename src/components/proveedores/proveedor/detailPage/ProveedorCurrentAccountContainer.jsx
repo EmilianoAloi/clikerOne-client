@@ -91,8 +91,7 @@ export default function ProveedorCurrentAccountContainer({
           montoAplicado + excedente > 0
             ? montoAplicado + excedente
             : Number(p.monto);
-        const usuario =
-          p.creador_nombre || p.usuario_nombre || p.usuario || "-";
+        const usuario = p.creador?.nombre || p.modificador?.nombre || "-";
         return {
           id: `pago-${p.id_pago}`,
           type: "Orden de pago",
