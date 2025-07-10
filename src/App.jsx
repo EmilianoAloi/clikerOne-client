@@ -28,12 +28,13 @@ import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresO
 import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
 import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCviewPage";
 import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
-// import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
+import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
+import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
 // import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
+import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 // import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
-// import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
+
 // import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
-// import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import PrivateRoute from "./components/login/PrivateRoute";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -138,7 +139,7 @@ function App() {
           />
 
           {/* Nota de Crédito */}
-          {/* <Route
+          <Route
             path="/proveedores/:id/notacredito/nuevanotacredito"
             element={<ProveedorNCPage />}
           />
@@ -149,7 +150,7 @@ function App() {
           <Route
             path="/proveedores/:id/notacredito/:idNC"
             element={<ProveedorNCviewPage />}
-          /> */}
+          />
 
           {/* Nota de Débito */}
           {/* <Route

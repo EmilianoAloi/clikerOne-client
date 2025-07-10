@@ -1,67 +1,57 @@
+// src/components/proveedores/proveedor/ncPage/NCeditForm.tsx
 import { useState } from "react";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+
 import { NCeditHeader } from "./NCeditHeader";
 import { NCeditItem } from "./NCeditItem";
 import NCeditextras from "./NCeditextras";
 import NCeditButtons from "./NCeditButtons";
+import { useUpdateFactura } from "@/queries/proveedores/factura/useUpdateFactura";
 
-const NCeditForm = ({ proveedor, notaCredito }) => {
-  const { updateNotaCredito, normalizeNotaCreditoPayload } =
-    useProveedorInvoices();
-  const [comprobantes, setComprobantes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function NCeditForm({ proveedor, notaCredito }) {
   const navigate = useNavigate();
+  const updateFactura = useUpdateFactura(proveedor.id_proveedor);
 
-  const [formData, setFormData] = useState(() => ({
+  const [comprobantes, setComprobantes] = useState([]);
+  const [formData, setFormData] = useState({
     ...notaCredito,
     fecha_emision: notaCredito.fecha_emision?.split("T")[0] || "",
     fecha_vencimiento: notaCredito.fecha_vencimiento?.split("T")[0] || "",
     fecha_contable: notaCredito.fecha_contable?.split("T")[0] || "",
     fecha_acreditacion: notaCredito.fecha_acreditacion?.split("T")[0] || "",
     observaciones_nota: notaCredito.observaciones_nota || "",
-  }));
+  });
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     setComprobantes(files);
-
-    if (files.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
+    if (files[0]) {
+      setFormData((f) => ({
+        ...f,
         url_factura_comprobante: files[0].name,
       }));
     }
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
     try {
       let urlComprobante = formData.url_factura_comprobante || "";
 
-      if (comprobantes.length > 0) {
-        const archivoFormData = new FormData();
-        archivoFormData.append("file", comprobantes[0]);
-        archivoFormData.append("folder", "notas-credito");
-
+      if (comprobantes.length) {
+        const fd = new FormData();
+        fd.append("file", comprobantes[0]);
+        fd.append("folder", "notas-credito");
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads`, {
           method: "POST",
-          body: archivoFormData,
+          body: fd,
         });
-
-        if (res.ok) {
-          const data = await res.json();
-          urlComprobante = data.url;
-        } else {
-          toast.error("Error al subir el archivo de comprobante");
-          setIsSubmitting(false);
-          return;
-        }
+        if (!res.ok) throw new Error("Error upload");
+        urlComprobante = (await res.json()).url;
       }
 
-      const finalItems = [
+      const items = [
         {
           id_articulo: null,
           nombre_manual: "Ítem único - generado por monto total",
@@ -72,50 +62,56 @@ const NCeditForm = ({ proveedor, notaCredito }) => {
         },
       ];
 
-      const payload = normalizeNotaCreditoPayload(
-        {
-          ...formData,
-          url_factura_comprobante: urlComprobante,
-        },
-        finalItems
-      );
+      const payload = {
+        ...formData,
+        url_factura_comprobante: urlComprobante,
+        items,
+      };
 
-      await updateNotaCredito(formData.id_factura, payload);
+      await updateFactura.mutateAsync({
+        idFactura: formData.id_factura,
+        body: payload,
+      });
 
       toast.success("Nota de Crédito modificada correctamente");
       navigate(`/proveedores/${proveedor.id_proveedor}`);
-    } catch (error) {
-      console.error("Error al actualizar nota de crédito:", error);
+    } catch (err) {
+      console.error(err);
       toast.error("Hubo un error al actualizar la nota de crédito");
-    } finally {
-      setIsSubmitting(false);
     }
   };
+
+  if (updateFactura.isLoading) {
+    return <p>Actualizando nota de crédito…</p>;
+  }
 
   return (
     <div className="space-y-6 mx-8 pb-10">
       <NCeditHeader
         formData={formData}
         setFormData={setFormData}
-        proveedorNombre={proveedor.nombre || ""}
-        proveedorCuit={proveedor.cuit || ""}
-        proveedorRazonSocial={proveedor.razon_social || ""}
+        proveedorNombre={proveedor.nombre}
+        proveedorCuit={proveedor.cuit}
+        proveedorRazonSocial={proveedor.razon_social}
       />
+
       <Separator className="mt-10 mb-8" />
+
       <NCeditItem formData={formData} setFormData={setFormData} />
+
       <Separator className="mt-10 mb-8" />
+
       <NCeditextras
         formData={formData}
         setFormData={setFormData}
         handleFileChange={handleFileChange}
       />
+
       <NCeditButtons
-        isSubmitting={isSubmitting}
+        isSubmitting={updateFactura.isLoading}
         onUpdate={handleSubmit}
         idProveedor={proveedor.id_proveedor}
       />
     </div>
   );
-};
-
-export default NCeditForm;
+}

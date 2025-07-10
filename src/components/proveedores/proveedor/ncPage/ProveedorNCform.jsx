@@ -1,31 +1,28 @@
+// src/components/proveedores/proveedor/ncPage/ProveedorNCform.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
 import { Separator } from "@/components/ui/separator";
-
 import { format } from "date-fns";
 
 import ProveedorNCformHeader from "./ProveedorNCformHeader";
 import ProveedorNCformItem from "./ProveedorNCformItem";
 import ProveedorNCformExtras from "./ProveedorNCformExtras";
 import ProveedorNCformButtons from "./ProveedorNCformButtons";
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
+import { useCreateFactura } from "@/queries/proveedores/factura/useCreateFactura";
 
 export default function ProveedorNCform({ proveedor }) {
-  const { createNotaCredito, normalizeNotaCreditoPayload } =
-    useProveedorInvoices();
+  const navigate = useNavigate();
+  const createFactura = useCreateFactura(proveedor.id_proveedor);
   const [comprobantes, setComprobantes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     id_factura: 0,
     id_proveedor: proveedor.id_proveedor,
-    tipo_comprobante: "nota de credito",
+    tipo_comprobante: "nota de crédito",
     numero_factura: "",
-    fecha_emision: new Date().toISOString().split("T")[0],
+    fecha_emision: new Date().toISOString().slice(0, 10),
     fecha_contable: format(new Date(), "yyyy-MM-dd"),
     monto_total: 0,
     observaciones: "",
@@ -46,83 +43,75 @@ export default function ProveedorNCform({ proveedor }) {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     setComprobantes(files);
-    if (files.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
+    if (files[0]) {
+      setFormData((f) => ({
+        ...f,
         url_factura_comprobante: files[0].name,
       }));
     }
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
     try {
+      setIsSubmitting(true);
+      // 1. Subir archivo si existe
       let urlComprobante = "";
-
-      // 1. Subir el archivo si hay adjunto
-      if (comprobantes.length > 0) {
-        const archivoFormData = new FormData();
-        archivoFormData.append("file", comprobantes[0]);
-        archivoFormData.append("folder", "notas-credito");
-
+      if (comprobantes.length) {
+        const fd = new FormData();
+        fd.append("file", comprobantes[0]);
+        fd.append("folder", "notas-credito");
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads`, {
           method: "POST",
-          body: archivoFormData,
+          body: fd,
         });
-
-        if (res.ok) {
-          const data = await res.json();
-          urlComprobante = data.url;
-        } else {
-          toast.error("Error al subir el archivo de comprobante");
-          setIsSubmitting(false);
-          return;
-        }
+        if (!res.ok) throw new Error("Error upload");
+        urlComprobante = (await res.json()).url;
       }
 
-      // SIEMPRE usar un solo ítem genérico
-      const finalItems = [
+      // 2. Crear ítem genérico
+      const items = [
         {
           id_articulo: null,
           nombre_manual: "Ítem único - generado por monto total",
           cantidad: 1,
-          precio_unitario: formData.monto_total ?? 0,
+          precio_unitario: formData.monto_total,
           valor_descuento: 0,
-          subtotal_manual: formData.monto_total ?? 0,
+          subtotal_manual: formData.monto_total,
         },
       ];
 
-      // 3. Preparar el payload con la URL del comprobante
-      const payload = normalizeNotaCreditoPayload(
-        {
-          ...formData,
-          url_factura_comprobante:
-            urlComprobante || formData.url_factura_comprobante || "",
-        },
-        finalItems
-      );
+      // 3. Armar payload
+      const payload = {
+        ...formData,
+        url_factura_comprobante:
+          urlComprobante || formData.url_factura_comprobante,
+        items,
+      };
 
-      // 4. Crear la nota de crédito
-      await createNotaCredito(payload);
-
+      // 4. Disparar mutación
+      await createFactura.mutateAsync(payload);
       toast.success("Nota de Crédito registrada correctamente");
       navigate(`/proveedores/${proveedor.id_proveedor}`);
-    } catch (error) {
-      console.error("Error al guardar nota de crédito:", error);
+    } catch (err) {
+      console.error(err);
       toast.error("Hubo un error al guardar la nota de crédito");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (createFactura.isLoading) {
+    return <p>Enviando nota de crédito…</p>;
+  }
+
   return (
     <div className="space-y-6 mx-8 pb-10">
       <ProveedorNCformHeader
         formData={formData}
         setFormData={setFormData}
-        proveedorNombre={proveedor.nombre ?? ""}
-        proveedorCuit={proveedor.cuit ?? ""}
-        proveedorRazonSocial={proveedor.razon_social ?? ""}
+        proveedorNombre={proveedor.nombre}
+        proveedorCuit={proveedor.cuit}
+        proveedorRazonSocial={proveedor.razon_social}
       />
 
       <Separator className="mt-10 mb-8" />
@@ -138,7 +127,7 @@ export default function ProveedorNCform({ proveedor }) {
       />
 
       <ProveedorNCformButtons
-        isSubmitting={isSubmitting}
+        isSubmitting={isSubmitting || createFactura.isLoading}
         onSubmit={handleSubmit}
         idProveedor={proveedor.id_proveedor}
       />
