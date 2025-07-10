@@ -12,8 +12,12 @@ const removeFacturaApi = async (idFactura) => {
     },
   });
 
-  if (!res.ok) throw new Error("Error al eliminar factura");
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) {
+    // lanza el error que mande el backend, p.ej. "No tienes permisos..."
+    throw new Error(data.error || "Error al eliminar factura");
+  }
+  return data;
 };
 
 export const useRemoveFactura = (idProveedor) => {

@@ -42,23 +42,23 @@ export default function CcActionCell({ movement, currentProveedor }) {
     setIsOpen(false);
     try {
       if (movement.type === "Orden de pago") {
-        // elimina orden de pago
         await eliminarPago.mutateAsync({
           idPago: Number(plainId),
           idProveedor,
         });
-        // éxito ya notificado en el hook con toast.success
+        toast.success("Orden de pago eliminada correctamente");
       } else {
-        // elimina factura / NC / ND
         await removeFactura(plainId);
         toast.success("Factura eliminada correctamente");
       }
     } catch (e) {
       console.error("Error al eliminar:", e);
+      // Mostrar el mensaje real del error o, si no existe, el genérico
       toast.error(
-        movement.type === "Orden de pago"
-          ? "No se pudo eliminar la orden de pago."
-          : "No se pudo eliminar la factura."
+        e.message ||
+          (movement.type === "Orden de pago"
+            ? "No se pudo eliminar la orden de pago."
+            : "No se pudo eliminar la factura.")
       );
     }
   };

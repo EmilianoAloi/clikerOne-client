@@ -26,12 +26,12 @@ import ProveedoresInvoiceEditPage from "./page/Proveedores/ProveedoresID/Proveed
 import ProveedorOPPage from "./page/Proveedores/ProveedoresID/ProveedorOPPage";
 import ProveedoresOPeditPage from "./page/Proveedores/ProveedoresID/ProveedoresOPeditPage";
 import ProveedorOPViewPage from "./page/Proveedores/ProveedoresID/ProveedorOPViewPage";
-// import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
 import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCviewPage";
 import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
 // import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
 // import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
 // import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
+// import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
 // import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 // import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
 import PrivateRoute from "./components/login/PrivateRoute";

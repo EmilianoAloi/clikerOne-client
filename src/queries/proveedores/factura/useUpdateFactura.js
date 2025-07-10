@@ -4,6 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export function useUpdateFactura() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({ id, data }) => {
       const token = localStorage.getItem("token");
@@ -15,8 +16,12 @@ export function useUpdateFactura() {
         },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("Error al actualizar factura");
-      return res.json();
+      const payload = await res.json();
+      if (!res.ok) {
+        // Propaga el mensaje de error que venga del backend
+        throw new Error(payload.error || "Error al actualizar factura");
+      }
+      return payload;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["facturas"] });
