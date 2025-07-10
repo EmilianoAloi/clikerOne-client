@@ -30,11 +30,10 @@ import ProveedorOCviewPage from "./page/Proveedores/ProveedoresID/ProveedorOCvie
 import ProveedorOCeditPage from "./page/Proveedores/ProveedoresID/ProveedorOCeditPage";
 import ProveedorNCviewPage from "./page/Proveedores/ProveedoresID/ProveedorNCviewPage";
 import ProveedorNCPage from "./page/Proveedores/ProveedoresID/ProveedorNCPage";
-// import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
 import ProveedoresNCeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNCeditPage";
-// import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
-
-// import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
+import ProveedoresNDviewPage from "./page/Proveedores/ProveedoresID/ProveedoresNDviewPage";
+import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPage";
+import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import PrivateRoute from "./components/login/PrivateRoute";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -153,7 +152,7 @@ function App() {
           />
 
           {/* Nota de Débito */}
-          {/* <Route
+          <Route
             path="/proveedores/:id/notadebito/nuevanotadebito"
             element={<ProveedoresNDPage />}
           />
@@ -164,7 +163,7 @@ function App() {
           <Route
             path="/proveedores/:id/notadebito/:idND"
             element={<ProveedoresNDviewPage />}
-          /> */}
+          />
 
           {/* Historial de Precios */}
           <Route

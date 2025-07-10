@@ -1,69 +1,62 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
-import { useProveedorInvoices } from "@/contexts/ProveedorInvoicesContext";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 import { NDeditHeader } from "./NDeditHeader";
 import { NDeditItem } from "./NDeditItem";
 import NDeditextras from "./NDeditextras";
 import NDeditButtons from "./NDeditButtons";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useUpdateFactura } from "@/queries/proveedores/factura/useUpdateFactura";
 
-const NDeditForm = ({ proveedor, notaDebito }) => {
-  const { updateNotaDebito, normalizeNotaDebitoPayload } =
-    useProveedorInvoices();
-  const [comprobantes, setComprobantes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const API_URL = import.meta.env.VITE_API_URL;
+
+export default function NDeditForm({ proveedor, notaDebito }) {
   const navigate = useNavigate();
-
-  // Estado inicial con datos de la ND para editar
-  const [formData, setFormData] = useState(() => ({
+  const updateM = useUpdateFactura();
+  const [comprobantes, setComprobantes] = useState([]);
+  const [formData, setFormData] = useState({
     ...notaDebito,
     fecha_emision: notaDebito.fecha_emision?.split("T")[0] || "",
     fecha_vencimiento: notaDebito.fecha_vencimiento?.split("T")[0] || "",
     fecha_contable: notaDebito.fecha_contable?.split("T")[0] || "",
     fecha_acreditacion: notaDebito.fecha_acreditacion?.split("T")[0] || "",
     observaciones_nota: notaDebito.observaciones_nota || "",
-  }));
+  });
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     setComprobantes(files);
-
-    if (files.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
+    if (files[0]) {
+      setFormData((f) => ({
+        ...f,
         url_factura_comprobante: files[0].name,
       }));
     }
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
     try {
-      let urlComprobante = formData.url_factura_comprobante || "";
+      let url = formData.url_factura_comprobante || "";
 
-      if (comprobantes.length > 0) {
-        const archivoFormData = new FormData();
-        archivoFormData.append("file", comprobantes[0]);
-        archivoFormData.append("folder", "notas-debito");
-
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads`, {
+      // Subida inline
+      if (comprobantes[0]) {
+        const fd = new FormData();
+        fd.append("file", comprobantes[0]);
+        fd.append("folder", "notas-debito");
+        const res = await fetch(`${API_URL}/api/uploads`, {
           method: "POST",
-          body: archivoFormData,
+          body: fd,
         });
-
-        if (res.ok) {
-          const data = await res.json();
-          urlComprobante = data.url;
-        } else {
-          toast.error("Error al subir el archivo de comprobante");
-          setIsSubmitting(false);
+        if (!res.ok) {
+          toast.error("Error al subir comprobante");
           return;
         }
+        const { url: uploaded } = await res.json();
+        url = uploaded;
       }
 
-      const finalItems = [
+      // Ítem único
+      const items = [
         {
           id_articulo: null,
           nombre_manual: "Ítem único - generado por monto total",
@@ -74,23 +67,24 @@ const NDeditForm = ({ proveedor, notaDebito }) => {
         },
       ];
 
-      const payload = normalizeNotaDebitoPayload(
-        {
-          ...formData,
-          url_factura_comprobante: urlComprobante,
-        },
-        finalItems
-      );
+      // Normaliza payload
+      const payload = {
+        ...formData,
+        url_factura_comprobante: url,
+        items,
+      };
 
-      await updateNotaDebito(formData.id_factura, payload);
+      // Mutate
+      await updateM.mutateAsync({
+        id: formData.id_factura,
+        payload,
+      });
 
       toast.success("Nota de Débito modificada correctamente");
       navigate(`/proveedores/${proveedor.id_proveedor}`);
-    } catch (error) {
-      console.error("Error al actualizar nota de débito:", error);
+    } catch (err) {
+      console.error(err);
       toast.error("Hubo un error al actualizar la nota de débito");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -112,12 +106,10 @@ const NDeditForm = ({ proveedor, notaDebito }) => {
         handleFileChange={handleFileChange}
       />
       <NDeditButtons
-        isSubmitting={isSubmitting}
+        isSubmitting={updateM.isLoading}
         onUpdate={handleSubmit}
         idProveedor={proveedor.id_proveedor}
       />
     </div>
   );
-};
-
-export default NDeditForm;
+}

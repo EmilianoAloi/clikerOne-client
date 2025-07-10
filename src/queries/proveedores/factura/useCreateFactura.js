@@ -6,11 +6,9 @@ export function useCreateFactura() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data) => {
-      // --- AGREGADO: leer el token desde localStorage (o desde donde lo guardes) ---
-      const token = localStorage.getItem("token"); // o el nombre que uses
+      const token = localStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
-        // Solo agregá Authorization si hay token
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       };
 

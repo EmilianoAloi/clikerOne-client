@@ -1,3 +1,4 @@
+// src/components/proveedores/proveedor/ndPage/ProveedorNDbuttons.jsx
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Save } from "lucide-react";
@@ -11,7 +12,6 @@ const ProveedorNDbuttons = ({
 
   return (
     <div className="flex items-center justify-end gap-3 mb-0">
-      {/* Cancelar */}
       <Button
         variant="outline"
         type="button"
@@ -21,7 +21,6 @@ const ProveedorNDbuttons = ({
         Cancelar
       </Button>
 
-      {/* Guardar Nota de Débito */}
       <Button
         type="button"
         onClick={onSubmit}
