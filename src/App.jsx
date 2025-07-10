@@ -8,10 +8,8 @@ import {
 import MainLayout from "./layout/MainLayout";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
-// Contexts
-// import { ProveedorInvoicesProvider } from "@/contexts/ProveedorInvoicesContext";
-// import { ProveedorOPProvider } from "@/contexts/ProveedorOPContext";
-// import { ProveedorComprasProvider } from "@/contexts/ProveedorOCContext";
+// Context
+import { useAuth } from "@/contexts/AuthContext";
 
 // Pages
 import LoginPage from "./page/login/LoginPage";
@@ -36,7 +34,6 @@ import ProveedoresNDPage from "./page/Proveedores/ProveedoresID/ProveedoresNDPag
 import ProveedoresNDeditPage from "./page/Proveedores/ProveedoresID/ProveedoresNDeditPage";
 import PrivateRoute from "./components/login/PrivateRoute";
 
-import { useAuth } from "@/contexts/AuthContext";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
 import HistorialPreciosGlobalContainer from "./page/Proveedores/Historialprecios/HistorialPreciosGlobalContainer";
 
