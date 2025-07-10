@@ -1,50 +1,20 @@
-import ProveedoresOPeditContainer from "@/components/proveedores/proveedor/opPage/opedit/ProveedoresOPeditContainer";
-import { useProveedores } from "@/queries/proveedores/useProveedores";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
+import { useOPById } from "@/queries/proveedores/pagos/useOPById";
+import ProveedoresOPeditContainer from "@/components/proveedores/proveedor/opPage/opedit/ProveedoresOPeditContainer";
 
-const ProveedoresOPeditPage = () => {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const { id, idOP } = useParams();
-  const { data: proveedores } = useProveedores();
-  const [proveedor, setProveedor] = useState(null);
-  const [pagoData, setPagoData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  // Buscar proveedor
-  useEffect(() => {
-    if (!id) return;
-    const found = proveedores?.find(
-      (p) => String(p.id_proveedor) === String(id)
-    );
-    if (found) {
-      setProveedor(found);
-    } else {
-      // Fetch si no está en contexto
-      fetch(`${API_URL}/api/proveedores/${id}`)
-        .then((res) => res.json())
-        .then((data) => setProveedor(data));
-    }
-  }, [id, proveedores, API_URL]);
+export default function ProveedoresOPeditPage() {
+  const { idOP } = useParams();
+  const { data: pagoData, isLoading, error } = useOPById(idOP);
 
-  // Buscar datos del pago
-  useEffect(() => {
-    if (!idOP) return;
-    setLoading(true);
-    fetch(`${API_URL}/api/proveedores/pagos/${idOP}`)
-      .then((res) => res.json())
-      .then((data) => setPagoData(data))
-      .finally(() => setLoading(false));
-  }, [idOP, API_URL]);
-
-  if (loading || !proveedor || !pagoData) return <div>Cargando...</div>;
+  if (isLoading) return <div>Cargando...</div>;
+  if (error) return <div>Error al cargar la orden de pago</div>;
 
   return (
     <ProveedoresOPeditContainer
-      pagoData={pagoData}
-      proveedor={proveedor}
       modo="editar"
+      proveedor={pagoData.proveedor}
+      pagoData={pagoData}
     />
   );
-};
-
-export default ProveedoresOPeditPage;
+}

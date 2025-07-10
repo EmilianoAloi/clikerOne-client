@@ -8,77 +8,85 @@ import ProveedorOPpagos from "./ProveedorOPpagos";
 import ProveedorOPinvoices from "./ProveedorOPinvoices";
 import ProveedorOPheader from "./ProveedorOPheader";
 import { useCrearOP } from "@/queries/proveedores/pagos/useCrearOP";
+import { useActualizarOP } from "@/queries/proveedores/pagos/useActualizarOP";
 import { useFacturasByProveedor } from "@/queries/proveedores/factura/useFacturasByProveedor";
 import normalizePaymentPayload from "@/lib/normalizePaymentPayload";
 
 export default function ProveedorOPform({ modo, proveedor, pagoData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    observaciones: "",
+    comprobantes: [],
+  });
   const [items, setItems] = useState([]);
   const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
   const navigate = useNavigate();
-  const crearOPMutation = useCrearOP();
+
+  const crearOP = useCrearOP();
+  const actualizarOP = useActualizarOP();
+  const mutation = modo === "editar" ? actualizarOP : crearOP;
+
   const { data: facturas = [], isLoading: loadingFacturas } =
     useFacturasByProveedor(proveedor?.id_proveedor);
 
-  // Prellenar datos al editar
   useEffect(() => {
     if (modo === "editar" && pagoData) {
-      setFormData((prev) => ({
-        ...prev,
-        observaciones: pagoData.observaciones ?? "",
+      setFormData({
+        observaciones: pagoData.observaciones || "",
         comprobantes: [],
-      }));
+      });
+
       setItems(
-        (pagoData.pagos || pagoData.items || []).map((item) => ({
-          ...item,
-          numero_comprobante: item.numero ?? item.numero_comprobante ?? "",
-          observaciones: item.observaciones,
-          medio: item.medio ?? "",
-          fecha: item.fecha ?? new Date().toISOString().slice(0, 10),
-          monto_aplicado: item.monto_aplicado ?? item.monto,
-        }))
+        pagoData.items.map((item) => {
+          const raw = item.fecha_acreditacion || item.fecha;
+          let fechaObj = new Date(raw);
+          if (isNaN(fechaObj)) fechaObj = new Date();
+          return {
+            id: item.id,
+            id_factura: item.id_factura,
+            numero_comprobante: item.numero_comprobante || "",
+            medio: item.medio || "",
+            fecha: fechaObj,
+            observaciones: item.observaciones || "",
+            monto_aplicado: Number(item.monto_aplicado || item.monto || 0),
+          };
+        })
       );
+
       setFacturasSeleccionadas(
-        (pagoData.facturas || []).map((f) => ({
-          ...f,
-          monto: f.monto_a_saldar ?? f.monto_total ?? "",
+        pagoData.items.map((item) => ({
+          id_factura: item.id_factura,
+          monto: Number(item.monto_aplicado || item.monto || 0),
+          numero_factura: item.ProveedorFactura?.numero_factura || "",
+          fecha_emision:
+            item.ProveedorFactura?.fecha_emision?.slice(0, 10) || "",
+          fecha_vencimiento:
+            item.ProveedorFactura?.fecha_vencimiento?.slice(0, 10) || "",
+          estado_saldo: item.ProveedorFactura?.estado_saldo || "",
+          tipo_comprobante: item.ProveedorFactura?.tipo_comprobante || "",
         }))
       );
     }
   }, [modo, pagoData]);
 
-  const [formData, setFormData] = useState({
-    observaciones: "",
-    comprobantes: [],
-  });
-
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    setFormData((prev) => ({ ...prev, comprobantes: files }));
-  };
-
-  const handleChange = (e) => {
+  const handleFileChange = (e) =>
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      comprobantes: Array.from(e.target.files || []),
     }));
-  };
 
-  function montoSeguro(val) {
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const montoSeguro = (val) => {
     const n = Number(val);
     return !isNaN(n) && isFinite(n) ? n : 0;
-  }
+  };
 
   const resumen = {
     facturasSeleccionadas: facturasSeleccionadas.length,
-    totalFacturas: facturasSeleccionadas.reduce(
-      (acc, f) => acc + parseFloat(f.monto),
-      0
-    ),
-    totalPagos: items.reduce(
-      (acc, item) => acc + Number(item.monto_aplicado ?? item.monto ?? 0),
-      0
-    ),
+    totalFacturas: facturasSeleccionadas.reduce((acc, f) => acc + f.monto, 0),
+    totalPagos: items.reduce((acc, it) => acc + it.monto_aplicado, 0),
   };
 
   const handleSubmit = async (e) => {
@@ -86,40 +94,50 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
     setIsSubmitting(true);
 
     try {
-      // 1) Normalizar montos en items y facturas
+      // 1) Normalizar items
       const itemsNorm = items.map((it) => ({
-        ...it,
-        monto_aplicado: montoSeguro(it.monto_aplicado ?? it.monto),
+        id: it.id,
+        id_factura: it.id_factura,
+        numero_comprobante: it.numero_comprobante,
+        medio: it.medio,
+        fecha_acreditacion:
+          it.fecha instanceof Date
+            ? it.fecha.toISOString().slice(0, 10)
+            : it.fecha,
+        observaciones: it.observaciones,
+        monto_aplicado: montoSeguro(it.monto_aplicado),
       }));
+
+      // 2) Normalizar facturas
       const facturasNorm = facturasSeleccionadas.map((f) => ({
         id_factura: f.id_factura,
         monto_a_saldar: montoSeguro(f.monto),
       }));
 
-      // Validar números
-      const invalid =
+      // 3) Validar montos
+      if (
         itemsNorm.some((it) => isNaN(it.monto_aplicado)) ||
-        facturasNorm.some((f) => isNaN(f.monto_a_saldar));
-      if (invalid) {
+        facturasNorm.some((f) => isNaN(f.monto_a_saldar))
+      ) {
         toast.error("Todos los montos deben ser válidos.");
         setIsSubmitting(false);
         return;
       }
 
-      // 2) Subir archivos
-      const uploaded = await Promise.all(
-        (formData.comprobantes || []).map(async (file) => {
+      // 4) Subir comprobantes
+      const archivos = await Promise.all(
+        formData.comprobantes.map(async (file) => {
           const fd = new FormData();
           fd.append("file", file);
           fd.append("folder", "comprobantes");
           const res = await fetch(
             `${import.meta.env.VITE_API_URL}/api/uploads`,
-            { method: "POST", body: fd }
+            {
+              method: "POST",
+              body: fd,
+            }
           );
-          if (!res.ok) {
-            toast.error("Error subiendo comprobante");
-            throw new Error("Upload error");
-          }
+          if (!res.ok) throw new Error("Upload error");
           const json = await res.json();
           return {
             url: json.url,
@@ -128,38 +146,38 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         })
       );
 
-      // 3) Construir items con id_factura (mismo índice)
-      const paymentItems = itemsNorm.map((it, i) => ({
-        ...it,
-        id_factura: facturasNorm[i]?.id_factura,
-      }));
-
-      // 4) Payload para el backend
-      const base = normalizePaymentPayload({
-        items: paymentItems,
+      // 5) Construir payload
+      const payload = normalizePaymentPayload({
+        items: itemsNorm,
         facturas: facturasNorm,
         idProveedor: proveedor.id_proveedor,
         observaciones: formData.observaciones,
-        archivos: uploaded,
+        archivos,
       });
 
-      console.log("Payload CORREGIDO:", base);
-
-      // 5) Mutate
-      const result = await crearOPMutation.mutateAsync(base);
-      if (result?.error) {
-        toast.error(result.error);
-        setIsSubmitting(false);
-        return;
+      // 6) Ejecutar mutation
+      if (modo === "editar") {
+        await mutation.mutateAsync({
+          idPago: pagoData.id_pago, // <— asegura que viene definido
+          data: payload,
+        });
+      } else {
+        await mutation.mutateAsync(payload);
       }
 
-      toast.success(result.mensaje || "Orden de pago guardada.");
+      toast.success(
+        modo === "editar"
+          ? "Orden de pago actualizada."
+          : "Orden de pago creada."
+      );
       navigate(`/proveedores/${proveedor.id_proveedor}`, {
         state: { refresh: true },
       });
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Error al guardar orden de pago.");
+      toast.error(
+        err.response?.data?.message || err.message || "Validation error"
+      );
     } finally {
       setIsSubmitting(false);
     }
