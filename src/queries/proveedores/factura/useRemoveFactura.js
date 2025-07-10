@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const removeFacturaApi = async (idFactura) => {
   const BASE_URL = import.meta.env.VITE_API_URL;
-  const token = localStorage.getItem("token"); // O donde lo guardes
+  const token = localStorage.getItem("token");
 
   const res = await fetch(`${BASE_URL}/api/proveedores/facturas/${idFactura}`, {
     method: "DELETE",
@@ -21,15 +21,54 @@ export const useRemoveFactura = (idProveedor) => {
 
   return useMutation({
     mutationFn: removeFacturaApi,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
+
+    // Optimistic Update
+    onMutate: async (idFactura) => {
+      await queryClient.cancelQueries([
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/proveedores/facturas/proveedor/${idProveedor}`,
+      ]);
+
+      const previousFacturas = queryClient.getQueryData([
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/proveedores/facturas/proveedor/${idProveedor}`,
+      ]);
+
+      // Elimina factura inmediatamente
+      queryClient.setQueryData(
+        [
           `${
             import.meta.env.VITE_API_URL
           }/api/proveedores/facturas/proveedor/${idProveedor}`,
         ],
-      });
-      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+        (old = []) => old.filter((f) => f.id_factura !== idFactura)
+      );
+
+      return { previousFacturas };
+    },
+
+    // Revierte si hay error
+    onError: (error, idFactura, context) => {
+      queryClient.setQueryData(
+        [
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/proveedores/facturas/proveedor/${idProveedor}`,
+        ],
+        context.previousFacturas
+      );
+    },
+
+    // Finalmente refetchea siempre para sincronizar con backend
+    onSettled: () => {
+      queryClient.invalidateQueries([
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/proveedores/facturas/proveedor/${idProveedor}`,
+      ]);
+      queryClient.invalidateQueries(["proveedores"]);
     },
   });
 };

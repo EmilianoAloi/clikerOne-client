@@ -1,10 +1,19 @@
-const removeCompraMutation = useRemoveCompra();
+import { mutationFetchWithAuth } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const handleDelete = async (id_orden_compra) => {
-  try {
-    await removeCompraMutation.mutateAsync(id_orden_compra);
-    toast.success("Orden de compra eliminada");
-  } catch (error) {
-    toast.error(error?.message || "Error al eliminar la orden de compra");
-  }
-};
+const API_URL = `${import.meta.env.VITE_API_URL}/api/proveedores/compras`;
+
+export function useRemoveCompra() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id) =>
+      mutationFetchWithAuth({
+        url: `${API_URL}/${id}`,
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries([API_URL]);
+    },
+  });
+}

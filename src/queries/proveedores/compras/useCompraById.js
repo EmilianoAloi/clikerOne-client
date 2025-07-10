@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryFetchWithAuth } from "@/lib/utils";
 
-// idCompra: número o string (ID de la OC)
 export const useCompraById = (idCompra) =>
   useQuery({
     queryKey: [
@@ -9,5 +8,4 @@ export const useCompraById = (idCompra) =>
     ],
     queryFn: queryFetchWithAuth,
     enabled: !!idCompra,
-    select: (data) => data || null, // asegurás null si no hay datos
   });

@@ -3,6 +3,8 @@ import ProveedoresDetailAccordionOc from "./provedoresaccordions/ProveedoresDeta
 import ProveedoresDetailAccordionFacturacion from "./provedoresaccordions/ProveedoresDetailAccordionFacturacion";
 import ProveedoresDetailAccordionOp from "./provedoresaccordions/ProveedoresDetailAccordionOp";
 import ProveedoresDetailAccordionArticulos from "./provedoresaccordions/ProveedoresDetailAccordionArticulos";
+import { useRemoveCompra } from "@/queries/proveedores/compras/useRemoveCompra";
+import { toast } from "sonner";
 
 const ProveedorAccordionContainer = ({
   currentProveedores,
@@ -20,6 +22,24 @@ const ProveedorAccordionContainer = ({
   isLoadingCompras,
   errorCompras,
 }) => {
+  const removeCompraMutation = useRemoveCompra();
+
+  const handleDeleteCompra = async (id) => {
+    try {
+      await removeCompraMutation.mutateAsync(id);
+      return true;
+    } catch (err) {
+      if (err.status === 403) {
+        toast.error("No tienes permiso para eliminar esta orden.");
+      } else if (err.status === 404) {
+        toast.error("La orden de compra no existe.");
+      } else {
+        toast.error("Error al eliminar la orden.");
+      }
+      return false;
+    }
+  };
+
   return (
     <Accordion
       type="multiple"
@@ -31,6 +51,7 @@ const ProveedorAccordionContainer = ({
         compras={compras}
         isLoading={isLoadingCompras}
         error={errorCompras}
+        onDeleteCompra={handleDeleteCompra}
       />
 
       <ProveedoresDetailAccordionFacturacion

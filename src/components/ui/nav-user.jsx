@@ -1,5 +1,5 @@
 import React from "react";
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { Bell, ChevronsUpDown, ExternalLink, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -68,10 +68,18 @@ export default function NavUser({ name, email, avatar, onLogout }) {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem disabled className="cursor-pointer">
-                <BadgeCheck className="mr-2 h-4 w-4" />
-                Ir a Cliker2
+              <DropdownMenuItem asChild>
+                <a
+                  href="https://cliker2.com.ar/Home.asp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cursor-pointer flex items-center"
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Ir a Cliker2
+                </a>
               </DropdownMenuItem>
+
               <DropdownMenuItem disabled>
                 <Bell className="mr-2 h-4 w-4" />
                 Notificaciones

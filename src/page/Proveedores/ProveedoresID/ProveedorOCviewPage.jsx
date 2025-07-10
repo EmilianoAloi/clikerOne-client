@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import OCviewContainer from "@/components/proveedores/proveedor/ocPage/ocview/OCviewContainer";
-import { useCompraById } from "@/queries/proveedores/useCompraById";
+import { useCompraById } from "@/queries/proveedores/compras/useCompraById";
 
 export default function OCIdPage() {
   const { idOC } = useParams();

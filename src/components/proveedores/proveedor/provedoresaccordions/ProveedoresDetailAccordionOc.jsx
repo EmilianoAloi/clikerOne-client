@@ -48,7 +48,7 @@ const ProveedoresDetailAccordionOc = ({
       if (ok) {
         toast.error(`Orden de compra #${id_orden_compra} eliminada`);
       } else {
-        toast.error("No se pudo eliminar la orden de compra");
+        // toast.error("No se pudo eliminar la orden de compra");
       }
     }
   };
@@ -190,7 +190,7 @@ const ProveedoresDetailAccordionOc = ({
                       />
                     </TableCell>
                     <TableCell className="py-3 text-center">
-                      {oc.creador_nombre || oc.creado_por}{" "}
+                      {oc.creador?.nombre || "sin datos"}
                     </TableCell>
                     <TableCell className="py-3 text-center">
                       <ActionCell

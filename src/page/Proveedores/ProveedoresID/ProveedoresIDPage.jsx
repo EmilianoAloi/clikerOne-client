@@ -4,7 +4,7 @@ import { useProveedor } from "@/queries/proveedores/useProveedor";
 import { useArticulosByProveedor } from "@/queries/proveedores/articulo/useArticulosByProveedor";
 import { useFacturasByProveedor } from "@/queries/proveedores/factura/useFacturasByProveedor";
 import { useOPByProveedor } from "@/queries/proveedores/pagos/useOPByProveedor";
-import { useComprasByProveedor } from "@/queries/proveedores/useComprasByProveedor";
+import { useComprasByProveedor } from "@/queries/proveedores/compras/useComprasByProveedor";
 import { usePagoItemsByProveedor } from "@/queries/proveedores/pagos/usePagoItemsByProveedor";
 
 export default function ProveedoresIDPage() {

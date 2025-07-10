@@ -28,8 +28,7 @@ const ProveedoresTableActions = ({ Proveedor }) => {
   const handleActivate = async () => {
     activateProveedorMutation.mutate(Proveedor.id_proveedor, {
       onSuccess: () => {
-        // setOpen(false);
-        // if (onActivate) onActivate(); // para manejar UI padre si hace falta
+        setIsOpen(false);
       },
       onError: (error) => {
         console.error("Error activando proveedor", error);
@@ -39,12 +38,13 @@ const ProveedoresTableActions = ({ Proveedor }) => {
   };
 
   const handleDelete = async () => {
-    try {
-      await removeProveedorMutation.mutateAsync(Proveedor.id_proveedor);
-      setIsOpen(false);
-    } catch (error) {
-      console.error("Error eliminando proveedor", error);
-    }
+    removeProveedorMutation.mutate(Proveedor.id_proveedor, {
+      onSuccess: () => setIsOpen(false),
+      onError: (error) => {
+        console.error("Error eliminando proveedor", error);
+        // Puedes manejar errores con toasts o mensajes aquí
+      },
+    });
   };
 
   return (

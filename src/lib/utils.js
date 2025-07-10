@@ -16,6 +16,8 @@ export const formatCurrency = (valor) => {
 };
 
 export const queryFetchWithAuth = async ({ queryKey }) => {
+  console.log(">>> queryKey", queryKey);
+
   const token = localStorage.getItem("token");
   const res = await fetch(queryKey[0], {
     headers: {
@@ -47,7 +49,12 @@ export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
   });
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    throw new Error(errorBody.message || "Network error");
+    const message =
+      errorBody.error || errorBody.message || `Error ${res.status}`;
+    const error = new Error(message);
+    error.status = res.status;
+    error._handled = true;
+    throw error;
   }
   return res.json();
 };
