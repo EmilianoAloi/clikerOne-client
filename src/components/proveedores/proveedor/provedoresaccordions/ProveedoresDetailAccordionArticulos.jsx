@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import ArticulosMultiFormModal from "../articulos/individual/ArticulosAddModal";
 import ArticulosEditModal from "../articulos/individual/ArticulosEditModal";
 
@@ -112,7 +111,7 @@ const ProveedoresDetailAccordionArticulos = ({
                   </span>
                 </TableHead>
                 <TableHead className="text-slate-700 font-semibold text-center w-32">
-                  Acciones
+                  Editar
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -168,8 +167,8 @@ const ProveedoresDetailAccordionArticulos = ({
                         articulo.creador?.nombre ||
                         "-"}
                     </TableCell>
-                    <TableCell className=" !ms-4 text-center flex gap-2 justify-center">
-                      <Link
+                    <TableCell className="  text-center flex gap-2 justify-center">
+                      {/* <Link
                         to={`/proveedores/${currentProveedores.id_proveedor}/historial-precios`}
                       >
                         <Button
@@ -180,12 +179,12 @@ const ProveedoresDetailAccordionArticulos = ({
                         >
                           <CircleDollarSign className="w-4 h-4" />
                         </Button>
-                      </Link>
+                      </Link> */}
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setEditingArticulo(articulo)}
-                        className="text-amber-500 !p-0 cursor-pointer"
+                        className="text-indigo-500 !p-0 cursor-pointer"
                         title="Editar artículo"
                       >
                         <Pencil className="w-4 h-4" />
