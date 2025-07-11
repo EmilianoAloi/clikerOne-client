@@ -2,6 +2,9 @@ import ProveedorDetailInfo from "./ProveedorDetailInfo";
 import BackButton from "@/components/ui/back-button";
 import ProveedorCurrentAccountContainer from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccountContainer";
 import ProveedorAccordionContainer from "../ProveedorAccordionContainer";
+import { Button } from "@/components/ui/button";
+import { LineChart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ProveedorDetailContainer = ({
   currentProveedores,
@@ -20,7 +23,7 @@ const ProveedorDetailContainer = ({
   errorCompras,
 }) => {
   const currentProveedor = currentProveedores;
-
+  const navigate = useNavigate();
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8 mb-10">
       {/* Info principal */}
@@ -37,8 +40,19 @@ const ProveedorDetailContainer = ({
               facturación y su cuenta corriente.
             </p>
           </div>
-          <span>
+          <span className="flex items-center gap-2">
             <BackButton />
+            <Button
+              className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+              onClick={() =>
+                navigate(
+                  `/proveedores/${currentProveedores.id_proveedor}/historial-precios`
+                )
+              }
+            >
+              <LineChart className="h-4 w-4" />
+              Historial de Precios
+            </Button>
           </span>
         </div>
         <ProveedorDetailInfo proveedor={currentProveedor} />

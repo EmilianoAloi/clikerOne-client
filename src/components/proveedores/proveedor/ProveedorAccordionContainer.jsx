@@ -46,6 +46,12 @@ const ProveedorAccordionContainer = ({
       className="space-y-4 mb-12"
       defaultValue={["cuentacorriente"]}
     >
+      <ProveedoresDetailAccordionArticulos
+        currentProveedores={currentProveedores}
+        articles={articles || []}
+        isLoading={isLoadingArticles}
+        error={errorArticles}
+      />
       <ProveedoresDetailAccordionOc
         currentProveedores={currentProveedores}
         compras={compras}
@@ -67,13 +73,6 @@ const ProveedorAccordionContainer = ({
         paymentItems={paymentItems || []}
         isLoading={isLoadingPayments}
         error={errorPayments}
-      />
-
-      <ProveedoresDetailAccordionArticulos
-        currentProveedores={currentProveedores}
-        articles={articles || []}
-        isLoading={isLoadingArticles}
-        error={errorArticles}
       />
     </Accordion>
   );

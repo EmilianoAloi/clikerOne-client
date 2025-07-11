@@ -60,7 +60,9 @@ const ProveedoresDetailAccordionArticulos = ({
           />
           <ArticulosEditModal
             open={!!editingArticulo}
-            onClose={() => setEditingArticulo(null)}
+            onOpenChange={(isOpen) => {
+              if (!isOpen) setEditingArticulo(null);
+            }}
             articulo={editingArticulo}
             idProveedor={currentProveedores.id_proveedor}
           />

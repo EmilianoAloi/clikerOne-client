@@ -14,7 +14,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const ProveedoresDeleteDialog = ({ proveedor, onDelete }) => {
+const ProveedoresDeleteDialog = ({ proveedor, onDelete, isAdmin }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -29,7 +29,9 @@ const ProveedoresDeleteDialog = ({ proveedor, onDelete }) => {
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          className="w-fit cursor-pointer flex items-center justify-start text-red-500 hover:text-red-600 hover:bg-red-100 !px-3 !py-1"
+          className={`w-fit cursor-pointer flex items-center justify-start text-red-500 hover:text-red-600 hover:bg-red-100 !px-3 !py-1 ${
+            !isAdmin ? "hidden" : ""
+          }`}
         >
           <Trash2 className="h-4 w-4 mr-0 text-red-500" />
         </Button>

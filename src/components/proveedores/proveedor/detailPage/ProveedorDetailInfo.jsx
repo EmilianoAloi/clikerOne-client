@@ -20,11 +20,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
 import ProveedoresDeleteDialog from "./ProveedorDeleteDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ProveedorDetailInfo = ({ proveedor }) => {
-  const removeProveedor = useRemoveProveedor();
+  const { user } = useAuth();
+  const isAdmin = user?.rol === "admin";
   const navigate = useNavigate();
 
+  const removeProveedor = useRemoveProveedor();
   if (!proveedor) {
     return <div className="p-6">Proveedor no encontrado.</div>;
   }
@@ -153,14 +156,16 @@ const ProveedorDetailInfo = ({ proveedor }) => {
               onClick={() =>
                 navigate(`/proveedores/${proveedor.id_proveedor}/editar`)
               }
-              className="text-sm cursor-pointer pe-0"
+              className={`text-sm cursor-pointer pe-0 ${
+                !isAdmin ? "hidden" : ""
+              }`}
             >
               <Pencil className="w-4 h-4 " />
             </Button>
 
-            {/* Si tu lógica de borrar proveedor sigue en Context, 
-                pasale por prop un onDelete que haga el removeProveedor */}
             <ProveedoresDeleteDialog
+              isAdmin={isAdmin}
+              className={`${!isAdmin ? "hidden" : ""}`}
               proveedor={proveedor}
               onDelete={() =>
                 removeProveedor.mutate(proveedor.id_proveedor, {

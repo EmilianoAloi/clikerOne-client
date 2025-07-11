@@ -169,7 +169,7 @@ export default function ProveedorCC({
             to={`/proveedores/${currentProveedores.id_proveedor}/ordencompra/nueva-oc`}
           >
             <Button
-              variant="default"
+              variant="outline"
               className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2"
             >
               <Plus className="h-4 w-4 " />
