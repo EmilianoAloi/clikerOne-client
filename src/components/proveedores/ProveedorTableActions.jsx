@@ -15,9 +15,12 @@ import ProveedoresActivateDialog from "./ProveedorActivateDialog";
 import { Link, useNavigate } from "react-router-dom";
 import { useActivateProveedor } from "@/queries/proveedores/useActivateProveedor";
 import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ProveedoresTableActions = ({ Proveedor }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.rol === "admin";
   const [isOpen, setIsOpen] = useState(false);
 
   const removeProveedorMutation = useRemoveProveedor();
@@ -82,7 +85,7 @@ const ProveedoresTableActions = ({ Proveedor }) => {
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          disabled={isInactivo}
+          disabled={isInactivo || !isAdmin}
           onClick={(e) => {
             if (isInactivo) return;
             e.stopPropagation();

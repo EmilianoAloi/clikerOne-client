@@ -13,9 +13,12 @@ import {
 import { Trash } from "lucide-react";
 import { Button } from "../ui/button"; // Ruta relativa desde 'proveedores'
 import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
+import { useAuth } from "@/contexts/AuthContext";
 
 // No más typescript, solo props JS
 const ProveedoressDeleteDialog = ({ Proveedor }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.rol === "admin";
   const [open, setOpen] = useState(false);
   const removeProveedorMutation = useRemoveProveedor();
 
@@ -28,6 +31,7 @@ const ProveedoressDeleteDialog = ({ Proveedor }) => {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
+          disabled={!isAdmin}
           variant="ghost"
           className="w-full cursor-pointer flex items-center justify-start text-red-500 hover:text-red-600 hover:bg-red-100 !px-2 !py-1"
         >

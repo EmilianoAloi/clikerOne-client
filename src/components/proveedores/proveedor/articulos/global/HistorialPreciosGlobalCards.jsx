@@ -109,7 +109,7 @@ export default function HistorialPreciosGlobalCards({
         <CardContent>
           <div className="text-2xl font-bold">{uniqueProvidersCount}</div>
           <p style={{ fontWeight: 600 }} className="text-xs text-gray-600">
-            Proveedores activos
+            Proveedores con artículos
           </p>
         </CardContent>
       </Card>
