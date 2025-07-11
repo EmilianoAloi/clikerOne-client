@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import EstadisticasTitle from "./EstadisticasTitle";
 import EstadisticasFiltros from "./EstadisticasFiltros";
+import EstadisticasCards from "./EstadisticasCards";
 
 // mocks
 
@@ -31,7 +32,7 @@ const kpiData = {
 
 export default function EstadisticasPageContainer() {
   // 1. Estados
-  const [filtroPeriodo, setFiltroPeriodo] = useState("ultimo-mes"); // <-- por defecto Último mes
+  const [filtroPeriodo, setFiltroPeriodo] = useState("ultimo-mes");
   const [selectedProvider, setSelectedProvider] = useState("all");
   const [selectedUser, setSelectedUser] = useState("all");
   const [fechaDesde, setFechaDesde] = useState("");
@@ -44,6 +45,7 @@ export default function EstadisticasPageContainer() {
   return (
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
       <EstadisticasTitle />
+      <EstadisticasCards />
       <Separator className="mt-6" />
 
       <EstadisticasFiltros
