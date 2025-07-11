@@ -43,10 +43,11 @@ export default function EstadisticasPageContainer() {
   const uniqueUsers = usuarios;
 
   return (
-    <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
+    <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6 ">
       <EstadisticasTitle />
-      <EstadisticasCards />
       <Separator className="mt-6" />
+
+      <EstadisticasCards kpiData={kpiData} />
 
       <EstadisticasFiltros
         uniqueUsers={uniqueUsers}

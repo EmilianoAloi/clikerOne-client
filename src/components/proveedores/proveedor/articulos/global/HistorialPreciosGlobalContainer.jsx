@@ -212,7 +212,7 @@ export default function HistorialPreciosGlobalContainer() {
     );
 
   return (
-    <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6">
+    <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6 !bg-slate-400">
       <HistorialPreciosGlobalTitle />
       <Separator className="mt-6" />
       <HistorialPreciosGlobalCards
