@@ -54,7 +54,7 @@ export default function EstadisticasTabs({
   topArticulos,
 }) {
   return (
-    <Tabs defaultValue="general" className="space-y-6  mx-6">
+    <Tabs defaultValue="general" className="space-y-6  mx-6 ">
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="general">General</TabsTrigger>
         <TabsTrigger value="proveedores">Proveedores</TabsTrigger>
@@ -65,9 +65,9 @@ export default function EstadisticasTabs({
 
       {/* General tab */}
       <TabsContent value="general" className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6  ">
           {/* Facturación Mensual */}
-          <Card>
+          <Card className="bg-slate-50">
             <CardHeader>
               <CardTitle>Facturación Mensual</CardTitle>
               <CardDescription>
@@ -99,7 +99,7 @@ export default function EstadisticasTabs({
           </Card>
 
           {/* Estados de Órdenes */}
-          <Card>
+          <Card className="bg-slate-50">
             <CardHeader>
               <CardTitle>Estados de Órdenes</CardTitle>
               <CardDescription>

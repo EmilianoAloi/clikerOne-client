@@ -28,7 +28,7 @@ const EstadisticasFiltros = ({
     "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
   return (
-    <div className="mx-6 px-4 py-3 pb-5 bg-slate-50 border border-slate-200 rounded-lg mt-4 mb-4">
+    <div className="mx-6 px-11 py-3 pb-5 bg-slate-50 border border-slate-300 rounded-lg mt-4 mb-4">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         {/* Periodo */}
         <div>

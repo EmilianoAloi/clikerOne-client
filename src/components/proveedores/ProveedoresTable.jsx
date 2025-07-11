@@ -7,11 +7,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
 import { useProveedores } from "@/queries/proveedores/useProveedores";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProveedoresTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+  const isAdmin = user?.rol === "admin";
 
   // 1. Traer proveedores desde React Query
   const {
@@ -76,12 +79,22 @@ export default function ProveedoresTable() {
           className="w-full md:max-w-sm"
         />
         <div className="flex gap-2">
-          <Link to="/proveedores/agregar">
-            <Button className="gap-2 py-5 border border-gray-200  text-sm font-semibold rounded-sm cursor-pointer">
+          {isAdmin ? (
+            <Link to="/proveedores/agregar">
+              <Button className="gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">
+                <Plus className="h-4 w-4" />
+                Agregar Proveedor
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              disabled
+              className="gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm opacity-40 cursor-not-allowed"
+            >
               <Plus className="h-4 w-4" />
               Agregar Proveedor
             </Button>
-          </Link>
+          )}
           <Button
             className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
             onClick={() => navigate("/proveedores/historial-precios-global")}
