@@ -91,8 +91,8 @@ export default function ProveedoresTable() {
           </Button>
 
           <Button
-            disabled
-            className="gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold rounded-sm py-5"
+            onClick={() => navigate("/proveedores/estadisticas")}
+            className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
           >
             <PieChart className="h-4 w-4" />
             Ver Estadísticas

@@ -36,6 +36,7 @@ const breadcrumbNames = {
   "editar-factura": "Editar",
   "historial-precios-global": "Historial Global de Precios",
   "historial-precios": "Historial de Precios",
+  estadisticas: "Estadísticas",
 };
 
 export default function DynamicBreadcrumbs() {

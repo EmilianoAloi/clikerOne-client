@@ -33,7 +33,7 @@ const Proveedor = () => {
               Gestión de Proveedores
             </h3>
           </div>
-          <p className={`text-sm text-muted-foreground lg:w-2/3 ${animClass2}`}>
+          <p className={`text-sm text-muted-foreground lg:w-3/5 ${animClass2}`}>
             Administrá tus proveedores con acceso a su información, operaciones
             recientes, cuenta corriente y herramientas para editar, eliminar o
             agregar proveedores.

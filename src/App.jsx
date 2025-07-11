@@ -36,6 +36,7 @@ import PrivateRoute from "./components/login/PrivateRoute";
 
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
 import HistorialPreciosGlobalContainer from "./page/Proveedores/Historialprecios/HistorialPreciosGlobalContainer";
+import EstadisticasPage from "./page/proveedores/estadisticas/EstadisticasPage";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -171,6 +172,12 @@ function App() {
           <Route
             path="/proveedores/historial-precios-global"
             element={<HistorialPreciosGlobalContainer />}
+          />
+
+          {/* Estadisticas */}
+          <Route
+            path="/proveedores/estadisticas"
+            element={<EstadisticasPage />}
           />
 
           {/* Redirecciones específicas */}
