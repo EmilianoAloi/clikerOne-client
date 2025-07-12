@@ -61,7 +61,7 @@ const ProveedoresDetailAccordionOc = ({
       <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 [&[data-state=open]>svg]:rotate-180 hover:no-underline cursor-pointer group">
         <div className="flex items-center">
           <FileText className="mr-2 h-5 w-5 text-blue-500 group-hover:text-blue-600 transition-colors" />
-          <span className="font-semibold text-lg">Órdenes de Compra</span>
+          <span className="font-semibold text-lg">Ordenes de Compra</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6 pb-6 pt-2">
