@@ -15,7 +15,7 @@ import ProveedorInvoiceImpuestos from "./ProveedorInvoiceImpuestos";
 import { useCreateFactura } from "@/queries/proveedores/factura/useCreateFactura";
 import { useUpdateFactura } from "@/queries/proveedores/factura/useUpdateFactura";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL;
 const inputStyle = "bg-white border border-gray-300 rounded-md shadow-sm ";
 
 export default function ProveedorInvoiceForm({

@@ -86,9 +86,7 @@ const ProveedorOPinvoices = ({
     if (montoNum > saldo) montoNum = saldo;
 
     setFacturasSeleccionadas((prev) =>
-      prev.map((f) =>
-        f.id_factura === id ? { ...f, monto: montoNum.toString() } : f
-      )
+      prev.map((f) => (f.id_factura === id ? { ...f, monto: montoNum } : f))
     );
   };
 
@@ -99,7 +97,7 @@ const ProveedorOPinvoices = ({
         ...prev,
         {
           id_factura: factura.id_factura,
-          monto: saldo.toString(),
+          monto: saldo,
           numero_factura:
             factura.numero_factura ?? factura.id_factura.toString(),
         },

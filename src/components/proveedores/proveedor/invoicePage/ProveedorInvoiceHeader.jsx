@@ -59,17 +59,6 @@ export default function ProveedorInvoiceHeader({
   const fecha_contable = watch("fecha_contable");
   const percepcion_iibb = watch("percepcion_iibb");
 
-  // useEffect(() => {
-  //   if (
-  //     proveedores.length > 0 &&
-  //     proveedor &&
-  //     !proveedores.find((p) => String(p.id) === String(proveedor))
-  //   ) {
-  //     // Si el proveedor no está en la lista, resetear a ""
-  //     setValue("proveedor", "", { shouldValidate: false });
-  //   }
-  // }, [proveedores, proveedor, setValue]);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
       {/* Proveedor */}
@@ -158,7 +147,7 @@ export default function ProveedorInvoiceHeader({
         />
         {errors.numero_factura && (
           <span
-            className="absolute left-0 top-full mt-0.5 text-xs text-red-500 bg-white px-1 z-20 pointer-events-none"
+            className=" left-0 top-full  text-xs text-red-500 bg-white px-1 z-20 pointer-events-none"
             style={{ minWidth: "100%" }}
           >
             {errors.numero_factura.message}

@@ -33,6 +33,7 @@ const breadcrumbNames = {
   "oc-edit": "Editar",
   "editar-nd": "Editar",
   "editar-nc": "Editar",
+  "nueva-factura": "Nueva Factura",
   "editar-factura": "Editar",
   "historial-precios-global": "Historial Global de Precios",
   "historial-precios": "Historial de Precios",

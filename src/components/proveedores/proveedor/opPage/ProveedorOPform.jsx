@@ -83,10 +83,18 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
     return !isNaN(n) && isFinite(n) ? n : 0;
   };
 
+  const totalFacturas = facturasSeleccionadas.reduce(
+    (acc, f) => acc + montoSeguro(f.monto),
+    0
+  );
+  const totalPagos = items.reduce(
+    (acc, it) => acc + montoSeguro(it.monto_aplicado),
+    0
+  );
   const resumen = {
     facturasSeleccionadas: facturasSeleccionadas.length,
-    totalFacturas: facturasSeleccionadas.reduce((acc, f) => acc + f.monto, 0),
-    totalPagos: items.reduce((acc, it) => acc + it.monto_aplicado, 0),
+    totalFacturas,
+    totalPagos,
   };
 
   const handleSubmit = async (e) => {
@@ -155,6 +163,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
         archivos,
       });
 
+      console.log("OP al backend Payload:", JSON.stringify(payload, null, 2));
       // 6) Ejecutar mutation
       if (modo === "editar") {
         await mutation.mutateAsync({
