@@ -1,6 +1,6 @@
 import ProveedorDetailInfo from "./ProveedorDetailInfo";
 import BackButton from "@/components/ui/back-button";
-import ProveedorCurrentAccountContainer from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccountContainer";
+import ProveedorCurrentAccount from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccount";
 import ProveedorAccordionContainer from "../ProveedorAccordionContainer";
 import { Button } from "@/components/ui/button";
 import { LineChart } from "lucide-react";
@@ -59,7 +59,7 @@ const ProveedorDetailContainer = ({
       </div>
 
       {/* Cuenta corriente */}
-      <ProveedorCurrentAccountContainer
+      <ProveedorCurrentAccount
         currentProveedor={currentProveedor}
         paymentItems={paymentItems}
         invoices={invoices}
