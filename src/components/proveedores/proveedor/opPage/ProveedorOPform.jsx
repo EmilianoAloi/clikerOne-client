@@ -102,10 +102,16 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
     setIsSubmitting(true);
 
     try {
-      // 1) Normalizar items
+      // 1) Normalizar facturas
+      const facturasNorm = facturasSeleccionadas.map((f) => ({
+        id_factura: f.id_factura,
+        monto_a_saldar: montoSeguro(f.monto),
+      }));
+
+      // 2) Normalizar items, asignando id_factura si viene vacío
       const itemsNorm = items.map((it) => ({
-        id: it.id,
-        id_factura: it.id_factura,
+        ...it,
+        id_factura: it.id_factura || facturasNorm[0].id_factura,
         numero_comprobante: it.numero_comprobante,
         medio: it.medio,
         fecha_acreditacion:
@@ -114,12 +120,6 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
             : it.fecha,
         observaciones: it.observaciones,
         monto_aplicado: montoSeguro(it.monto_aplicado),
-      }));
-
-      // 2) Normalizar facturas
-      const facturasNorm = facturasSeleccionadas.map((f) => ({
-        id_factura: f.id_factura,
-        monto_a_saldar: montoSeguro(f.monto),
       }));
 
       // 3) Validar montos
@@ -140,10 +140,7 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
           fd.append("folder", "comprobantes");
           const res = await fetch(
             `${import.meta.env.VITE_API_URL}/api/uploads`,
-            {
-              method: "POST",
-              body: fd,
-            }
+            { method: "POST", body: fd }
           );
           if (!res.ok) throw new Error("Upload error");
           const json = await res.json();
@@ -164,10 +161,11 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       });
 
       console.log("OP al backend Payload:", JSON.stringify(payload, null, 2));
+
       // 6) Ejecutar mutation
       if (modo === "editar") {
         await mutation.mutateAsync({
-          idPago: pagoData.id_pago, // <— asegura que viene definido
+          idPago: pagoData.id_pago,
           data: payload,
         });
       } else {
