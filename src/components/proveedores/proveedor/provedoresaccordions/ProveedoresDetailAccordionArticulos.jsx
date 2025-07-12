@@ -42,7 +42,7 @@ const ProveedoresDetailAccordionArticulos = ({
       value="articulos"
       className="border rounded-lg shadow-sm overflow-hidden bg-white"
     >
-      <AccordionTrigger className="px-6 py-3 hover:bg-slate-50 cursor-pointer group hover:no-underline">
+      <AccordionTrigger className="px-6 py-4 hover:bg-slate-50 cursor-pointer group hover:no-underline">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center ">
             <Package className="mr-2 h-5 w-5 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
@@ -194,7 +194,10 @@ const ProveedoresDetailAccordionArticulos = ({
                 ))
               ) : (
                 <TableRow className="group">
-                  <TableCell colSpan={8} className="text-center py-4">
+                  <TableCell
+                    colSpan={10}
+                    className="py-4 pl-6 sm:text-center sm:pl-0 text-muted-foreground"
+                  >
                     No hay artículos asociados.
                   </TableCell>
                 </TableRow>
@@ -206,7 +209,7 @@ const ProveedoresDetailAccordionArticulos = ({
                     className="w-full py-4 hover:bg-slate-50 cursor-pointer transition-colors duration-200 border-t border-slate-100"
                     onClick={() => setShowArticuloModal(true)}
                   >
-                    <div className="flex items-center justify-center gap-3 text-slate-500 group-hover:text-indigo-600 transition-colors">
+                    <div className="flex items-center ps-5 md: ps-0 justify-start md:justify-center gap-3 text-slate-500 group-hover:text-indigo-600 transition-colors">
                       <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
                         <Plus className="w-5 h-5" />
                       </div>

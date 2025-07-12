@@ -27,20 +27,20 @@ const ProveedorDetailContainer = ({
   return (
     <div className="mx-6 mt-2 mb-4 space-y-8 mb-10">
       {/* Info principal */}
-      <div className="rounded-lg border text-card-foreground shadow-sm p-6">
+      <div className="rounded-lg border text-card-foreground shadow-sm p-4 md:p-6">
         <div className="flex flex-col flex-col-reverse md:flex-col md:flex-row gap-2 justify-between items-start">
           <div className="flex flex-col space-y-1.5 mb-7">
-            <h3 className="text-2xl font-semibold leading-none tracking-tight">
+            <h3 className="text-xl md:text-2xl font-semibold leading-none tracking-tight">
               Información de Proveedor:
               <span className="font-regular"> {currentProveedor.nombre}</span>
             </h3>
-            <p className="text-sm text-muted-foreground md:max-w-[600px] break-words">
+            <p className=" text-xs md:text-sm text-muted-foreground md:max-w-[600px] break-words">
               Accedé a la información completa del proveedor, incluyendo datos
               de contacto, artículos asociados, historial de órdenes de pagos,
               facturación y su cuenta corriente.
             </p>
           </div>
-          <div className="w-full md:w-fit flex justify-between md:justify-start items-center gap-2">
+          <div className="w-full md:w-fit flex justify-between md:justify-start md:items-center gap-2 mb-2">
             <BackButton />
             <Button
               className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"

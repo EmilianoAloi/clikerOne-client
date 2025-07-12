@@ -213,7 +213,10 @@ const ProveedoresDetailAccordionFacturacion = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={10} className="text-center py-4">
+                  <TableCell
+                    colSpan={10}
+                    className="pl-6 sm:text-center sm:pl-0 py-4 text-muted-foreground"
+                  >
                     No hay facturas para este proveedor.
                   </TableCell>
                 </TableRow>

@@ -230,7 +230,7 @@ const ProveedoresDetailAccordionOp = ({
                 <TableRow>
                   <TableCell
                     colSpan={9}
-                    className="text-center py-4 text-muted-foreground"
+                    className="pl-6 sm:text-center sm:pl-0 py-4 text-muted-foreground"
                   >
                     No hay órdenes de pago para este proveedor.
                   </TableCell>

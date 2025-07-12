@@ -203,7 +203,10 @@ const ProveedoresDetailAccordionOc = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-4">
+                  <TableCell
+                    colSpan={10}
+                    className="pl-6 w-full sm:text-center md:pl-0 py-4 text-muted-foreground"
+                  >
                     No hay órdenes de compra para este proveedor.
                   </TableCell>
                 </TableRow>

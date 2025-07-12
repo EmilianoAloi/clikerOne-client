@@ -21,7 +21,7 @@ export default function NCviewExtras({ notaCredito }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm">
+          <p className="text-sm ">
             {notaCredito.observaciones?.trim()
               ? notaCredito.observaciones
               : "No hay observaciones en la nota de crédito."}

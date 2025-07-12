@@ -142,7 +142,7 @@ export default function ProveedorCurrentAccount({
     console.log({ invoices, payments, paymentItems });
   }, [invoices, payments, paymentItems]);
   return (
-    <section className="rounded-lg border shadow-sm mx-auto px-6 py-4 w-full space-y-6">
+    <section className="rounded-lg border shadow-sm mx-auto px-6 py-4 w-full space-y-6 ">
       {/* Header */}
       <div className="flex flex-col  sm:flex-row gap-4 justify-between items-center md:items-start mb-0 sm:mb-2">
         <div>
@@ -159,8 +159,8 @@ export default function ProveedorCurrentAccount({
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col flex-col-reverse lg:flex-row !justify-between items-center lg:items-end bg-muted/30 rounded-lg p-3">
-        <div className="relative w-full md:w-80 mt-6 md:mt-0">
+      <div className="flex flex-col flex-col-reverse gap-4 xl:gap-30 lg:flex-row !justify-between items-center lg:items-end bg-muted/30 rounded-lg px-4  md:p-3 pb-4  ">
+        <div className="relative w-full !md:w-1/3 mt-6 md:mt-0 ">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
@@ -170,26 +170,26 @@ export default function ProveedorCurrentAccount({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex flex-col lg:flex-row w-full xl:w-fit gap-2 mt-6 md:mt-0 ">
+        <div className="flex flex-col lg:flex-row md:grid md:grid-cols-3 lg:flex w-full xl:w-fit gap-2 mt-6 md:mt-0 ">
           <Link
-            className="flex !items-center"
+            className="flex !items-center !w-full"
             to={`/proveedores/${currentProveedor.id_proveedor}/ordencompra/nueva-oc`}
           >
             <Button
               variant="default"
-              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2  w-full md:w-fit"
+              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2  !w-full md:w-fit"
             >
               <Plus className="h-4 w-4 " />
               Orden de Compra
             </Button>
           </Link>
           <Link
-            className="flex !items-center"
+            className="flex !items-center  !w-full"
             to={`/proveedores/${currentProveedor.id_proveedor}/facturacion/nueva-factura`}
           >
             <Button
               variant="outline"
-              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 w-full md:w-fit"
+              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 !w-full md:w-fit"
             >
               <Plus className="h-4 w-4 " />
               Cargar Factura
@@ -200,7 +200,7 @@ export default function ProveedorCurrentAccount({
           >
             <Button
               variant="outline"
-              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 w-full md:w-fit"
+              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 !w-full md:w-fit"
             >
               <Plus className="h-4 w-4 " />
               Orden de Pago
@@ -211,7 +211,7 @@ export default function ProveedorCurrentAccount({
           >
             <Button
               variant="outline"
-              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 w-full md:w-fit"
+              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 !w-full md:w-fit"
             >
               <Plus className="h-4 w-4 " />
               Nota de Crédito
@@ -222,7 +222,7 @@ export default function ProveedorCurrentAccount({
           >
             <Button
               variant="outline"
-              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 w-full md:w-fit"
+              className="text-sm font-semibold rounded-sm cursor-pointer px-4 py-2 !w-full md:w-fit"
             >
               <Plus className="h-4 w-4 " />
               Nota de Débito
