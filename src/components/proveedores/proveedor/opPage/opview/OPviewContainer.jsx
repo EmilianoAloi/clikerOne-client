@@ -15,14 +15,19 @@ export default function OPviewContainer({ pago }) {
   const [isPrinting, setIsPrinting] = useState(false);
 
   const pagos = pago.items;
-  const facturas = useMemo(
-    () =>
-      pagos.map((it) => ({
-        ...it.ProveedorFactura,
-        monto_total: parseFloat(it.ProveedorFactura.monto_total),
-      })),
-    [pagos]
-  );
+  const facturas = useMemo(() => {
+    const mapFact = new Map();
+    pagos.forEach((it) => {
+      const f = it.ProveedorFactura;
+      if (f && !mapFact.has(f.id_factura)) {
+        mapFact.set(f.id_factura, {
+          ...f,
+          monto_total: parseFloat(f.monto_total),
+        });
+      }
+    });
+    return Array.from(mapFact.values());
+  }, [pagos]);
 
   const handlePrint = () => {
     setIsPrinting(true);
