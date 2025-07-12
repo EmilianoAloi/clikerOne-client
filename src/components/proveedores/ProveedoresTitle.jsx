@@ -1,7 +1,7 @@
 import { useProveedores } from "@/queries/proveedores/useProveedores";
 import { useEffect, useState } from "react";
 
-const Proveedor = () => {
+const ProveedoresTitle = () => {
   const { data: proveedores = [] } = useProveedores();
   const [isLoaded, setIsLoaded] = useState(false);
   // Animar SOLO cuando está vacío
@@ -44,4 +44,4 @@ const Proveedor = () => {
   );
 };
 
-export default Proveedor;
+export default ProveedoresTitle;

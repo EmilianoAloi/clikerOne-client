@@ -1,4 +1,4 @@
-import ProveedoresTitle from "./Proveedor";
+import ProveedoresTitle from "./ProveedoresTitle";
 import ProveedoresTable from "./ProveedoresTable";
 
 const ProveedoresContainer = () => {

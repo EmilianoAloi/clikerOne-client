@@ -78,7 +78,9 @@ export default function ProveedoresTable() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full md:max-w-sm"
         />
-        <div className="flex gap-2">
+
+        {/* Toolbar */}
+        <div className="flex flex-col md:flex-row gap-2">
           {isAdmin ? (
             <Link to="/proveedores/agregar">
               <Button className="gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">

@@ -36,9 +36,6 @@ import {
 import {
   TrendingUp,
   TrendingDown,
-  ShoppingCart,
-  DollarSign,
-  Building2,
   Clock,
   Package,
   Eye,
