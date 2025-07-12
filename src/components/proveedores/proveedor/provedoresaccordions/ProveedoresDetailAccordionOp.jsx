@@ -214,7 +214,7 @@ const ProveedoresDetailAccordionOp = ({
                         )}
                       </TableCell>
                       <TableCell className="py-3 text-center">
-                        {pago.creador_nombre || pago.modificador_nombre || "-"}
+                        {pago.creador?.nombre || "-"}
                       </TableCell>
                       <TableCell className="py-3">
                         <div className="flex justify-center">
