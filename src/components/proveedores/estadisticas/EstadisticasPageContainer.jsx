@@ -1,14 +1,9 @@
-// components/EstadisticasPageContainer.jsx
-"use client";
-
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import EstadisticasTitle from "./EstadisticasTitle";
 import EstadisticasFiltros from "./EstadisticasFiltros";
 import EstadisticasCards from "./EstadisticasCards";
 import EstadisticasTabs from "./EstadisticasTabs";
-
-// mocks
 
 // Filtros
 const proveedores = [
@@ -19,7 +14,6 @@ const proveedores = [
 const usuarios = ["admin", "jdoe", "asmith"];
 
 // Cards
-
 const kpiData = {
   totalProveedores: 186,
   proveedoresActivos: 142,
@@ -39,7 +33,7 @@ export default function EstadisticasPageContainer() {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
 
-  // 2. Arrays únicos (mocked)
+  // 2. Arrays unicos (mocked)
   const uniqueProviders = proveedores;
   const uniqueUsers = usuarios;
 
@@ -120,6 +114,13 @@ export default function EstadisticasPageContainer() {
         setFechaHasta={setFechaHasta}
       />
       <EstadisticasCards kpiData={kpiData} />
+      {/* <EstadisticasTabs
+        facturacionMensual={facturacionMensual}
+        estadosOrdenes={estadosOrdenes}
+        comprasPorProveedor={comprasPorProveedor}
+        tendenciaPrecios={tendenciaPrecios}
+        topArticulos={topArticulos}
+      /> */}
       <EstadisticasTabs
         facturacionMensual={facturacionMensual}
         estadosOrdenes={estadosOrdenes}
