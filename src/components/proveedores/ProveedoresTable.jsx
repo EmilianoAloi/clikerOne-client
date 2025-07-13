@@ -98,7 +98,7 @@ export default function ProveedoresTable() {
             </Button>
           )}
           <Button
-            className="w-full gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+            className=" gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
             onClick={() => navigate("/proveedores/historial-precios-global")}
           >
             <LineChart className="h-4 w-4" />
