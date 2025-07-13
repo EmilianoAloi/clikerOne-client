@@ -35,7 +35,6 @@ const ProveedoresTableActions = ({ Proveedor }) => {
       },
       onError: (error) => {
         console.error("Error activando proveedor", error);
-        // toast.error o mostrar mensaje
       },
     });
   };
@@ -45,7 +44,6 @@ const ProveedoresTableActions = ({ Proveedor }) => {
       onSuccess: () => setIsOpen(false),
       onError: (error) => {
         console.error("Error eliminando proveedor", error);
-        // Puedes manejar errores con toasts o mensajes aquí
       },
     });
   };

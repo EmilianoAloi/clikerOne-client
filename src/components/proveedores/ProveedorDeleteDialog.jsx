@@ -9,22 +9,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog"; // Ruta relativa desde 'proveedores'
+} from "../ui/alert-dialog";
 import { Trash } from "lucide-react";
-import { Button } from "../ui/button"; // Ruta relativa desde 'proveedores'
-import { useRemoveProveedor } from "@/queries/proveedores/useRemoveProveedor";
+import { Button } from "../ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
-// No más typescript, solo props JS
-const ProveedoressDeleteDialog = ({ Proveedor }) => {
+const ProveedoressDeleteDialog = ({ Proveedor, onDelete }) => {
   const { user } = useAuth();
   const isAdmin = user?.rol === "admin";
   const [open, setOpen] = useState(false);
-  const removeProveedorMutation = useRemoveProveedor();
 
   const handleConfirmDelete = async () => {
-    await removeProveedorMutation.mutateAsync(Proveedor.id_proveedor);
     setOpen(false);
+    await onDelete();
   };
 
   return (

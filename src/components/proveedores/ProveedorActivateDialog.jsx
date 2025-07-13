@@ -12,22 +12,13 @@ import {
 } from "../ui/alert-dialog";
 import { CheckCircle } from "lucide-react";
 import { Button } from "../ui/button";
-import { useActivateProveedor } from "@/queries/proveedores/useActivateProveedor";
 
 const ProveedoresActivateDialog = ({ Proveedor, onActivate }) => {
   const [open, setOpen] = useState(false);
-  const activateProveedorMutation = useActivateProveedor();
 
-  const handleConfirmActivate = () => {
-    activateProveedorMutation.mutate(Proveedor.id_proveedor, {
-      onSuccess: () => {
-        setOpen(false);
-        if (onActivate) onActivate();
-      },
-      onError: (error) => {
-        console.error("Error en activar proveedor:", error);
-      },
-    });
+  const handleConfirmActivate = async () => {
+    if (onActivate) await onActivate();
+    setOpen(false);
   };
 
   return (
