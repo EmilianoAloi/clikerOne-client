@@ -83,7 +83,7 @@ export default function ProveedoresTable() {
         <div className="flex flex-col md:flex-row gap-2">
           {isAdmin ? (
             <Link to="/proveedores/agregar">
-              <Button className="gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">
+              <Button className=" w-full gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">
                 <Plus className="h-4 w-4" />
                 Agregar Proveedor
               </Button>
@@ -91,14 +91,14 @@ export default function ProveedoresTable() {
           ) : (
             <Button
               disabled
-              className="gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm opacity-40 cursor-not-allowed"
+              className=" w-full gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm opacity-40 cursor-not-allowed"
             >
               <Plus className="h-4 w-4" />
               Agregar Proveedor
             </Button>
           )}
           <Button
-            className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+            className="w-full gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
             onClick={() => navigate("/proveedores/historial-precios-global")}
           >
             <LineChart className="h-4 w-4" />
