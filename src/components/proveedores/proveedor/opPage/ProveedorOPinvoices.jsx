@@ -12,18 +12,17 @@ import { Calendar } from "lucide-react";
 import { useFactura } from "@/queries/proveedores/factura/useFactura";
 import { toast } from "sonner";
 
-const InputMonto = memo(({ value, onChange }) => (
+const InputMonto = memo(({ value, onChange, disabled }) => (
   <Input
     type="text"
     inputMode="decimal"
     className="w-full text-right px-2 py-1 h-9"
     value={value}
-    disabled={false}
+    disabled={disabled}
     onChange={(e) => onChange(e.target.value)}
   />
 ));
 InputMonto.displayName = "InputMonto";
-
 const ProveedorOPinvoices = ({
   idProveedor,
   facturasSeleccionadas,
@@ -229,6 +228,7 @@ const ProveedorOPinvoices = ({
                     <TableCell className=" w-30">
                       <InputMonto
                         value={monto}
+                        disabled={modo === "editar"}
                         onChange={(val) =>
                           handleMontoChange(factura.id_factura, val)
                         }

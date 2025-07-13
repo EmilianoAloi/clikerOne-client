@@ -22,6 +22,7 @@ const breadcrumbNames = {
   pagos: "Ordenes de Pago",
   nuevopago: "Nueva OP",
   agregar: "Agregar Nuevo Proveedor",
+  "editar-pago": "Editar OP",
   editar: "Modificar Proveedor",
   nuevafactura: "Nueva Factura",
   notacredito: "Nota de Crédito",

@@ -56,7 +56,6 @@ const ProveedorOPExtras = ({
     };
 
     loadFromCloudinary();
-     
   }, [formData.url_comprobante_pago]);
 
   return (
@@ -98,7 +97,7 @@ const ProveedorOPExtras = ({
         </div>
 
         {/* Observaciones */}
-        <div className="mt-5">
+        <div className="">
           <Label
             htmlFor="observaciones"
             className="text-sm font-semibold mb-2 flex items-center gap-2"
@@ -111,7 +110,7 @@ const ProveedorOPExtras = ({
             name="observaciones"
             value={formData.observaciones}
             onChange={handleChange}
-            rows={4}
+            rows={3}
             className={`!resize-none mt-1 ${inputStyle}`}
             placeholder="Notas adicionales sobre esta orden de pago..."
           />
@@ -120,7 +119,7 @@ const ProveedorOPExtras = ({
 
       {/* Columna derecha: resumen */}
       <div>
-        <div className="border border-slate-200 rounded-md overflow-hidden">
+        <div className="border border-slate-200 rounded-md overflow-hidden mt-7">
           <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 flex items-center gap-2 font-semibold text-slate-700">
             <Receipt className="h-5 w-5 text-slate-600" />
             Resumen
