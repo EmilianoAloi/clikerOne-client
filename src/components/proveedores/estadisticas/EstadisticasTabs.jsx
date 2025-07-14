@@ -165,7 +165,7 @@ export default function EstadisticasTabs({
         )}
 
         {activeTab === "proveedores" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-80">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Proveedores Activos</CardTitle>
@@ -201,7 +201,7 @@ export default function EstadisticasTabs({
         )}
 
         {activeTab === "compras" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-80">
             <Card>
               <CardHeader>
                 <CardTitle>Órdenes por Estado</CardTitle>
@@ -244,7 +244,7 @@ export default function EstadisticasTabs({
         )}
 
         {activeTab === "facturacion" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-80">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Facturación Total</CardTitle>
@@ -281,7 +281,7 @@ export default function EstadisticasTabs({
 
         {activeTab === "precios" && (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-80">
               <Card>
                 <CardHeader>
                   <CardTitle>Tendencia de Cambios</CardTitle>
