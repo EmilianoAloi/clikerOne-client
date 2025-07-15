@@ -83,7 +83,7 @@ export default function ProveedoresTable() {
         <div className="flex flex-col md:flex-row gap-2">
           {isAdmin ? (
             <Link to="/proveedores/agregar">
-              <Button className=" w-full gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">
+              <Button className=" gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm">
                 <Plus className="h-4 w-4" />
                 Agregar Proveedor
               </Button>
@@ -91,7 +91,7 @@ export default function ProveedoresTable() {
           ) : (
             <Button
               disabled
-              className=" w-full gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm opacity-40 cursor-not-allowed"
+              className="  gap-2 py-5 border border-gray-200 text-sm font-semibold rounded-sm opacity-40 cursor-not-allowed"
             >
               <Plus className="h-4 w-4" />
               Agregar Proveedor
