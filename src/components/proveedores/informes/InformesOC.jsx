@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Download, ShoppingCart, Search, Calendar, MapPin } from "lucide-react";
+import {
+  Download,
+  ShoppingCart,
+  Search,
+  Calendar,
+  MapPin,
+  CalendarCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +28,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 // import * as XLSX from "xlsx";
+
+const inputStyle =
+  "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
 // Datos de ejemplo para las órdenes de compra
 const ordenesMock = [
@@ -99,34 +109,33 @@ export default function InformesOC() {
   const totalGeneral = ordenesFiltradas.reduce((sum, o) => sum + o.total, 0);
 
   // Exportar a Excel
-  const exportarAExcel = () => {
-    const datosParaExcel = ordenesFiltradas.map((orden) => ({
-      "Nº de OC": orden.numeroOC,
-      "Razón Social": orden.razonSocial,
-      CUIT: orden.cuit,
-      "Fecha de Entrega": orden.fechaEntrega,
-      "Condición de Pago": orden.condicionPago,
-      "Lugar de Entrega": orden.lugarEntrega,
-      "Total de la Orden": orden.total,
-      Estado: orden.estado,
-    }));
-    datosParaExcel.push({
-      "Nº de OC": "",
-      "Razón Social": "",
-      CUIT: "",
-      "Fecha de Entrega": "",
-      "Condición de Pago": "",
-      "Lugar de Entrega": "TOTAL GENERAL:",
-      "Total de la Orden": totalGeneral,
-      Estado: "",
-    });
-
-    // const ws = XLSX.utils.json_to_sheet(datosParaExcel);
-    // const wb = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, "Informe OC");
-    // const fechaHoy = new Date().toISOString().split("T")[0];
-    // XLSX.writeFile(wb, `informe_ordenes_compra_${fechaHoy}.xlsx`);
-  };
+  // const exportarAExcel = () => {
+  //   // const datosParaExcel = ordenesFiltradas.map((orden) => ({
+  //   //   "Nº de OC": orden.numeroOC,
+  //   //   "Razón Social": orden.razonSocial,
+  //   //   CUIT: orden.cuit,
+  //   //   "Fecha de Entrega": orden.fechaEntrega,
+  //   //   "Condición de Pago": orden.condicionPago,
+  //   //   "Lugar de Entrega": orden.lugarEntrega,
+  //   //   "Total de la Orden": orden.total,
+  //   //   Estado: orden.estado,
+  //   // }));
+  //   // datosParaExcel.push({
+  //   //   "Nº de OC": "",
+  //   //   "Razón Social": "",
+  //   //   CUIT: "",
+  //   //   "Fecha de Entrega": "",
+  //   //   "Condición de Pago": "",
+  //   //   "Lugar de Entrega": "TOTAL GENERAL:",
+  //   //   "Total de la Orden": totalGeneral,
+  //   //   Estado: "",
+  //   // });
+  //   // const ws = XLSX.utils.json_to_sheet(datosParaExcel);
+  //   // const wb = XLSX.utils.book_new();
+  //   // XLSX.utils.book_append_sheet(wb, ws, "Informe OC");
+  //   // const fechaHoy = new Date().toISOString().split("T")[0];
+  //   // XLSX.writeFile(wb, `informe_ordenes_compra_${fechaHoy}.xlsx`);
+  // };
 
   const formatearMoneda = (valor) =>
     new Intl.NumberFormat("es-AR", {
@@ -143,65 +152,52 @@ export default function InformesOC() {
     });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Informes de Órdenes de Compra
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">
-            Reporte detallado de órdenes de compra
-          </p>
-        </div>
-        <Button
-          onClick={exportarAExcel}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          <Download className="w-4 h-4 mr-2" /> Exportar a Excel
-        </Button>
-      </div>
-
+    <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Filtros de Búsqueda</CardTitle>
-          <CardDescription>
-            Refina tu búsqueda de órdenes de compra
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <Card className="p-0 rounded-none border-l-0 border-r-0 border-t-0 border-b-0 shadow-none ">
+        <CardContent className="p-0 ">
+          <div
+            className="grid grid-cols-1 md:grid-cols-4 gap-4  border-0 shadow-none
+         px-4 py-3 pb-6 bg-slate-50 border"
+          >
             <div className="space-y-2">
-              <Label htmlFor="fechaDesde">Fecha Desde</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <CalendarCheck className="h-4 w-4 text-gray-700" />
+                Fecha Desde:
+              </Label>
               <Input
                 id="fechaDesde"
                 type="date"
                 value={fechaDesde}
                 onChange={(e) => setFechaDesde(e.target.value)}
-                className="w-full"
+                className={`w-full ${inputStyle}`}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="fechaHasta">Fecha Hasta</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <CalendarCheck className="h-4 w-4 text-gray-700" />
+                Fechas Hasta:
+              </Label>
               <Input
                 id="fechaHasta"
                 type="date"
                 value={fechaHasta}
                 onChange={(e) => setFechaHasta(e.target.value)}
-                className="w-full"
+                className={`w-full ${inputStyle}`}
               />
             </div>
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="busqueda">Buscar</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <Search className="h-4 w-4 text-gray-700" />
+                Buscar
+              </Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   id="busqueda"
-                  placeholder="Buscar por OC, razón social, CUIT o lugar..."
+                  placeholder="sadasdadadas"
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
-                  className="pl-10"
+                  className={`w-full ${inputStyle}`}
                 />
               </div>
             </div>
@@ -210,13 +206,13 @@ export default function InformesOC() {
       </Card>
 
       {/* Resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-4 py-0 pb-6">
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <ShoppingCart className="w-5 h-5 text-blue-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-semibold text-gray-600">
                   Total Órdenes
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -226,12 +222,12 @@ export default function InformesOC() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <Calendar className="w-5 h-5 text-green-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-semibold text-gray-600">
                   Promedio por Orden
                 </p>
                 <p className="text-xl font-bold text-gray-900">
@@ -243,12 +239,27 @@ export default function InformesOC() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <MapPin className="w-5 h-5 text-purple-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-semibold text-gray-600">
+                  Total General
+                </p>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatearMoneda(totalGeneral)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="py-0 shadow-lg">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <MapPin className="w-5 h-5 text-purple-600" />
+              <div>
+                <p className="text-sm font-semibold text-gray-600">
                   Total General
                 </p>
                 <p className="text-2xl font-bold text-green-600">
