@@ -85,7 +85,7 @@ const ordenesPagoMock = [
   },
 ];
 
-export default function InformesOrdenesPago() {
+export default function InformesOP() {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");

@@ -6,6 +6,9 @@ import {
   MapPin,
   CalendarCheck,
   Upload,
+  // AlertTriangle,
+  // Clock,
+  // Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -193,7 +196,7 @@ export default function InformesOC() {
               <div className="relative">
                 <Input
                   id="busqueda"
-                  placeholder="sadasdadadas"
+                  placeholder="Nº de OC, razón social, CUIT, lugar de entrega..."
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
                   className={`w-full ${inputStyle}`}
@@ -203,6 +206,32 @@ export default function InformesOC() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Alertas
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center">
+            <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
+            Alertas
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex items-center text-sm">
+              <Clock className="w-4 h-4 text-orange-500 mr-2" />
+              <span>1 orden vence hoy</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <Users className="w-4 h-4 text-blue-500 mr-2" />
+              <span>3 proveedores nuevos</span>
+            </div>
+            <div className="flex items-center text-sm">
+              <MapPin className="w-4 h-4 text-green-500 mr-2" />
+              <span>2 entregas pendientes</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card> */}
 
       {/* Resumen */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-4 pt-3 pb-9">
@@ -339,7 +368,7 @@ export default function InformesOC() {
           </div>
 
           {/* Pie de totales */}
-          <div className=" p-4 flex justify-between border border-t-0">
+          <div className=" p-4 flex justify-between items-center border border-t-0">
             <p className="text-lg font-semibold text-gray-600">
               Total de {ordenesFiltradas.length} Ordenes de compra
             </p>

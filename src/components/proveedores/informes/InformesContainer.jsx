@@ -62,10 +62,8 @@ export default function InformesContainer() {
     <div className="rounded-lg border text-card-foreground shadow-sm mx-6 mt-2 mb-6 ">
       {/* Header Principal */}
       <InformesTitle />
-      {/* <Separator className="my-2" /> */}
 
       {/* Tabs Navigation */}
-
       <InformesTabs
         facturacionMensual={facturacionMensual}
         estadosOrdenes={estadosOrdenes}

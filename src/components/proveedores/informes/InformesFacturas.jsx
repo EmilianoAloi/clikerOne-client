@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Download, FileText, Search } from "lucide-react";
+import {
+  Calculator,
+  CalendarCheck,
+  DollarSign,
+  Upload,
+  FileText,
+  Percent,
+  Search,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -81,6 +89,9 @@ const facturasMock = [
   },
 ];
 
+const inputStyle =
+  "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
+
 export default function InformesFacturas() {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
@@ -117,39 +128,39 @@ export default function InformesFacturas() {
   );
 
   // Función para exportar a Excel
-  const exportarAExcel = () => {
-    const datosParaExcel = facturasFiltradas.map((factura) => ({
-      "Nº de Factura": factura.numeroFactura,
-      "Razón Social": factura.razonSocial,
-      CUIT: factura.cuit,
-      Localidad: factura.localidad,
-      "Valor sin Impuestos": factura.valorSinImpuestos,
-      IVA: factura.iva,
-      "Otros Impuestos": factura.otrosImpuestos,
-      Total: factura.total,
-      Fecha: factura.fecha,
-    }));
+  // const exportarAExcel = () => {
+  //   const datosParaExcel = facturasFiltradas.map((factura) => ({
+  //     "Nº de Factura": factura.numeroFactura,
+  //     "Razón Social": factura.razonSocial,
+  //     CUIT: factura.cuit,
+  //     Localidad: factura.localidad,
+  //     "Valor sin Impuestos": factura.valorSinImpuestos,
+  //     IVA: factura.iva,
+  //     "Otros Impuestos": factura.otrosImpuestos,
+  //     Total: factura.total,
+  //     Fecha: factura.fecha,
+  //   }));
 
-    // Agregar fila de totales
-    datosParaExcel.push({
-      "Nº de Factura": "",
-      "Razón Social": "",
-      CUIT: "",
-      Localidad: "TOTALES:",
-      "Valor sin Impuestos": totales.valorSinImpuestos,
-      IVA: totales.iva,
-      "Otros Impuestos": totales.otrosImpuestos,
-      Total: totales.total,
-      Fecha: "",
-    });
+  //   // Agregar fila de totales
+  //   datosParaExcel.push({
+  //     "Nº de Factura": "",
+  //     "Razón Social": "",
+  //     CUIT: "",
+  //     Localidad: "TOTALES:",
+  //     "Valor sin Impuestos": totales.valorSinImpuestos,
+  //     IVA: totales.iva,
+  //     "Otros Impuestos": totales.otrosImpuestos,
+  //     Total: totales.total,
+  //     Fecha: "",
+  //   });
 
-    // const worksheet = XLSX.utils.json_to_sheet(datosParaExcel);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Informe de Facturas");
+  //   // const worksheet = XLSX.utils.json_to_sheet(datosParaExcel);
+  //   // const workbook = XLSX.utils.book_new();
+  //   // XLSX.utils.book_append_sheet(workbook, worksheet, "Informe de Facturas");
 
-    // const fechaActual = new Date().toISOString().split("T")[0];
-    // XLSX.writeFile(workbook, `informe_facturas_${fechaActual}.xlsx`);
-  };
+  //   // const fechaActual = new Date().toISOString().split("T")[0];
+  //   // XLSX.writeFile(workbook, `informe_facturas_${fechaActual}.xlsx`);
+  // };
 
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat("es-AR", {
@@ -160,67 +171,52 @@ export default function InformesFacturas() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header del Tab */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Informes de Facturas
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">
-            Reporte detallado de facturas de proveedores con totales y
-            exportación
-          </p>
-        </div>
-        <Button
-          onClick={exportarAExcel}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          <Download className="w-4 h-4 mr-2" />
-          Exportar a Excel
-        </Button>
-      </div>
-
+    <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Filtros de Búsqueda</CardTitle>
-          <CardDescription>
-            Utiliza los filtros para refinar tu búsqueda de facturas
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <Card className="p-0 rounded-none border-l-0 border-r-0 border-t-0 border-b-0 shadow-none ">
+        <CardContent className="p-0 ">
+          <div
+            className="grid grid-cols-1 md:grid-cols-4 gap-4  border-0 shadow-none
+         px-4 py-3 pb-6 bg-slate-50 border"
+          >
             <div className="space-y-2">
-              <Label htmlFor="fechaDesde">Fecha Desde</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <CalendarCheck className="h-4 w-4 text-gray-700" />
+                Fecha Desde:
+              </Label>
               <Input
                 id="fechaDesde"
                 type="date"
                 value={fechaDesde}
                 onChange={(e) => setFechaDesde(e.target.value)}
-                className="w-full"
+                className={`w-full ${inputStyle}`}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="fechaHasta">Fecha Hasta</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <CalendarCheck className="h-4 w-4 text-gray-700" />
+                Fechas Hasta:
+              </Label>
               <Input
                 id="fechaHasta"
                 type="date"
                 value={fechaHasta}
                 onChange={(e) => setFechaHasta(e.target.value)}
-                className="w-full"
+                className={`w-full ${inputStyle}`}
               />
             </div>
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="busqueda">Buscar</Label>
+              <Label className="text-sm flex items-center gap-2 text-gray-700 font-semibold mb-1">
+                <Search className="h-4 w-4 text-gray-700" />
+                Buscar
+              </Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   id="busqueda"
-                  placeholder="Buscar por factura, razón social o CUIT..."
+                  placeholder="sadasdadadas"
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
-                  className="pl-10"
+                  className={`w-full ${inputStyle}`}
                 />
               </div>
             </div>
@@ -229,13 +225,14 @@ export default function InformesFacturas() {
       </Card>
 
       {/* Resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-4 pt-3 pb-9">
+        {/* Total Facturas */}
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <FileText className="w-5 h-5 text-blue-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-semibold text-gray-600">
                   Total Facturas
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -245,40 +242,57 @@ export default function InformesFacturas() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        {/* Subtotal */}
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Subtotal</p>
-              <p className="text-xl font-bold text-gray-900">
-                {formatearMoneda(totales.valorSinImpuestos)}
-              </p>
+            <div className="flex items-center space-x-2">
+              <Calculator className="w-5 h-5 text-gray-600" />
+              <div>
+                <p className="text-sm font-semibold text-gray-600">Subtotal</p>
+                <p className="text-xl font-bold text-gray-900">
+                  {formatearMoneda(totales.valorSinImpuestos)}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        {/* IVA Total */}
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
-            <div>
-              <p className="text-sm font-medium text-gray-600">IVA Total</p>
-              <p className="text-xl font-bold text-orange-600">
-                {formatearMoneda(totales.iva)}
-              </p>
+            <div className="flex items-center space-x-2">
+              <Percent className="w-5 h-5 text-orange-600" />
+              <div>
+                <p className="text-sm font-semibold text-gray-600">IVA Total</p>
+                <p className="text-xl font-bold text-orange-600">
+                  {formatearMoneda(totales.iva)}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        {/* Total General */}
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total General</p>
-              <p className="text-2xl font-bold text-green-600">
-                {formatearMoneda(totales.total)}
-              </p>
+            <div className="flex items-center space-x-2">
+              <DollarSign className="w-5 h-5 text-green-600" />
+              <div>
+                <p className="text-sm font-semibold text-gray-600">
+                  Total General
+                </p>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatearMoneda(totales.total)}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Tabla de Facturas */}
-      <Card>
+      <Card className="mx-4 mb-10">
         <CardHeader>
           <CardTitle>Detalle de Facturas</CardTitle>
           <CardDescription>
@@ -287,21 +301,33 @@ export default function InformesFacturas() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <Table>
+            <Table className="border ">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[140px]">Nº de Factura</TableHead>
-                  <TableHead className="min-w-[200px]">Razón Social</TableHead>
-                  <TableHead className="w-[120px]">CUIT</TableHead>
-                  <TableHead className="w-[120px]">Localidad</TableHead>
-                  <TableHead className="text-right w-[130px]">
-                    Valor s/Imp.
+                <TableRow className="bg-gray-50">
+                  <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Nº de Factura
                   </TableHead>
-                  <TableHead className="text-right w-[100px]">IVA</TableHead>
-                  <TableHead className="text-right w-[120px]">
+                  <TableHead className=" py-2 text-left font-semibold text-gray-700 min-w-[200px]">
+                    Razón Social
+                  </TableHead>
+                  <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    CUIT
+                  </TableHead>
+                  <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Localidad
+                  </TableHead>
+                  <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
+                    Subtotal
+                  </TableHead>
+                  <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
+                    IVA
+                  </TableHead>
+                  <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
                     Otros Imp.
                   </TableHead>
-                  <TableHead className="text-right w-[130px]">Total</TableHead>
+                  <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
+                    Total
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

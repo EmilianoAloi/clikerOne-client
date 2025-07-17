@@ -1,23 +1,20 @@
-import React, { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-
-import { Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import InformesOC from "./InformesOC";
+import InformesFacturas from "./InformesFacturas";
+import InformesOP from "./InformesOP";
 
 export default function InformesTabs() {
   const [activeTab, setActiveTab] = useState("informes-oc");
   const tabs = [
     { id: "informes-oc", label: "Informes Ordenes de Compra" },
-    { id: "Informes-facturas", label: "Informes Facturas" },
+    { id: "informes-facturas", label: "Informes Facturas" },
     { id: "precios", label: "Informes Ordenes de Pago" },
   ];
 
   return (
     <div className="">
       {/* Tabs  */}
-
       <div className=" bg-slate-50 border-l-0 border border-r-0 border-b-0 max-w-full border-slate-300   py-3  ">
         <div className="flex space-x-2 w-full px-6 mt-2">
           {tabs.map((tab) => (
@@ -44,84 +41,11 @@ export default function InformesTabs() {
         {/* Tab OC */}
         {activeTab === "informes-oc" && <InformesOC />}
 
-        {activeTab === "informes-facturas" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-80">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Proveedores Activos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-green-600">142</div>
-                <p className="text-sm text-muted-foreground">de 186 totales</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  Cuenta Corriente Promedio
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">$18,450</div>
-                <p className="text-sm text-muted-foreground">saldo promedio</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Facturas Pendientes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-orange-600">45</div>
-                <p className="text-sm text-muted-foreground">
-                  requieren atención
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {/* Tab Facturas */}
+        {activeTab === "informes-facturas" && <InformesFacturas />}
 
-        {activeTab === "informes-op" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-80">
-            <Card>
-              <CardHeader>
-                <CardTitle>Órdenes por Estado</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600" />{" "}
-                    Ejecutadas
-                  </span>
-                  <Badge variant="secondary">45</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-orange-600" /> Pendientes
-                  </span>
-                  <Badge variant="secondary">23</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-red-600" />{" "}
-                    Canceladas
-                  </span>
-                  <Badge variant="secondary">8</Badge>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Tiempo Promedio de Entrega</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">18 días</div>
-                <p className="text-sm text-muted-foreground">
-                  desde emisión hasta entrega
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {/* Tab OP */}
+        {activeTab === "informes-op" && <InformesOP />}
       </div>
     </div>
   );
