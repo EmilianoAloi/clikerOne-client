@@ -105,7 +105,7 @@ export default function ProveedoresTable() {
             Historial de Precios
           </Button>
           <Button
-            onClick={() => navigate("/proveedores/estadisticas")}
+            onClick={() => navigate("/proveedores/informes")}
             className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
           >
             <PieChart className="h-4 w-4" />
