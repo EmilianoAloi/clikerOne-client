@@ -272,52 +272,67 @@ export default function InformesOC() {
       </div>
 
       {/* Tabla OC */}
-      <Card>
+      <Card className="mx-4 mb-10">
         <CardHeader>
-          <CardTitle>Detalle de Órdenes de Compra</CardTitle>
+          <CardTitle>Detalle de Ordenes de Compra</CardTitle>
           <CardDescription>Listado completo con entrega y pago</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="">
           <div className="overflow-x-auto">
-            <Table>
+            <Table className="border ">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[120px]">Nº de OC</TableHead>
-                  <TableHead className="min-w-[200px]">Razón Social</TableHead>
-                  <TableHead className="w-[120px]">CUIT</TableHead>
-                  <TableHead className="w-[120px]">Fecha Entrega</TableHead>
-                  <TableHead className="w-[120px]">Condición Pago</TableHead>
-                  <TableHead className="min-w-[200px]">Lugar Entrega</TableHead>
-                  <TableHead className="text-right w-[130px]">
+                <TableRow className="bg-gray-50">
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Nº de OC
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 min-w-[200px]">
+                    Razón Social
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    CUIT
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Fecha Entrega
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Condición Pago
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 min-w-[200px]">
+                    Lugar Entrega
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-right font-semibold text-gray-700 w-[130px]">
                     Total Orden
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {ordenesFiltradas.map((orden, idx) => (
-                  <TableRow key={idx} className="hover:bg-gray-50">
-                    <TableCell className="font-mono text-sm font-medium">
+                  <TableRow
+                    key={idx}
+                    className="hover:bg-gray-50 transition-colors "
+                  >
+                    <TableCell className="px-3 py-4 font-mono text-sm font-medium">
                       {orden.numeroOC}
                     </TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="px-3 py-4 font-medium">
                       {orden.razonSocial}
                     </TableCell>
-                    <TableCell className="font-mono text-sm">
+                    <TableCell className="px-3 py-4 font-mono text-sm">
                       {orden.cuit}
                     </TableCell>
-                    <TableCell className="font-mono text-sm">
+                    <TableCell className="px-3 py-4 font-mono text-sm">
                       {formatearFecha(orden.fechaEntrega)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-3 py-4">
                       <Badge variant="outline" className="text-xs">
                         {orden.condicionPago}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm flex items-center space-x-1">
+                    <TableCell className="px-3 py-4 text-sm flex items-center space-x-1">
                       <MapPin className="w-3 h-3 text-gray-400" />
                       <span>{orden.lugarEntrega}</span>
                     </TableCell>
-                    <TableCell className="text-right font-mono font-semibold">
+                    <TableCell className="px-3 py-4 text-right font-mono font-semibold">
                       {formatearMoneda(orden.total)}
                     </TableCell>
                   </TableRow>
@@ -327,14 +342,14 @@ export default function InformesOC() {
           </div>
 
           {/* Pie de totales */}
-          <Separator className="my-4" />
-          <div className="bg-gray-50 p-4 rounded-lg flex justify-between">
-            <p className="text-sm text-gray-600">
-              Total de {ordenesFiltradas.length} orden
-              {ordenesFiltradas.length !== 1 ? "es" : ""}
+          <div className=" p-4 flex justify-between border border-t-0">
+            <p className="text-lg font-semibold text-gray-600">
+              Total de {ordenesFiltradas.length} Ordenes de compra
             </p>
             <div className="text-right">
-              <p className="text-sm text-gray-600">Total General</p>
+              <p className="text-sm font-semibold text-gray-600">
+                Total General
+              </p>
               <p className="text-2xl font-bold text-green-600">
                 {formatearMoneda(totalGeneral)}
               </p>

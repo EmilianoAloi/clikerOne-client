@@ -40,8 +40,8 @@ export default function InformesTabs({
               onClick={() => setActiveTab(tab.id)}
               className={` w-full px-6 py-2 text-sm  rounded transition-all duration-200 relative w-46 cursor-pointer ${
                 activeTab === tab.id
-                  ? "bg-blue-500 text-white shadow-xl border-2 border-blue-300"
-                  : "bg-slate-200 text-gray-600 border-2 border-slate-300 hover:bg-slate-400 hover:text-white hover:border-slate-400 font-semibold"
+                  ? "bg-slate-700 text-white shadow-xl border-2 border-slate-700"
+                  : "bg-slate-200 text-gray-600 border-2 border-slate-300  font-semibold"
               }`}
             >
               {tab.label}
