@@ -296,7 +296,7 @@ export default function InformesFacturas() {
         <CardHeader>
           <CardTitle>Detalle de Facturas</CardTitle>
           <CardDescription>
-            Listado completo de facturas con información detallada de impuestos
+            Listado completo de facturas con información detallada de impuestos.
           </CardDescription>
         </CardHeader>
         <CardContent>

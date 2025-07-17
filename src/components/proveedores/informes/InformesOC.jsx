@@ -301,7 +301,9 @@ export default function InformesOC() {
       <Card className="mx-4 mb-10">
         <CardHeader>
           <CardTitle>Detalle de Ordenes de Compra</CardTitle>
-          <CardDescription>Listado completo con entrega y pago</CardDescription>
+          <CardDescription>
+            Listado completo con entrega y pago.
+          </CardDescription>
         </CardHeader>
         <CardContent className="">
           <div className="overflow-x-auto">

@@ -72,7 +72,7 @@ export default function BadgeEstado({ estado, className = "", children }) {
         };
       case "anulada":
         return {
-          color: "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100",
+          color: "bg-red-50 text-red-700 border-red-200 hover:bg-red-100",
           label: "Anulada",
           icon: XCircle,
         };
