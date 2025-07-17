@@ -370,7 +370,7 @@ export default function InformesOC() {
           {/* Pie de totales */}
           <div className=" p-4 flex justify-between items-center border border-t-0">
             <p className="text-lg font-semibold text-gray-600">
-              Total de {ordenesFiltradas.length} Ordenes de compra
+              {ordenesFiltradas.length} Ordenes de compra
             </p>
             <div className="text-right">
               <p className="text-sm font-semibold text-gray-600">
@@ -393,7 +393,7 @@ export default function InformesOC() {
 
           <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
             <Upload className="h-4 w-4" />
-            Exportar Informe Excel
+            Exportar - Informe OC
           </Button>
         </CardContent>
       </Card>

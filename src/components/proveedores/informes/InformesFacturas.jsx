@@ -7,6 +7,7 @@ import {
   FileText,
   Percent,
   Search,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +28,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 // import * as XLSX from "xlsx";
 
 // Datos de ejemplo para las facturas
@@ -304,7 +304,7 @@ export default function InformesFacturas() {
             <Table className="border ">
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
+                  <TableHead className=" px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     Nº de Factura
                   </TableHead>
                   <TableHead className=" py-2 text-left font-semibold text-gray-700 min-w-[200px]">
@@ -326,14 +326,17 @@ export default function InformesFacturas() {
                     Otros Imp.
                   </TableHead>
                   <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
-                    Total
+                    Total Factura
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {facturasFiltradas.map((factura, i) => (
-                  <TableRow key={i} className="hover:bg-gray-50">
-                    <TableCell className="font-mono text-sm">
+                  <TableRow
+                    key={i}
+                    className="hover:bg-gray-50 transition-colors "
+                  >
+                    <TableCell className="px-3 py-4 font-mono text-sm font-medium">
                       {factura.numeroFactura}
                     </TableCell>
                     <TableCell className="font-medium">
@@ -366,35 +369,34 @@ export default function InformesFacturas() {
           </div>
 
           {/* Totales al pie */}
-          <Separator className="my-4" />
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Subtotal General</p>
-                <p className="text-lg font-bold">
-                  {formatearMoneda(totales.valorSinImpuestos)}
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">IVA Total</p>
-                <p className="text-lg font-bold text-orange-600">
-                  {formatearMoneda(totales.iva)}
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Otros Impuestos</p>
-                <p className="text-lg font-bold">
-                  {formatearMoneda(totales.otrosImpuestos)}
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Total con IVA</p>
-                <p className="text-xl font-bold text-green-600">
-                  {formatearMoneda(totales.total)}
-                </p>
-              </div>
+          {/* Pie de totales */}
+          <div className=" p-4 flex justify-between items-center border border-t-0">
+            <p className="text-lg font-semibold text-gray-600">
+              {facturasFiltradas.length} Facturas
+            </p>
+            <div className="text-right">
+              <p className="text-sm font-semibold text-gray-600">
+                Total General
+              </p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatearMoneda(totales.total)}
+              </p>
             </div>
           </div>
+
+          {facturasFiltradas.length === 0 && (
+            <div className="text-center py-8">
+              <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500">
+                No se encontraron órdenes con los filtros aplicados
+              </p>
+            </div>
+          )}
+
+          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
+            <Upload className="h-4 w-4" />
+            Exportar - Informe Facturas
+          </Button>
 
           {facturasFiltradas.length === 0 && (
             <div className="text-center py-8">
