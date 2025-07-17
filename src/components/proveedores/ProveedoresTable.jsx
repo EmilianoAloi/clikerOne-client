@@ -104,8 +104,16 @@ export default function ProveedoresTable() {
             <LineChart className="h-4 w-4" />
             Historial de Precios
           </Button>
+          <Button
+            onClick={() => navigate("/proveedores/estadisticas")}
+            className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
+          >
+            <PieChart className="h-4 w-4" />
+            Ver Informes
+          </Button>
 
           <Button
+            disabled
             onClick={() => navigate("/proveedores/estadisticas")}
             className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
           >

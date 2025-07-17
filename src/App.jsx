@@ -37,6 +37,7 @@ import PrivateRoute from "./components/login/PrivateRoute";
 import ProveedoresHistorialPreciosPage from "./page/Proveedores/Historialprecios/ProveedoresHistorialPreciosPage";
 import HistorialPreciosGlobalContainer from "./page/Proveedores/Historialprecios/HistorialPreciosGlobalContainer";
 import EstadisticasPage from "./page/Proveedores/estadisticas/EstadisticasPage";
+import InformesPage from "./page/Proveedores/informes/InformesPage";
 
 // Función para redirigir
 function RedirectToProveedor() {
@@ -52,6 +53,10 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+
+      {/* Catch-all para rutas no definidas */}
+      {/* <Route path="*" element={<Navigate to="/proveedores" replace />} /> */}
+
       <Routes>
         {/* Auth: Login y redirección */}
         <Route
@@ -180,6 +185,9 @@ function App() {
             element={<EstadisticasPage />}
           />
 
+          {/* Informes */}
+          <Route path="/proveedores/informes" element={<InformesPage />} />
+
           {/* Redirecciones específicas */}
           <Route
             path="/proveedores/:id/ordencompra"
@@ -202,12 +210,6 @@ function App() {
             element={<RedirectToProveedor />}
           />
         </Route>
-
-        {/* Catch-all para rutas no definidas */}
-        {/* <Route
-                    path="*"
-                    element={<Navigate to="/proveedores" replace />}
-                  /> */}
       </Routes>
     </BrowserRouter>
   );
