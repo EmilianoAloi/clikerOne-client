@@ -6,6 +6,7 @@ import {
   Calendar,
   MapPin,
   CalendarCheck,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -364,6 +365,11 @@ export default function InformesOC() {
               </p>
             </div>
           )}
+
+          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
+            <Upload className="h-4 w-4" />
+            Exportar Informe Excel
+          </Button>
         </CardContent>
       </Card>
     </div>
