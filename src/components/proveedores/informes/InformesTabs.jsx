@@ -9,7 +9,7 @@ export default function InformesTabs() {
   const tabs = [
     { id: "informes-oc", label: "Informes Ordenes de Compra" },
     { id: "informes-facturas", label: "Informes Facturas" },
-    { id: "precios", label: "Informes Ordenes de Pago" },
+    { id: "informes-op", label: "Informes Ordenes de Pago" },
   ];
 
   return (

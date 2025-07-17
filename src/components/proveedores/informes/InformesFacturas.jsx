@@ -213,7 +213,7 @@ export default function InformesFacturas() {
               <div className="relative">
                 <Input
                   id="busqueda"
-                  placeholder="sadasdadadas"
+                  placeholder="Nº de Factura, Razón social o CUIT..."
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
                   className={`w-full ${inputStyle}`}
