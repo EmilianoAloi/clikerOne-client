@@ -2,25 +2,11 @@ import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
-import {
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  Package,
-  Eye,
-  CheckCircle,
-  AlertTriangle,
-} from "lucide-react";
+import { Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import InformesOC from "./InformesOC";
 
-export default function InformesTabs({
-  facturacionMensual,
-  estadosOrdenes,
-  tendenciaPrecios,
-  topArticulos,
-}) {
+export default function InformesTabs() {
   const [activeTab, setActiveTab] = useState("informes-oc");
   const tabs = [
     { id: "informes-oc", label: "Informes Ordenes de Compra" },

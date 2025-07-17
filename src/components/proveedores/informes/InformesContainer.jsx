@@ -1,15 +1,7 @@
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, ShoppingCart, CreditCard } from "lucide-react";
-import InformesOC from "./InformesOC";
-import InformesFacturas from "./InformesFacturas";
-import InformesOP from "./InformesOP";
 import InformesTitle from "./InformesTitle";
-import { Separator } from "@/components/ui/separator";
 import InformesTabs from "./InformesTabs";
 
 export default function InformesContainer() {
-  const [activeTab, setActiveTab] = useState("facturas");
   // 3. datos de tabs
   const facturacionMensual = [
     { mes: "Ene", monto: 180000, ordenes: 45 },
