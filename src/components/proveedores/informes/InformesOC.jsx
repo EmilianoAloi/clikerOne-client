@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Download,
   ShoppingCart,
   Search,
   Calendar,
@@ -27,7 +26,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 // import * as XLSX from "xlsx";
 
 const inputStyle =
@@ -207,7 +205,7 @@ export default function InformesOC() {
       </Card>
 
       {/* Resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-4 py-0 pb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-4 pt-3 pb-9">
         <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -246,16 +244,14 @@ export default function InformesOC() {
               <MapPin className="w-5 h-5 text-purple-600" />
               <div>
                 <p className="text-sm font-semibold text-gray-600">
-                  Total General
+                  Ordenes Entregadas
                 </p>
-                <p className="text-2xl font-bold text-green-600">
-                  {formatearMoneda(totalGeneral)}
-                </p>
+                <p className="text-2xl font-bold ">16</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="py-0 shadow-lg">
+        <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <MapPin className="w-5 h-5 text-purple-600" />
