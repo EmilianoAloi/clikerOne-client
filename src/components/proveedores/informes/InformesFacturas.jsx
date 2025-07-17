@@ -378,7 +378,7 @@ export default function InformesFacturas() {
               <p className="text-sm font-semibold text-gray-600">
                 Total General
               </p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-red-600">
                 {formatearMoneda(totales.total)}
               </p>
             </div>

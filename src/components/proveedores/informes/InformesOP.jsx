@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Download,
+  Upload,
   CreditCard,
   Search,
   CheckCircle,
@@ -28,7 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import BadgeEstado from "@/components/ui/badge-custom";
 
@@ -136,41 +135,6 @@ export default function InformesOP() {
     }
   );
 
-  const exportarAExcel = () => {
-    const datosParaExcel = ordenesFiltradas.map((orden) => ({
-      "Nº de OP": orden.numeroOP,
-      "Razón Social": orden.razonSocial,
-      CUIT: orden.cuit,
-      Estado: orden.estado,
-      "Fecha de Ejecución": orden.fechaEjecucion,
-      "Fecha de Pago": orden.fechaPago || "Sin pagar",
-      "Total de la OP": orden.total,
-      "Fecha de Creación": orden.fechaCreacion,
-    }));
-
-    datosParaExcel.push({
-      "Nº de OP": "",
-      "Razón Social": "",
-      CUIT: "",
-      Estado: "",
-      "Fecha de Ejecución": "",
-      "Fecha de Pago": "TOTAL GENERAL:",
-      "Total de la OP": totales.total,
-      "Fecha de Creación": "",
-    });
-
-    // const worksheet = XLSX.utils.json_to_sheet(datosParaExcel);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(
-    //   workbook,
-    //   worksheet,
-    //   "Informe Órdenes de Pago"
-    // );
-
-    // const fechaActual = new Date().toISOString().split("T")[0];
-    // XLSX.writeFile(workbook, `informe_ordenes_pago_${fechaActual}.xlsx`);
-  };
-
   const formatearMoneda = (valor) =>
     new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -188,37 +152,7 @@ export default function InformesOP() {
   };
 
   const getEstadoBadge = (estado) => {
-    const configuraciones = {
-      Ejecutada: {
-        className: "bg-green-100 text-green-800 border-green-200",
-        icon: CheckCircle,
-      },
-      Pendiente: {
-        className: "bg-yellow-100 text-yellow-800 border-yellow-200",
-        icon: Clock,
-      },
-      Cancelada: {
-        className: "bg-red-100 text-red-800 border-red-200",
-        icon: XCircle,
-      },
-    };
-
-    const config = configuraciones[estado] || {
-      className: "bg-gray-100 text-gray-800 border-gray-200",
-      icon: Clock,
-    };
-    const IconComponent = config.icon;
-
-    return (
-      // <Badge
-      //   variant="outline"
-      //   className={`${config.className} flex items-center gap-1`}
-      // >
-      //   <IconComponent className="w-3 h-3" />
-      //   {estado}
-      // </Badge>
-      <BadgeEstado estado={estado} className={"w-full"} />
-    );
+    return <BadgeEstado estado={estado} className={"w-full"} />;
   };
 
   return (
@@ -352,8 +286,8 @@ export default function InformesOP() {
           <div className="overflow-x-auto">
             <Table className="border ">
               <TableHeader>
-                <TableRow>
-                  <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
+                <TableRow className="bg-gray-50">
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     Nº de OP
                   </TableHead>
                   <TableHead className=" py-2 text-left font-semibold text-gray-700 min-w-[200px]">
@@ -376,8 +310,11 @@ export default function InformesOP() {
               </TableHeader>
               <TableBody>
                 {ordenesFiltradas.map((orden, i) => (
-                  <TableRow key={i} className="hover:bg-gray-50">
-                    <TableCell className="font-mono text-sm font-medium">
+                  <TableRow
+                    key={i}
+                    className="hover:bg-gray-50 transition-colors "
+                  >
+                    <TableCell className="px-3 py-4 font-mono text-sm font-medium">
                       {orden.numeroOP}
                     </TableCell>
                     <TableCell className="font-medium">
@@ -408,52 +345,19 @@ export default function InformesOP() {
             </Table>
           </div>
 
-          <Separator className="my-4" />
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600 mb-2">
-                  Resumen por Estado:
-                </p>
-                <div className="space-y-1 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-600">
-                      Ejecutadas ({totales.countEjecutadas}):
-                    </span>
-                    <span className="font-mono font-semibold text-green-600">
-                      {formatearMoneda(totales.ejecutadas)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-yellow-600">
-                      Pendientes ({totales.countPendientes}):
-                    </span>
-                    <span className="font-mono font-semibold text-yellow-600">
-                      {formatearMoneda(totales.pendientes)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-red-600">
-                      Canceladas ({totales.countCanceladas}):
-                    </span>
-                    <span className="font-mono font-semibold text-red-600">
-                      {formatearMoneda(totales.canceladas)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-600">
-                  Total de {ordenesFiltradas.length} orden
-                  {ordenesFiltradas.length !== 1 ? "es" : ""} de pago
-                </p>
-                <p className="text-2xl font-bold text-blue-600 mt-2">
-                  {formatearMoneda(totales.total)}
-                </p>
-              </div>
+          <div className=" p-4 flex justify-between items-center border border-t-0">
+            <p className="text-lg font-semibold text-gray-600">
+              {ordenesFiltradas.length} Ordenes de pago
+            </p>
+            <div className="text-right">
+              <p className="text-sm font-semibold text-gray-600">
+                Total General
+              </p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatearMoneda(totales.total)}
+              </p>
             </div>
           </div>
-
           {ordenesFiltradas.length === 0 && (
             <div className="text-center py-8">
               <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -462,6 +366,10 @@ export default function InformesOP() {
               </p>
             </div>
           )}
+          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
+            <Upload className="h-4 w-4" />
+            Exportar - Informe OP
+          </Button>
         </CardContent>
       </Card>
     </div>
