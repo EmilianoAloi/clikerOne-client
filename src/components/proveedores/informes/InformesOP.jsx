@@ -28,7 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
 import BadgeEstado from "@/components/ui/badge-custom";
 
 // import * as XLSX from "xlsx";
