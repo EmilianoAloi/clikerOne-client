@@ -92,12 +92,9 @@ export default function InformesOC({ compras }) {
       minimumFractionDigits: 2,
     }).format(valor);
 
-  const formatearFecha = (fecha) =>
-    new Date(fecha).toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+  const formatearFecha = (fecha) => {
+    return fecha.split("-").reverse().join("/"); // "YYYY-MM-DD" → "DD/MM/YYYY"
+  };
 
   const getEstadoBadge = (estado) => {
     return <BadgeEstado estado={estado} className={"w-full"} />;
