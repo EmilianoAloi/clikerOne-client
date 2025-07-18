@@ -4,6 +4,7 @@ import InformesOC from "./InformesOC";
 import InformesFacturas from "./InformesFacturas";
 import InformesOP from "./InformesOP";
 import { useCompras } from "@/queries/proveedores/compras/useCompras";
+import { useFacturas } from "@/queries/proveedores/factura/useFacturas";
 
 export default function InformesTabs() {
   const [activeTab, setActiveTab] = useState("informes-oc");
@@ -19,18 +20,30 @@ export default function InformesTabs() {
     isError: errorCompras,
   } = useCompras();
 
-  // Estados de carga/error
-  if (loadingCompras) {
-    return <div className="p-4 text-center">Cargando órdenes de compra…</div>;
+  const {
+    data: facturas,
+    isLoading: loadingFacturas,
+    isError: errorFacturas,
+  } = useFacturas();
+
+  // carga/errores por tab
+  if (activeTab === "informes-oc") {
+    if (loadingCompras) return <div className="p-4 text-center">Cargando…</div>;
+    if (errorCompras)
+      return (
+        <div className="p-4 text-center text-red-600">Error al cargar OCs</div>
+      );
   }
-  if (errorCompras) {
-    return (
-      <div className="p-4 text-center text-red-600">
-        Error al cargar órdenes de compra
-      </div>
-    );
+  if (activeTab === "informes-facturas") {
+    if (loadingFacturas)
+      return <div className="p-4 text-center">Cargando...</div>;
+    if (errorFacturas)
+      return (
+        <div className="p-4 text-center text-red-600">
+          Error al cargar facturas
+        </div>
+      );
   }
-  console.log("informes tabs  compras", compras);
   return (
     <div className="">
       {/* Tabs  */}
@@ -61,10 +74,12 @@ export default function InformesTabs() {
         {activeTab === "informes-oc" && <InformesOC compras={compras} />}
 
         {/* Tab Facturas */}
-        {activeTab === "informes-facturas" && <InformesFacturas />}
+        {activeTab === "informes-facturas" && (
+          <InformesFacturas facturas={facturas} />
+        )}
 
         {/* Tab OP */}
-        {activeTab === "informes-op" && <InformesOP />}
+        {activeTab === "informes-op" && <InformesOP pagos={pagos} />}
       </div>
     </div>
   );

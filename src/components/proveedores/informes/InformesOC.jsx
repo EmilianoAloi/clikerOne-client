@@ -37,6 +37,7 @@ export default function InformesOC({ compras }) {
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
+  // 1) Normalizar datos
   const datos = useMemo(
     () =>
       compras.map((o) => ({
@@ -45,7 +46,7 @@ export default function InformesOC({ compras }) {
         razonSocial: o.proveedor?.nombre ?? "",
         cuit: o.proveedor?.cuit ?? "",
         fechaCreacion: o.fecha_creado,
-        fechaEntrega: o.fecha_entrega, // "YYYY-MM-DD"
+        fechaEntrega: o.fecha_entrega,
         condicionPago: o.condicion_pago,
         lugarEntrega: o.lugar_entrega,
         total: parseFloat(o.monto_total) || 0,
@@ -76,9 +77,9 @@ export default function InformesOC({ compras }) {
   }, [datos, fechaDesde, fechaHasta, busqueda]);
 
   // 3) Cuenta cuantas entregadas
-  const entregadas = useMemo(
-    () => datos.filter((o) => o.estado === "entregada").length,
-    [datos]
+  const entregadasFiltradas = useMemo(
+    () => ordenesFiltradas.filter((o) => o.estado === "entregada").length,
+    [ordenesFiltradas]
   );
 
   // Calcular total general
@@ -190,7 +191,7 @@ export default function InformesOC({ compras }) {
               <ShoppingCart className="w-5 h-5 text-blue-600" />
               <div>
                 <p className="text-sm font-semibold text-gray-600">
-                  Total Órdenes
+                  Total Ordenes
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
                   {ordenesFiltradas.length}
@@ -224,7 +225,7 @@ export default function InformesOC({ compras }) {
                 <p className="text-sm font-semibold text-gray-600">
                   Ordenes Entregadas
                 </p>
-                <p className="text-2xl font-bold ">{entregadas}</p>
+                <p className="text-2xl font-bold ">{entregadasFiltradas}</p>
               </div>
             </div>
           </CardContent>

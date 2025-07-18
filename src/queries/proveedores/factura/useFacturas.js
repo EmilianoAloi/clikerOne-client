@@ -1,14 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryFetchWithAuth } from "@/lib/utils";
 
-export const useFactura = (idProveedor) =>
+// Trae todas las facturas
+export const useFacturas = () =>
   useQuery({
     queryKey: [
-      `${
-        import.meta.env.VITE_API_URL
-      }/api/proveedores/facturas/proveedor/${idProveedor}`,
+      `${import.meta.env.VITE_API_URL}/api/proveedores/facturas/allFacturas`,
     ],
     queryFn: queryFetchWithAuth,
-    enabled: !!idProveedor,
     select: (data) => data || [],
   });

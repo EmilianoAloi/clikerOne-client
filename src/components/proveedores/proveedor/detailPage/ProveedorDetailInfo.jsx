@@ -11,7 +11,6 @@ import {
   MapPin,
   Landmark,
   Percent,
-  Calendar1,
   Pencil,
 } from "lucide-react";
 
@@ -31,20 +30,20 @@ const ProveedorDetailInfo = ({ proveedor }) => {
   if (!proveedor) {
     return <div className="p-6">Proveedor no encontrado.</div>;
   }
-  function esFechaMovimientoValida(fecha) {
-    if (!fecha) return false;
-    const lower = fecha.toLowerCase?.() || fecha;
-    const fechasInvalidas = [
-      "31/12/999",
-      "9999-12-31",
-      "0000-00-00",
-      "null",
-      "undefined",
-    ];
-    if (fechasInvalidas.includes(lower)) return false;
-    const dateObj = new Date(fecha);
-    return !isNaN(dateObj.getTime()) && dateObj.getFullYear() > 1900;
-  }
+  // function esFechaMovimientoValida(fecha) {
+  //   if (!fecha) return false;
+  //   const lower = fecha.toLowerCase?.() || fecha;
+  //   const fechasInvalidas = [
+  //     "31/12/999",
+  //     "9999-12-31",
+  //     "0000-00-00",
+  //     "null",
+  //     "undefined",
+  //   ];
+  //   if (fechasInvalidas.includes(lower)) return false;
+  //   const dateObj = new Date(fecha);
+  //   return !isNaN(dateObj.getTime()) && dateObj.getFullYear() > 1900;
+  // }
 
   function mostrarIvaPredeterminado(iva) {
     if (iva === null || iva === undefined || iva === "" || isNaN(Number(iva))) {
@@ -81,6 +80,11 @@ const ProveedorDetailInfo = ({ proveedor }) => {
           icon={MapPin}
           label="Dirección"
           value={proveedor.direccion}
+        />
+        <ProveedorDetailItem
+          icon={MapPin}
+          label="Provincia"
+          value={proveedor.provincia}
         />
         <ProveedorDetailItem
           icon={Globe}
@@ -121,7 +125,7 @@ const ProveedorDetailInfo = ({ proveedor }) => {
           label="IVA predeterminado"
           value={mostrarIvaPredeterminado(proveedor.iva_predeterminado)}
         />
-        <ProveedorDetailItem
+        {/* <ProveedorDetailItem
           icon={Calendar1}
           label="Último movimiento"
           value={
@@ -136,7 +140,7 @@ const ProveedorDetailInfo = ({ proveedor }) => {
                 )
               : "Sin movimientos"
           }
-        />
+        /> */}
       </div>
 
       <Separator className="mt-7 mb-4" />

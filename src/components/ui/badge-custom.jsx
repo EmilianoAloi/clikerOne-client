@@ -36,6 +36,13 @@ export default function BadgeEstado({ estado, className = "", children }) {
           label: "Pagada",
           icon: CheckCircle,
         };
+      case "entregada":
+        return {
+          color:
+            "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
+          label: "Entregada",
+          icon: CheckCircle,
+        };
       case "completo":
         return {
           color:
@@ -95,6 +102,13 @@ export default function BadgeEstado({ estado, className = "", children }) {
             "bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100",
           label: "En discusión",
           icon: MessageSquare,
+        };
+      case "en_proceso":
+        return {
+          color:
+            "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+          label: "En Proceso",
+          icon: Circle,
         };
       case "sobrada":
         return {

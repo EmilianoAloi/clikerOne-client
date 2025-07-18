@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Calculator,
   CalendarCheck,
@@ -28,88 +28,114 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-// import * as XLSX from "xlsx";
+import BadgeEstado from "@/components/ui/badge-custom";
 
 // Datos de ejemplo para las facturas
-const facturasMock = [
-  {
-    numeroFactura: "0001-00000123",
-    razonSocial: "Plaswag SA",
-    cuit: "30-12345678-9",
-    localidad: "Buenos Aires",
-    valorSinImpuestos: 85000.0,
-    iva: 17850.0,
-    otrosImpuestos: 2550.0,
-    total: 105400.0,
-    fecha: "2025-01-15",
-  },
-  {
-    numeroFactura: "0001-00000124",
-    razonSocial: "Distribuidora Norte SRL",
-    cuit: "30-87654321-0",
-    localidad: "Rosario",
-    valorSinImpuestos: 45000.0,
-    iva: 9450.0,
-    otrosImpuestos: 1350.0,
-    total: 55800.0,
-    fecha: "2025-01-14",
-  },
-  {
-    numeroFactura: "0001-00000125",
-    razonSocial: "Materiales del Sur SA",
-    cuit: "30-11223344-5",
-    localidad: "Córdoba",
-    valorSinImpuestos: 120000.0,
-    iva: 25200.0,
-    otrosImpuestos: 3600.0,
-    total: 148800.0,
-    fecha: "2025-01-13",
-  },
-  {
-    numeroFactura: "0001-00000126",
-    razonSocial: "Comercial Este Ltda",
-    cuit: "30-99887766-1",
-    localidad: "La Plata",
-    valorSinImpuestos: 67500.0,
-    iva: 14175.0,
-    otrosImpuestos: 2025.0,
-    total: 83700.0,
-    fecha: "2025-01-12",
-  },
-  {
-    numeroFactura: "0001-00000127",
-    razonSocial: "Insumos Industriales SA",
-    cuit: "30-55443322-7",
-    localidad: "Mendoza",
-    valorSinImpuestos: 95000.0,
-    iva: 19950.0,
-    otrosImpuestos: 2850.0,
-    total: 117800.0,
-    fecha: "2025-01-11",
-  },
-];
-
+// const facturasMock = [
+//   {
+//     numeroFactura: "0001-00000123",
+//     razonSocial: "Plaswag SA",
+//     cuit: "30-12345678-9",
+//     localidad: "Buenos Aires",
+//     valorSinImpuestos: 85000.0,
+//     iva: 17850.0,
+//     otrosImpuestos: 2550.0,
+//     total: 105400.0,
+//     fecha: "2025-01-15",
+//   },
+//   {
+//     numeroFactura: "0001-00000124",
+//     razonSocial: "Distribuidora Norte SRL",
+//     cuit: "30-87654321-0",
+//     localidad: "Rosario",
+//     valorSinImpuestos: 45000.0,
+//     iva: 9450.0,
+//     otrosImpuestos: 1350.0,
+//     total: 55800.0,
+//     fecha: "2025-01-14",
+//   },
+//   {
+//     numeroFactura: "0001-00000125",
+//     razonSocial: "Materiales del Sur SA",
+//     cuit: "30-11223344-5",
+//     localidad: "Córdoba",
+//     valorSinImpuestos: 120000.0,
+//     iva: 25200.0,
+//     otrosImpuestos: 3600.0,
+//     total: 148800.0,
+//     fecha: "2025-01-13",
+//   },
+//   {
+//     numeroFactura: "0001-00000126",
+//     razonSocial: "Comercial Este Ltda",
+//     cuit: "30-99887766-1",
+//     localidad: "La Plata",
+//     valorSinImpuestos: 67500.0,
+//     iva: 14175.0,
+//     otrosImpuestos: 2025.0,
+//     total: 83700.0,
+//     fecha: "2025-01-12",
+//   },
+//   {
+//     numeroFactura: "0001-00000127",
+//     razonSocial: "Insumos Industriales SA",
+//     cuit: "30-55443322-7",
+//     localidad: "Mendoza",
+//     valorSinImpuestos: 95000.0,
+//     iva: 19950.0,
+//     otrosImpuestos: 2850.0,
+//     total: 117800.0,
+//     fecha: "2025-01-11",
+//   },
+// ];
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
-export default function InformesFacturas() {
+export default function InformesFacturas({ facturas }) {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // Filtrar facturas según los criterios
-  const facturasFiltradas = facturasMock.filter((factura) => {
-    const cumpleFecha =
-      (!fechaDesde || factura.fecha >= fechaDesde) &&
-      (!fechaHasta || factura.fecha <= fechaHasta);
-    const cumpleBusqueda =
-      !busqueda ||
-      factura.numeroFactura.toLowerCase().includes(busqueda.toLowerCase()) ||
-      factura.razonSocial.toLowerCase().includes(busqueda.toLowerCase()) ||
-      factura.cuit.includes(busqueda);
+  const datos = useMemo(
+    () =>
+      facturas.map((f) => ({
+        id: f.id_factura,
+        numeroFactura: f.numero_factura,
+        razonSocial: f.proveedor_razon_social,
+        cuit: f.proveedor_cuit,
+        provincia: f.provincia,
+        fecha: f.fecha,
+        valorSinImpuestos: f.subtotal,
+        iva: f.iva,
+        otrosImpuestos: f.otros_impuestos_valor,
+        total: f.total,
+        estado: f.estado_saldo,
+      })),
+    [facturas]
+  );
 
-    return cumpleFecha && cumpleBusqueda;
-  });
+  // Filtrar facturas según los criterios
+  const facturasFiltradas = useMemo(() => {
+    const desde = fechaDesde ? new Date(fechaDesde) : null;
+    const hasta = fechaHasta ? new Date(fechaHasta) : null;
+    const txt = busqueda.trim().toLowerCase();
+    return datos.filter((d) => {
+      const fc = new Date(d.fecha);
+      const okFecha = (!desde || fc >= desde) && (!hasta || fc <= hasta);
+      const okTexto =
+        !txt ||
+        d.numero.toLowerCase().includes(txt) ||
+        d.proveedor.toLowerCase().includes(txt) ||
+        d.cuit.includes(txt);
+      return okFecha && okTexto;
+    });
+  }, [datos, fechaDesde, fechaHasta, busqueda]);
+
+  const totalCount = facturasFiltradas.length;
+  const totalSum = useMemo(
+    () => facturasFiltradas.reduce((sum, f) => sum + f.total, 0),
+    [facturasFiltradas]
+  );
 
   // Calcular totales
   const totales = facturasFiltradas.reduce(
@@ -127,41 +153,6 @@ export default function InformesFacturas() {
     }
   );
 
-  // Función para exportar a Excel
-  // const exportarAExcel = () => {
-  //   const datosParaExcel = facturasFiltradas.map((factura) => ({
-  //     "Nº de Factura": factura.numeroFactura,
-  //     "Razón Social": factura.razonSocial,
-  //     CUIT: factura.cuit,
-  //     Localidad: factura.localidad,
-  //     "Valor sin Impuestos": factura.valorSinImpuestos,
-  //     IVA: factura.iva,
-  //     "Otros Impuestos": factura.otrosImpuestos,
-  //     Total: factura.total,
-  //     Fecha: factura.fecha,
-  //   }));
-
-  //   // Agregar fila de totales
-  //   datosParaExcel.push({
-  //     "Nº de Factura": "",
-  //     "Razón Social": "",
-  //     CUIT: "",
-  //     Localidad: "TOTALES:",
-  //     "Valor sin Impuestos": totales.valorSinImpuestos,
-  //     IVA: totales.iva,
-  //     "Otros Impuestos": totales.otrosImpuestos,
-  //     Total: totales.total,
-  //     Fecha: "",
-  //   });
-
-  //   // const worksheet = XLSX.utils.json_to_sheet(datosParaExcel);
-  //   // const workbook = XLSX.utils.book_new();
-  //   // XLSX.utils.book_append_sheet(workbook, worksheet, "Informe de Facturas");
-
-  //   // const fechaActual = new Date().toISOString().split("T")[0];
-  //   // XLSX.writeFile(workbook, `informe_facturas_${fechaActual}.xlsx`);
-  // };
-
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -170,6 +161,9 @@ export default function InformesFacturas() {
     }).format(valor);
   };
 
+  const getEstadoBadge = (estado) => {
+    return <BadgeEstado estado={estado} className={"w-full"} />;
+  };
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
@@ -262,10 +256,10 @@ export default function InformesFacturas() {
         <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <Percent className="w-5 h-5 text-orange-600" />
+              <Percent className="w-5 h-5 text-gray-600" />
               <div>
                 <p className="text-sm font-semibold text-gray-600">IVA Total</p>
-                <p className="text-xl font-bold text-orange-600">
+                <p className="text-xl font-bold ">
                   {formatearMoneda(totales.iva)}
                 </p>
               </div>
@@ -277,12 +271,12 @@ export default function InformesFacturas() {
         <Card className="py-1 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <DollarSign className="w-5 h-5 text-green-600" />
+              <DollarSign className="w-5 h-5 text-red-600" />
               <div>
                 <p className="text-sm font-semibold text-gray-600">
                   Total General
                 </p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-2xl font-bold text-red-600">
                   {formatearMoneda(totales.total)}
                 </p>
               </div>
@@ -313,8 +307,14 @@ export default function InformesFacturas() {
                   <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
                     CUIT
                   </TableHead>
+                  <TableHead className=" py-2 text-left font-semibold text-gray-700 max-w-[200px]">
+                    Provincia
+                  </TableHead>
                   <TableHead className=" py-2 text-left font-semibold text-gray-700 w-[120px]">
-                    Localidad
+                    Fecha Creación
+                  </TableHead>
+                  <TableHead className="ps-4 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Estado
                   </TableHead>
                   <TableHead className=" py-2 text-right font-semibold text-gray-700 w-[120px]">
                     Subtotal
@@ -345,10 +345,14 @@ export default function InformesFacturas() {
                     <TableCell className="font-mono text-sm">
                       {factura.cuit}
                     </TableCell>
+                    <TableCell className=" text-sm">
+                      {factura.provincia}
+                    </TableCell>
+                    <TableCell className=" text-sm">{factura.fecha}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs">
-                        {factura.localidad}
-                      </Badge>
+                      <TableCell className="">
+                        {getEstadoBadge(factura.estado)}
+                      </TableCell>
                     </TableCell>
                     <TableCell className="text-right font-mono">
                       {formatearMoneda(factura.valorSinImpuestos)}
