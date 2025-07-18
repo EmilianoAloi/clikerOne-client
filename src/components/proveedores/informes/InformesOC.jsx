@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ShoppingCart,
   Search,
@@ -27,64 +27,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import BadgeEstado from "@/components/ui/badge-custom";
-// import * as XLSX from "xlsx";
 
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
-
-// Datos de ejemplo para las órdenes de compra
-// const ordenesMock = [
-//   {
-//     numeroOC: "OC-2025-001",
-//     razonSocial: "Plaswag SA",
-//     cuit: "30-12345678-9",
-//     fechaEntrega: "2025-02-15",
-//     condicionPago: "30 días",
-//     lugarEntrega: "Depósito Central - Buenos Aires",
-//     total: 125400.0,
-//     estado: "Pendiente",
-//   },
-//   {
-//     numeroOC: "OC-2025-002",
-//     razonSocial: "Distribuidora Norte SRL",
-//     cuit: "30-87654321-0",
-//     fechaEntrega: "2025-02-20",
-//     condicionPago: "Contado",
-//     lugarEntrega: "Sucursal Rosario",
-//     total: 67800.0,
-//     estado: "Confirmada",
-//   },
-//   {
-//     numeroOC: "OC-2025-003",
-//     razonSocial: "Materiales del Sur SA",
-//     cuit: "30-11223344-5",
-//     fechaEntrega: "2025-02-18",
-//     condicionPago: "60 días",
-//     lugarEntrega: "Planta Industrial - Córdoba",
-//     total: 189600.0,
-//     estado: "En proceso",
-//   },
-//   {
-//     numeroOC: "OC-2025-004",
-//     razonSocial: "Comercial Este Ltda",
-//     cuit: "30-99887766-1",
-//     fechaEntrega: "2025-02-25",
-//     condicionPago: "15 días",
-//     lugarEntrega: "Almacén La Plata",
-//     total: 94200.0,
-//     estado: "Pendiente",
-//   },
-//   {
-//     numeroOC: "OC-2025-005",
-//     razonSocial: "Insumos Industriales SA",
-//     cuit: "30-55443322-7",
-//     fechaEntrega: "2025-02-22",
-//     condicionPago: "45 días",
-//     lugarEntrega: "Centro de Distribución - Mendoza",
-//     total: 156800.0,
-//     estado: "Confirmada",
-//   },
-// ];
 
 export default function InformesOC({ compras }) {
   console.log(compras);
@@ -92,77 +37,52 @@ export default function InformesOC({ compras }) {
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // 1) Normalizar nombres:
-  const datos = compras.map((o) => ({
-    id: o.id_orden_compra,
-    numeroOC: o.id_orden_compra,
-    razonSocial: o.proveedor?.nombre,
-    cuit: o.proveedor?.cuit,
-    fechaEntrega: o.fecha_entrega,
-    condicionPago: o.condicion_pago,
-    lugarEntrega: o.lugar_entrega,
-    total: parseFloat(o.monto_total),
-    estado: o.estado_compra,
-  }));
+  const datos = useMemo(
+    () =>
+      compras.map((o) => ({
+        id: o.id_orden_compra,
+        numeroOC: o.id_orden_compra.toString(),
+        razonSocial: o.proveedor?.nombre ?? "",
+        cuit: o.proveedor?.cuit ?? "",
+        fechaCreacion: o.fecha_creado,
+        fechaEntrega: o.fecha_entrega, // "YYYY-MM-DD"
+        condicionPago: o.condicion_pago,
+        lugarEntrega: o.lugar_entrega,
+        total: parseFloat(o.monto_total) || 0,
+        estado: o.estado_compra,
+      })),
+    [compras]
+  );
 
-  // 2) Filtrar órdenes
-  const ordenesFiltradas = datos.filter((o) => {
-    const okFecha =
-      (!fechaDesde || o.fechaEntrega >= fechaDesde) &&
-      (!fechaHasta || o.fechaEntrega <= fechaHasta);
-    const txt = busqueda.toLowerCase();
-    const okTexto =
-      !busqueda ||
-      o.numeroOC.toLowerCase().includes(txt) ||
-      o.razonSocial.toLowerCase().includes(txt) ||
-      o.cuit.includes(busqueda) ||
-      o.lugarEntrega.toLowerCase().includes(txt);
-    return okFecha && okTexto;
-  });
+  // 2) Filtra usando fechaCreacion
+  const ordenesFiltradas = useMemo(() => {
+    const desde = fechaDesde ? new Date(fechaDesde) : null;
+    const hasta = fechaHasta ? new Date(fechaHasta) : null;
+    const txt = busqueda.trim().toLowerCase();
 
-  // OC entregadas
-  let entregadas;
-  if (datos.estado === "entregada") {
-    entregadas = datos.estado;
-  } else {
-    entregadas = 0;
-  }
+    return datos.filter((o) => {
+      const fecha = new Date(o.fechaCreacion); // ← uso fechaCreacion
+      const okFecha = (!desde || fecha >= desde) && (!hasta || fecha <= hasta);
 
-  const getEstadoBadge = (estado) => {
-    return <BadgeEstado estado={estado} className={"w-full"} />;
-  };
+      const okTexto =
+        !txt ||
+        o.numeroOC.toLowerCase().includes(txt) ||
+        o.razonSocial.toLowerCase().includes(txt) ||
+        o.cuit.includes(txt) ||
+        o.lugarEntrega.toLowerCase().includes(txt);
+
+      return okFecha && okTexto;
+    });
+  }, [datos, fechaDesde, fechaHasta, busqueda]);
+
+  // 3) Cuenta cuantas entregadas
+  const entregadas = useMemo(
+    () => datos.filter((o) => o.estado === "entregada").length,
+    [datos]
+  );
 
   // Calcular total general
   const totalGeneral = ordenesFiltradas.reduce((sum, o) => sum + o.total, 0);
-
-  // Exportar a Excel
-  // const exportarAExcel = () => {
-  //   // const datosParaExcel = ordenesFiltradas.map((orden) => ({
-  //   //   "Nº de OC": orden.numeroOC,
-  //   //   "Razón Social": orden.razonSocial,
-  //   //   CUIT: orden.cuit,
-  //   //   "Fecha de Entrega": orden.fechaEntrega,
-  //   //   "Condición de Pago": orden.condicionPago,
-  //   //   "Lugar de Entrega": orden.lugarEntrega,
-  //   //   "Total de la Orden": orden.total,
-  //   //   Estado: orden.estado,
-  //   // }));
-  //   // datosParaExcel.push({
-  //   //   "Nº de OC": "",
-  //   //   "Razón Social": "",
-  //   //   CUIT: "",
-  //   //   "Fecha de Entrega": "",
-  //   //   "Condición de Pago": "",
-  //   //   "Lugar de Entrega": "TOTAL GENERAL:",
-  //   //   "Total de la Orden": totalGeneral,
-  //   //   Estado: "",
-  //   // });
-  //   // const ws = XLSX.utils.json_to_sheet(datosParaExcel);
-  //   // const wb = XLSX.utils.book_new();
-  //   // XLSX.utils.book_append_sheet(wb, ws, "Informe OC");
-  //   // const fechaHoy = new Date().toISOString().split("T")[0];
-  //   // XLSX.writeFile(wb, `informe_ordenes_compra_${fechaHoy}.xlsx`);
-  // };
 
   const formatearMoneda = (valor) =>
     new Intl.NumberFormat("es-AR", {
@@ -177,6 +97,10 @@ export default function InformesOC({ compras }) {
       month: "2-digit",
       year: "numeric",
     });
+
+  const getEstadoBadge = (estado) => {
+    return <BadgeEstado estado={estado} className={"w-full"} />;
+  };
 
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
@@ -344,6 +268,9 @@ export default function InformesOC({ compras }) {
                   <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     CUIT
                   </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[140px]">
+                    Fecha Creación
+                  </TableHead>
                   <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     Fecha Entrega
                   </TableHead>
@@ -376,7 +303,10 @@ export default function InformesOC({ compras }) {
                     <TableCell className="px-3 py-4 font-mono text-sm">
                       {orden.cuit}
                     </TableCell>
-                    <TableCell className="px-3 py-4 font-mono text-sm">
+                    <TableCell className="px-3 py-4 text-sm">
+                      {formatearFecha(orden.fechaCreacion)}
+                    </TableCell>
+                    <TableCell className="px-3 py-4  text-sm">
                       {formatearFecha(orden.fechaEntrega)}
                     </TableCell>
                     <TableCell className="px-3 py-4">

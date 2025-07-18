@@ -134,6 +134,7 @@ export default function OCForm({ proveedor, compra, modo }) {
         });
         toast.success("Orden modificada correctamente");
       } else {
+        // eslint-disable-next-line no-unused-vars
         json = await createCompraMutation.mutateAsync(dataToSend);
         toast.success("Orden creada correctamente");
       }
