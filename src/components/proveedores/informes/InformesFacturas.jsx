@@ -27,67 +27,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import BadgeEstado from "@/components/ui/badge-custom";
 
-// Datos de ejemplo para las facturas
-// const facturasMock = [
-//   {
-//     numeroFactura: "0001-00000123",
-//     razonSocial: "Plaswag SA",
-//     cuit: "30-12345678-9",
-//     localidad: "Buenos Aires",
-//     valorSinImpuestos: 85000.0,
-//     iva: 17850.0,
-//     otrosImpuestos: 2550.0,
-//     total: 105400.0,
-//     fecha: "2025-01-15",
-//   },
-//   {
-//     numeroFactura: "0001-00000124",
-//     razonSocial: "Distribuidora Norte SRL",
-//     cuit: "30-87654321-0",
-//     localidad: "Rosario",
-//     valorSinImpuestos: 45000.0,
-//     iva: 9450.0,
-//     otrosImpuestos: 1350.0,
-//     total: 55800.0,
-//     fecha: "2025-01-14",
-//   },
-//   {
-//     numeroFactura: "0001-00000125",
-//     razonSocial: "Materiales del Sur SA",
-//     cuit: "30-11223344-5",
-//     localidad: "Córdoba",
-//     valorSinImpuestos: 120000.0,
-//     iva: 25200.0,
-//     otrosImpuestos: 3600.0,
-//     total: 148800.0,
-//     fecha: "2025-01-13",
-//   },
-//   {
-//     numeroFactura: "0001-00000126",
-//     razonSocial: "Comercial Este Ltda",
-//     cuit: "30-99887766-1",
-//     localidad: "La Plata",
-//     valorSinImpuestos: 67500.0,
-//     iva: 14175.0,
-//     otrosImpuestos: 2025.0,
-//     total: 83700.0,
-//     fecha: "2025-01-12",
-//   },
-//   {
-//     numeroFactura: "0001-00000127",
-//     razonSocial: "Insumos Industriales SA",
-//     cuit: "30-55443322-7",
-//     localidad: "Mendoza",
-//     valorSinImpuestos: 95000.0,
-//     iva: 19950.0,
-//     otrosImpuestos: 2850.0,
-//     total: 117800.0,
-//     fecha: "2025-01-11",
-//   },
-// ];
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
@@ -114,28 +55,29 @@ export default function InformesFacturas({ facturas }) {
     [facturas]
   );
 
-  // Filtrar facturas según los criterios
+  // 2) Filtra usando fechaCreacion
   const facturasFiltradas = useMemo(() => {
-    const desde = fechaDesde ? new Date(fechaDesde) : null;
-    const hasta = fechaHasta ? new Date(fechaHasta) : null;
+    const desdeStr = fechaDesde?.trim() || null;
+    const hastaStr = fechaHasta?.trim() || null;
     const txt = busqueda.trim().toLowerCase();
-    return datos.filter((d) => {
-      const fc = new Date(d.fecha);
-      const okFecha = (!desde || fc >= desde) && (!hasta || fc <= hasta);
+
+    return datos.filter((o) => {
+      const fechaStr = o.fecha.slice(0, 10); // Asume formato 'YYYY-MM-DD' seguro
+
+      const okFecha =
+        (!desdeStr || fechaStr >= desdeStr) &&
+        (!hastaStr || fechaStr <= hastaStr);
+
       const okTexto =
         !txt ||
-        d.numero.toLowerCase().includes(txt) ||
-        d.proveedor.toLowerCase().includes(txt) ||
-        d.cuit.includes(txt);
+        o.numeroFactura.toLowerCase().includes(txt) ||
+        o.razonSocial.toLowerCase().includes(txt) ||
+        o.cuit.includes(txt) ||
+        o.provincia?.toLowerCase().includes(txt);
+
       return okFecha && okTexto;
     });
   }, [datos, fechaDesde, fechaHasta, busqueda]);
-
-  const totalCount = facturasFiltradas.length;
-  const totalSum = useMemo(
-    () => facturasFiltradas.reduce((sum, f) => sum + f.total, 0),
-    [facturasFiltradas]
-  );
 
   // Calcular totales
   const totales = facturasFiltradas.reduce(
@@ -152,6 +94,10 @@ export default function InformesFacturas({ facturas }) {
       total: 0,
     }
   );
+
+  const formatearFecha = (fecha) => {
+    return fecha.split("-").reverse().join("/"); // "YYYY-MM-DD" → "DD/MM/YYYY"
+  };
 
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat("es-AR", {
@@ -348,7 +294,9 @@ export default function InformesFacturas({ facturas }) {
                     <TableCell className=" text-sm">
                       {factura.provincia}
                     </TableCell>
-                    <TableCell className=" text-sm">{factura.fecha}</TableCell>
+                    <TableCell className=" text-sm">
+                      {formatearFecha(factura.fecha)}
+                    </TableCell>
                     <TableCell>
                       <TableCell className="">
                         {getEstadoBadge(factura.estado)}

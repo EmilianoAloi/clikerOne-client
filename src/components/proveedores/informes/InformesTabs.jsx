@@ -79,7 +79,11 @@ export default function InformesTabs() {
         )}
 
         {/* Tab OP */}
-        {activeTab === "informes-op" && <InformesOP pagos={pagos} />}
+        {activeTab === "informes-op" && (
+          <InformesOP
+          // pagos={pagos}
+          />
+        )}
       </div>
     </div>
   );
