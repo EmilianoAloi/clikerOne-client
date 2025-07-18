@@ -26,6 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import BadgeEstado from "@/components/ui/badge-custom";
 // import * as XLSX from "xlsx";
 
 const inputStyle =
@@ -126,6 +127,10 @@ export default function InformesOC({ compras }) {
   } else {
     entregadas = 0;
   }
+
+  const getEstadoBadge = (estado) => {
+    return <BadgeEstado estado={estado} className={"w-full"} />;
+  };
 
   // Calcular total general
   const totalGeneral = ordenesFiltradas.reduce((sum, o) => sum + o.total, 0);
@@ -327,7 +332,7 @@ export default function InformesOC({ compras }) {
         </CardHeader>
         <CardContent className="">
           <div className="overflow-x-auto">
-            <Table className="border ">
+            <Table className="border">
               <TableHeader>
                 <TableRow className="bg-gray-50">
                   <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
@@ -341,6 +346,9 @@ export default function InformesOC({ compras }) {
                   </TableHead>
                   <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     Fecha Entrega
+                  </TableHead>
+                  <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
+                    Estado
                   </TableHead>
                   <TableHead className="px-3 py-2 text-left font-semibold text-gray-700 w-[120px]">
                     Condición Pago
@@ -357,7 +365,7 @@ export default function InformesOC({ compras }) {
                 {ordenesFiltradas.map((orden) => (
                   <TableRow
                     key={orden.id}
-                    className="hover:bg-gray-50 transition-colors "
+                    className="hover:bg-gray-50 transition-colors"
                   >
                     <TableCell className="px-3 py-4 font-mono text-sm font-medium">
                       {orden.numeroOC}
@@ -372,7 +380,10 @@ export default function InformesOC({ compras }) {
                       {formatearFecha(orden.fechaEntrega)}
                     </TableCell>
                     <TableCell className="px-3 py-4">
-                      <Badge variant="outline" className="text-xs">
+                      {getEstadoBadge(orden.estado)}
+                    </TableCell>
+                    <TableCell className="px-3 py-4">
+                      <Badge variant="outline" className="text-xs px-3">
                         {orden.condicionPago}
                       </Badge>
                     </TableCell>

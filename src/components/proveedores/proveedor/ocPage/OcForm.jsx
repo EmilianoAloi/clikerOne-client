@@ -18,7 +18,7 @@ import { useUpdateCompra } from "@/queries/proveedores/compras/useUpdateCompra";
 export default function OCForm({ proveedor, compra, modo }) {
   const isEdit = modo === "editar";
   const navigate = useNavigate();
-  const ivaPredeterminado = proveedor?.iva_predeterminado?.toString() || "21";
+  const ivaPredeterminado = proveedor?.iva_predeterminado?.toString();
 
   const createCompraMutation = useCreateCompra();
   const updateCompraMutation = useUpdateCompra();
@@ -132,18 +132,11 @@ export default function OCForm({ proveedor, compra, modo }) {
           id: compra.id_orden_compra,
           data: dataToSend,
         });
-        // eslint-disable-next-line no-unused-vars
+        toast.success("Orden modificada correctamente");
+      } else {
         json = await createCompraMutation.mutateAsync(dataToSend);
+        toast.success("Orden creada correctamente");
       }
-
-      toast.success(
-        isEdit
-          ? "Orden modificada correctamente"
-          : "Orden creada correctamente",
-        {
-          // description: `N° OC: ${json.id_orden_compra}`,
-        }
-      );
 
       navigate(`/proveedores/${data.id_proveedor}`, {
         state: { refresh: true },
@@ -153,9 +146,7 @@ export default function OCForm({ proveedor, compra, modo }) {
         isEdit
           ? "No se pudo modificar la orden de compra"
           : "No se pudo crear la orden de compra",
-        {
-          description: error?.message || "Error desconocido",
-        }
+        { description: error?.message || "Error desconocido" }
       );
     }
   }
