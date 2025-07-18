@@ -132,7 +132,7 @@ export default function OCForm({ proveedor, compra, modo }) {
           id: compra.id_orden_compra,
           data: dataToSend,
         });
-      } else {
+        // eslint-disable-next-line no-unused-vars
         json = await createCompraMutation.mutateAsync(dataToSend);
       }
 
@@ -141,7 +141,7 @@ export default function OCForm({ proveedor, compra, modo }) {
           ? "Orden modificada correctamente"
           : "Orden creada correctamente",
         {
-          description: `N° OC: ${json.id_orden_compra}`,
+          // description: `N° OC: ${json.id_orden_compra}`,
         }
       );
 

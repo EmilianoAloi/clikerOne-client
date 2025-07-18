@@ -6,9 +6,6 @@ import {
   MapPin,
   CalendarCheck,
   Upload,
-  // AlertTriangle,
-  // Clock,
-  // Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,76 +32,91 @@ const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
 // Datos de ejemplo para las órdenes de compra
-const ordenesMock = [
-  {
-    numeroOC: "OC-2025-001",
-    razonSocial: "Plaswag SA",
-    cuit: "30-12345678-9",
-    fechaEntrega: "2025-02-15",
-    condicionPago: "30 días",
-    lugarEntrega: "Depósito Central - Buenos Aires",
-    total: 125400.0,
-    estado: "Pendiente",
-  },
-  {
-    numeroOC: "OC-2025-002",
-    razonSocial: "Distribuidora Norte SRL",
-    cuit: "30-87654321-0",
-    fechaEntrega: "2025-02-20",
-    condicionPago: "Contado",
-    lugarEntrega: "Sucursal Rosario",
-    total: 67800.0,
-    estado: "Confirmada",
-  },
-  {
-    numeroOC: "OC-2025-003",
-    razonSocial: "Materiales del Sur SA",
-    cuit: "30-11223344-5",
-    fechaEntrega: "2025-02-18",
-    condicionPago: "60 días",
-    lugarEntrega: "Planta Industrial - Córdoba",
-    total: 189600.0,
-    estado: "En proceso",
-  },
-  {
-    numeroOC: "OC-2025-004",
-    razonSocial: "Comercial Este Ltda",
-    cuit: "30-99887766-1",
-    fechaEntrega: "2025-02-25",
-    condicionPago: "15 días",
-    lugarEntrega: "Almacén La Plata",
-    total: 94200.0,
-    estado: "Pendiente",
-  },
-  {
-    numeroOC: "OC-2025-005",
-    razonSocial: "Insumos Industriales SA",
-    cuit: "30-55443322-7",
-    fechaEntrega: "2025-02-22",
-    condicionPago: "45 días",
-    lugarEntrega: "Centro de Distribución - Mendoza",
-    total: 156800.0,
-    estado: "Confirmada",
-  },
-];
+// const ordenesMock = [
+//   {
+//     numeroOC: "OC-2025-001",
+//     razonSocial: "Plaswag SA",
+//     cuit: "30-12345678-9",
+//     fechaEntrega: "2025-02-15",
+//     condicionPago: "30 días",
+//     lugarEntrega: "Depósito Central - Buenos Aires",
+//     total: 125400.0,
+//     estado: "Pendiente",
+//   },
+//   {
+//     numeroOC: "OC-2025-002",
+//     razonSocial: "Distribuidora Norte SRL",
+//     cuit: "30-87654321-0",
+//     fechaEntrega: "2025-02-20",
+//     condicionPago: "Contado",
+//     lugarEntrega: "Sucursal Rosario",
+//     total: 67800.0,
+//     estado: "Confirmada",
+//   },
+//   {
+//     numeroOC: "OC-2025-003",
+//     razonSocial: "Materiales del Sur SA",
+//     cuit: "30-11223344-5",
+//     fechaEntrega: "2025-02-18",
+//     condicionPago: "60 días",
+//     lugarEntrega: "Planta Industrial - Córdoba",
+//     total: 189600.0,
+//     estado: "En proceso",
+//   },
+//   {
+//     numeroOC: "OC-2025-004",
+//     razonSocial: "Comercial Este Ltda",
+//     cuit: "30-99887766-1",
+//     fechaEntrega: "2025-02-25",
+//     condicionPago: "15 días",
+//     lugarEntrega: "Almacén La Plata",
+//     total: 94200.0,
+//     estado: "Pendiente",
+//   },
+//   {
+//     numeroOC: "OC-2025-005",
+//     razonSocial: "Insumos Industriales SA",
+//     cuit: "30-55443322-7",
+//     fechaEntrega: "2025-02-22",
+//     condicionPago: "45 días",
+//     lugarEntrega: "Centro de Distribución - Mendoza",
+//     total: 156800.0,
+//     estado: "Confirmada",
+//   },
+// ];
 
-export default function InformesOC() {
+export default function InformesOC({ compras }) {
+  console.log(compras);
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // Filtrar órdenes según criterios
-  const ordenesFiltradas = ordenesMock.filter((orden) => {
-    const cumpleFecha =
-      (!fechaDesde || orden.fechaEntrega >= fechaDesde) &&
-      (!fechaHasta || orden.fechaEntrega <= fechaHasta);
-    const cumpleBusqueda =
+  // 1) Normalizar nombres:
+  const datos = compras.map((o) => ({
+    id: o.id_orden_compra,
+    numeroOC: o.id_orden_compra,
+    razonSocial: o.proveedor?.nombre,
+    cuit: o.proveedor?.cuit,
+    fechaEntrega: o.fecha_entrega,
+    condicionPago: o.condicion_pago,
+    lugarEntrega: o.lugar_entrega,
+    total: parseFloat(o.monto_total),
+    estado: o.estado_compra,
+  }));
+
+  // 2) Filtrar órdenes
+  const ordenesFiltradas = datos.filter((o) => {
+    const okFecha =
+      (!fechaDesde || o.fechaEntrega >= fechaDesde) &&
+      (!fechaHasta || o.fechaEntrega <= fechaHasta);
+    const txt = busqueda.toLowerCase();
+    const okTexto =
       !busqueda ||
-      orden.numeroOC.toLowerCase().includes(busqueda.toLowerCase()) ||
-      orden.razonSocial.toLowerCase().includes(busqueda.toLowerCase()) ||
-      orden.cuit.includes(busqueda) ||
-      orden.lugarEntrega.toLowerCase().includes(busqueda.toLowerCase());
-    return cumpleFecha && cumpleBusqueda;
+      o.numeroOC.toLowerCase().includes(txt) ||
+      o.razonSocial.toLowerCase().includes(txt) ||
+      o.cuit.includes(busqueda) ||
+      o.lugarEntrega.toLowerCase().includes(txt);
+    return okFecha && okTexto;
   });
 
   // Calcular total general
@@ -334,9 +346,9 @@ export default function InformesOC() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {ordenesFiltradas.map((orden, idx) => (
+                {ordenesFiltradas.map((orden) => (
                   <TableRow
-                    key={idx}
+                    key={orden.id}
                     className="hover:bg-gray-50 transition-colors "
                   >
                     <TableCell className="px-3 py-4 font-mono text-sm font-medium">

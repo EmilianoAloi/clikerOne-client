@@ -3,6 +3,7 @@ import { useState } from "react";
 import InformesOC from "./InformesOC";
 import InformesFacturas from "./InformesFacturas";
 import InformesOP from "./InformesOP";
+import { useCompras } from "@/queries/proveedores/compras/useCompras";
 
 export default function InformesTabs() {
   const [activeTab, setActiveTab] = useState("informes-oc");
@@ -12,6 +13,24 @@ export default function InformesTabs() {
     { id: "informes-op", label: "Informes Ordenes de Pago" },
   ];
 
+  const {
+    data: compras,
+    isLoading: loadingCompras,
+    isError: errorCompras,
+  } = useCompras();
+
+  // Estados de carga/error
+  if (loadingCompras) {
+    return <div className="p-4 text-center">Cargando órdenes de compra…</div>;
+  }
+  if (errorCompras) {
+    return (
+      <div className="p-4 text-center text-red-600">
+        Error al cargar órdenes de compra
+      </div>
+    );
+  }
+  console.log("informes tabs  compras", compras);
   return (
     <div className="">
       {/* Tabs  */}
@@ -39,7 +58,7 @@ export default function InformesTabs() {
       {/* Contenido */}
       <div className="space-y-6">
         {/* Tab OC */}
-        {activeTab === "informes-oc" && <InformesOC />}
+        {activeTab === "informes-oc" && <InformesOC compras={compras} />}
 
         {/* Tab Facturas */}
         {activeTab === "informes-facturas" && <InformesFacturas />}
