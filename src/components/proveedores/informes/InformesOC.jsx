@@ -119,6 +119,14 @@ export default function InformesOC({ compras }) {
     return okFecha && okTexto;
   });
 
+  // OC entregadas
+  let entregadas;
+  if (datos.estado === "entregada") {
+    entregadas = datos.estado;
+  } else {
+    entregadas = 0;
+  }
+
   // Calcular total general
   const totalGeneral = ordenesFiltradas.reduce((sum, o) => sum + o.total, 0);
 
@@ -287,7 +295,7 @@ export default function InformesOC({ compras }) {
                 <p className="text-sm font-semibold text-gray-600">
                   Ordenes Entregadas
                 </p>
-                <p className="text-2xl font-bold ">16</p>
+                <p className="text-2xl font-bold ">{entregadas}</p>
               </div>
             </div>
           </CardContent>
