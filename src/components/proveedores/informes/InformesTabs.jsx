@@ -5,6 +5,7 @@ import InformesFacturas from "./InformesFacturas";
 import InformesOP from "./InformesOP";
 import { useCompras } from "@/queries/proveedores/compras/useCompras";
 import { useFacturas } from "@/queries/proveedores/factura/useFacturas";
+import { useOPs } from "@/queries/proveedores/pagos/useOPs";
 
 export default function InformesTabs() {
   const [activeTab, setActiveTab] = useState("informes-oc");
@@ -26,24 +27,29 @@ export default function InformesTabs() {
     isError: errorFacturas,
   } = useFacturas();
 
+  const {
+    data: pagos,
+    isLoading: loadingPagos,
+    isError: errorPagos,
+  } = useOPs();
+
   // carga/errores por tab
   if (activeTab === "informes-oc") {
-    if (loadingCompras) return <div className="p-4 text-center">Cargando…</div>;
+    if (loadingCompras) return <div className="p-4 ">Cargando…</div>;
     if (errorCompras)
-      return (
-        <div className="p-4 text-center text-red-600">Error al cargar OCs</div>
-      );
+      return <div className="p-4 text-red-600">Error al cargar OCs</div>;
   }
   if (activeTab === "informes-facturas") {
-    if (loadingFacturas)
-      return <div className="p-4 text-center">Cargando...</div>;
+    if (loadingFacturas) return <div className="p-4">Cargando...</div>;
     if (errorFacturas)
-      return (
-        <div className="p-4 text-center text-red-600">
-          Error al cargar facturas
-        </div>
-      );
+      return <div className="p-4 text-red-600">Error al cargar facturas</div>;
   }
+  if (activeTab === "informes-op") {
+    if (loadingPagos) return <div className="p-4 ">Cargando…</div>;
+    if (errorPagos)
+      return <div className="p-4 text-red-600">Error al cargar OPs</div>;
+  }
+
   return (
     <div className="">
       {/* Tabs  */}
@@ -79,11 +85,7 @@ export default function InformesTabs() {
         )}
 
         {/* Tab OP */}
-        {activeTab === "informes-op" && (
-          <InformesOP
-          // pagos={pagos}
-          />
-        )}
+        {activeTab === "informes-op" && <InformesOP pagos={pagos} />}
       </div>
     </div>
   );

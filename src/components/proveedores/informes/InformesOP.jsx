@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Upload,
   CreditCard,
@@ -30,108 +30,86 @@ import {
 } from "@/components/ui/table";
 import BadgeEstado from "@/components/ui/badge-custom";
 
-// import * as XLSX from "xlsx";
-
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
 
-// Datos de ejemplo para las órdenes de pago
-const ordenesPagoMock = [
-  {
-    numeroOP: "OP-78",
-    razonSocial: "Iele SA",
-    cuit: "30-12345678-9",
-    estado: "ejecutada",
-    fechaEjecucion: "2025-01-16",
-    fechaPago: "2025-01-16",
-    total: 200.0,
-    fechaCreacion: "2025-01-15",
-  },
-  {
-    numeroOP: "OP-79",
-    razonSocial: "Plaswag SA",
-    cuit: "30-87654321-0",
-    estado: "pendiente",
-    fechaEjecucion: "2025-01-20",
-    fechaPago: null,
-    total: 125400.0,
-    fechaCreacion: "2025-01-17",
-  },
-  {
-    numeroOP: "OP-80",
-    razonSocial: "Distribuidora Norte SRL",
-    cuit: "30-11223344-5",
-    estado: "ejecutada",
-    fechaEjecucion: "2025-01-18",
-    fechaPago: "2025-01-18",
-    total: 67800.0,
-    fechaCreacion: "2025-01-16",
-  },
-  {
-    numeroOP: "OP-81",
-    razonSocial: "Materiales del Sur SA",
-    cuit: "30-99887766-1",
-    estado: "anulada",
-    fechaEjecucion: "2025-01-22",
-    fechaPago: null,
-    total: 89600.0,
-    fechaCreacion: "2025-01-18",
-  },
-  {
-    numeroOP: "OP-82",
-    razonSocial: "Comercial Este Ltda",
-    cuit: "30-55443322-7",
-    estado: "ejecutada",
-    fechaEjecucion: "2025-01-19",
-    fechaPago: "2025-01-19",
-    total: 94200.0,
-    fechaCreacion: "2025-01-17",
-  },
-];
-
-export default function InformesOP() {
+export default function InformesOP({ pagos }) {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  const ordenesFiltradas = ordenesPagoMock.filter((orden) => {
-    const cumpleFecha =
-      (!fechaDesde || orden.fechaEjecucion >= fechaDesde) &&
-      (!fechaHasta || orden.fechaEjecucion <= fechaHasta);
-    const cumpleBusqueda =
-      !busqueda ||
-      orden.numeroOP.toLowerCase().includes(busqueda.toLowerCase()) ||
-      orden.razonSocial.toLowerCase().includes(busqueda.toLowerCase()) ||
-      orden.cuit.includes(busqueda) ||
-      orden.estado.toLowerCase().includes(busqueda.toLowerCase());
+  const datos = useMemo(
+    () =>
+      pagos.map((pago) => ({
+        id: pago.id_pago,
+        numeroOP: pago.numero_pago?.toString() || pago.id_pago.toString(),
+        razonSocial: pago.proveedor?.nombre ?? "",
+        cuit: pago.proveedor?.cuit ?? "",
+        estado: pago.estado_pago.toLowerCase(),
+        fechaEjecucion: pago.fecha, // ISO: "YYYY-MM-DD"
+        fechaPago: pago.fecha_acreditacion, // ISO o null
+        total: parseFloat(pago.monto_total) || 0,
+      })),
+    [pagos]
+  );
 
-    return cumpleFecha && cumpleBusqueda;
-  });
+  // 2) Filtrar por fechas y búsqueda
+  const ordenesFiltradas = useMemo(() => {
+    const desde = fechaDesde || null;
+    const hasta = fechaHasta || null;
+    const txt = busqueda.trim().toLowerCase();
 
-  const totales = ordenesFiltradas.reduce(
-    (acc, orden) => {
-      acc.total += orden.total;
-      if (orden.estado === "Ejecutada") {
-        acc.ejecutadas += orden.total;
-        acc.countEjecutadas += 1;
-      } else if (orden.estado === "Pendiente") {
-        acc.pendientes += orden.total;
-        acc.countPendientes += 1;
-      } else if (orden.estado === "Cancelada") {
-        acc.canceladas += orden.total;
-        acc.countCanceladas += 1;
-      }
-      return acc;
-    },
-    {
-      total: 0,
-      ejecutadas: 0,
-      pendientes: 0,
-      canceladas: 0,
-      countEjecutadas: 0,
-      countPendientes: 0,
-      countCanceladas: 0,
-    }
+    return datos.filter((o) => {
+      const okFecha =
+        (!desde || o.fechaEjecucion >= desde) &&
+        (!hasta || o.fechaEjecucion <= hasta);
+
+      const okTexto =
+        !txt ||
+        o.numeroOP.toLowerCase().includes(txt) ||
+        o.razonSocial.toLowerCase().includes(txt) ||
+        o.cuit.includes(txt) ||
+        o.estado.includes(txt);
+
+      return okFecha && okTexto;
+    });
+  }, [datos, fechaDesde, fechaHasta, busqueda]);
+
+  // 3) Calcular totales y conteos
+  const totales = useMemo(
+    () =>
+      ordenesFiltradas.reduce(
+        (acc, orden) => {
+          acc.total += orden.total;
+          switch (orden.estado) {
+            case "ejecutada":
+              acc.ejecutadas += orden.total;
+              acc.countEjecutadas++;
+              break;
+            case "pendiente":
+              acc.pendientes += orden.total;
+              acc.countPendientes++;
+              break;
+            case "cancelada":
+              acc.canceladas += orden.total;
+              acc.countCanceladas++;
+              break;
+            default:
+              break;
+          }
+          return acc;
+        },
+        {
+          total: 0,
+          ejecutadas: 0,
+          pendientes: 0,
+          canceladas: 0,
+          countEjecutadas: 0,
+          countPendientes: 0,
+          countCanceladas: 0,
+        }
+      ),
+    [ordenesFiltradas]
   );
 
   const formatearMoneda = (valor) =>
@@ -142,12 +120,7 @@ export default function InformesOP() {
     }).format(valor);
 
   const formatearFecha = (fecha) => {
-    if (!fecha) return "-";
-    return new Date(fecha).toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return fecha.split("-").reverse().join("/"); // "YYYY-MM-DD" → "DD/MM/YYYY"
   };
 
   const getEstadoBadge = (estado) => {
