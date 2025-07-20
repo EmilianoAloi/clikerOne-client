@@ -113,7 +113,6 @@ export default function ProveedoresTable() {
           </Button>
 
           <Button
-            disabled
             onClick={() => navigate("/proveedores/estadisticas")}
             className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
           >

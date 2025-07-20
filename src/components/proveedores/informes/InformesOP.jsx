@@ -118,9 +118,9 @@ export default function InformesOP({ pagos }) {
   );
 
   return (
-    <div className="py-2 px-2 bg-slate-50">
+    <div className=" py-2 px-2 bg-slate-50 ">
       {/* filtros */}
-      <Card className="border-none shadow-none mb-4">
+      <Card className="p-0 rounded-none border-l-0 border-r-0 border-t-0 border-b-0 shadow-none ">
         <CardContent className="p-0">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 py-3 bg-slate-50">
             <div>
