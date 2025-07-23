@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import BadgeEstado from "@/components/ui/badge-custom";
+import { useExportInforme } from "@/queries/proveedores/informes/useExportInforme";
 
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
@@ -100,6 +101,23 @@ export default function InformesOC({ compras }) {
     return <BadgeEstado estado={estado} className={"w-full"} />;
   };
 
+  // Handle Export
+  const exportOC = useExportInforme("oc");
+
+  const handleExportOC = () => {
+    const payload = {
+      filtros: { fechaDesde, fechaHasta },
+      resumen: {
+        totalOC: ordenesFiltradas.length,
+        entregadas: entregadasFiltradas,
+        totalGeneral,
+      },
+      ordenes: ordenesFiltradas,
+    };
+    console.log("Payload a enviar al backend:", payload);
+
+    exportOC.mutate(payload);
+  };
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
@@ -352,7 +370,10 @@ export default function InformesOC({ compras }) {
             </div>
           )}
 
-          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
+          <Button
+            onClick={handleExportOC}
+            className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+          >
             <Upload className="h-4 w-4" />
             Exportar - Informe OC
           </Button>

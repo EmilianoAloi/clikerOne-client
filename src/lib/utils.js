@@ -33,8 +33,36 @@ export const queryFetchWithAuth = async ({ queryKey }) => {
   return res.json();
 };
 
-export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
+// export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
+//   const token = localStorage.getItem("token");
+//   const res = await fetch(url, {
+//     method,
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//     body: body ? JSON.stringify(body) : undefined,
+//   });
+//   if (!res.ok) {
+//     const errorBody = await res.json().catch(() => ({}));
+//     const message =
+//       errorBody.error || errorBody.message || `Error ${res.status}`;
+//     const error = new Error(message);
+//     error.status = res.status;
+//     error._handled = true;
+//     throw error;
+//   }
+//   return res.json();
+// };
+
+export const mutationFetchWithAuth = async ({
+  url,
+  method = "POST",
+  body,
+  raw = false, // ✅ añadimos flag para respuestas tipo archivo
+}) => {
   const token = localStorage.getItem("token");
+
   const res = await fetch(url, {
     method,
     headers: {
@@ -43,6 +71,7 @@ export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
     },
     body: body ? JSON.stringify(body) : undefined,
   });
+
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
     const message =
@@ -52,5 +81,7 @@ export const mutationFetchWithAuth = async ({ url, method = "POST", body }) => {
     error._handled = true;
     throw error;
   }
-  return res.json();
+
+  // ✅ si es raw, devolvemos el Response sin parsear
+  return raw ? res : res.json();
 };
