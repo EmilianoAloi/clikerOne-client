@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BadgeEstado from "@/components/ui/badge-custom";
+import { useExportInforme } from "@/queries/proveedores/informes/useExportInforme";
 
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
@@ -110,6 +111,27 @@ export default function InformesFacturas({ facturas }) {
   const getEstadoBadge = (estado) => {
     return <BadgeEstado estado={estado} className={"w-full"} />;
   };
+
+  // 1. Hook para facturas
+  const exportFacturas = useExportInforme("facturas");
+
+  // 2. Adaptación del handler
+  const handleExportFacturas = () => {
+    const { valorSinImpuestos, iva, otrosImpuestos, total } = totales;
+    const payload = {
+      filtros: { fechaDesde, fechaHasta },
+      resumen: {
+        totalFacturas: facturasFiltradas.length,
+        subtotal: valorSinImpuestos,
+        ivaTotal: iva,
+        totalGeneral: total,
+      },
+      facturas: facturasFiltradas,
+    };
+    console.log("Payload Facturas → backend:", payload);
+    exportFacturas.mutate(payload);
+  };
+
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
@@ -297,10 +319,9 @@ export default function InformesFacturas({ facturas }) {
                     <TableCell className=" text-sm">
                       {formatearFecha(factura.fecha)}
                     </TableCell>
-                    <TableCell>
-                      <TableCell className="">
-                        {getEstadoBadge(factura.estado)}
-                      </TableCell>
+
+                    <TableCell className="">
+                      {getEstadoBadge(factura.estado)}
                     </TableCell>
                     <TableCell className="text-right font-mono">
                       {formatearMoneda(factura.valorSinImpuestos)}
@@ -345,9 +366,15 @@ export default function InformesFacturas({ facturas }) {
             </div>
           )}
 
-          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5">
+          <Button
+            className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
+            onClick={handleExportFacturas}
+            disabled={exportFacturas.isLoading}
+          >
             <Upload className="h-4 w-4" />
-            Exportar - Informe Facturas
+            {exportFacturas.isLoading
+              ? "Generando..."
+              : "Exportar Informe Facturas"}
           </Button>
 
           {facturasFiltradas.length === 0 && (

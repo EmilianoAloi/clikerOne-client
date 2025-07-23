@@ -118,6 +118,7 @@ export default function InformesOC({ compras }) {
 
     exportOC.mutate(payload);
   };
+
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
       {/* Filtros */}
