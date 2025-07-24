@@ -188,7 +188,7 @@ export default function OrderCompraView({ orden }) {
             <CardContent>
               <div className="flex items-end justify-between">
                 <div>
-                  <h2 className="text-5xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
                     {orden.proveedor?.nombre || "-"}
                   </h2>
                   <p className="text-xl font-medium text-gray-700">
