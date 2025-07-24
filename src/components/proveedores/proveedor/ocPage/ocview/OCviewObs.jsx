@@ -59,27 +59,25 @@ const OCviewObs = ({ orden }) => {
   return (
     <div className="flex gap-2 mt-5 mb-5">
       {/* Observaciones */}
-      <Card className="w-1/2 md:w-full border-none shadow-none md:border md:shadow-md ">
+      <Card className="w-1/2 md:w-full  shadow-none md:border rounded-xs shadow-none mx-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2  text-xl">
             <FileText className="w-5 h-5" />
             Observaciones
           </CardTitle>
-          <CardDescription className="hidden md:block">
+          <CardDescription className="hidden ">
             Notas o comentarios adicionales sobre la orden de compra
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm">
-            {orden.observaciones?.trim()
-              ? orden.observaciones
-              : "No hay observaciones en la orden de compra."}
+            {orden.observaciones?.trim() ? orden.observaciones : ""}
           </p>
         </CardContent>
       </Card>
 
       {/* Resumen montos (solo mobile) */}
-      <Card className="w-1/2 md:hidden">
+      <Card className="w-1/2 md:hidden rounded-xs shadow-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
             <Calculator className="w-5 h-5" />

@@ -16,7 +16,7 @@ const formatCurrency = (amount) =>
 
 const OCviewItems = ({ items }) => {
   return (
-    <Card className="mt-5 border-none shadow-none md:border md:shadow-md px-0 md:px-4">
+    <Card className="mt-3 rounded-xs shadow-none md:border  px-0 md:px-4 mx-2">
       <CardHeader className="px-0">
         <CardTitle className="flex items-center gap-2 text-lg md:text-xl !mb-0 px-0">
           <Boxes className="w-5 h-5" />

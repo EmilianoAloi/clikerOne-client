@@ -231,3 +231,11 @@
 .stagger-4 {
   transition-delay: 0.4s;
 }
+
+@media print {
+  .bg-blue-50 {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background-color: #eff6ff !important;
+  }
+}

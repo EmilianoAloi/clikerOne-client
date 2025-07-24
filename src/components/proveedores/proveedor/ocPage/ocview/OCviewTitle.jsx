@@ -13,7 +13,7 @@ const OCviewTitle = ({ orden }) => {
   }
 
   return (
-    <CardHeader className="rounded-t-lg mb-4 mt-[-5rem] md:mt-0 px-0 md:px-2">
+    <CardHeader className="rounded-t-lg mb-1 mt-[-5rem] md:mt-0 px-0 md:px-2">
       <div className="flex md:flex-row justify-between items-start md:items-start w-full">
         {/* Izquierda: icono, título y fechas */}
         <div>
@@ -30,7 +30,10 @@ const OCviewTitle = ({ orden }) => {
           <div className="text-4xl font-bold mb-2">
             {formatCurrency(orden.monto_total || 0)}
           </div>
-          <BadgeEstado estado={orden.estado_compra} />
+          <BadgeEstado
+            estado={orden.estado_compra}
+            className="text-md px-2 py-4 px-3 font-semibold"
+          />
         </div>
       </div>
     </CardHeader>
