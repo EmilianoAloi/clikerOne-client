@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import AdjuntosBadgePopover from "@/components/ui/adjuntos-badge-popover";
 import { toast } from "sonner";
 import ActionCell from "../detailPage/ActionCell";
+import { formatDate } from "@/lib/utils";
 
 const ProveedoresDetailAccordionOc = ({
   currentProveedores,
@@ -135,14 +136,10 @@ const ProveedoresDetailAccordionOc = ({
                       #{oc.id_orden_compra}
                     </TableCell>
                     <TableCell className="py-3 text-left ps-3">
-                      {oc.fecha_emision
-                        ? new Date(oc.fecha_emision).toLocaleDateString("es-AR")
-                        : "-"}
+                      {oc.fecha_emision ? formatDate(oc.fecha_emision) : "-"}
                     </TableCell>
                     <TableCell className="py-3 text-left ps-3">
-                      {oc.fecha_entrega
-                        ? new Date(oc.fecha_entrega).toLocaleDateString("es-AR")
-                        : "-"}
+                      {oc.fecha_entrega ? formatDate(oc.fecha_entrega) : "-"}
                     </TableCell>
                     <TableCell className="py-3 text-left font-medium ps-3">
                       $
