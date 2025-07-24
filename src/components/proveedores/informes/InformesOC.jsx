@@ -94,7 +94,10 @@ export default function InformesOC({ compras }) {
     }).format(valor);
 
   const formatearFecha = (fecha) => {
-    return fecha.split("-").reverse().join("/"); // "YYYY-MM-DD" → "DD/MM/YYYY"
+    if (!fecha) return "-";
+    const [isoDate] = fecha.split("T");
+    const [year, month, day] = isoDate.split("-");
+    return `${day}/${month}/${year}`;
   };
 
   const getEstadoBadge = (estado) => {
