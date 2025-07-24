@@ -49,8 +49,8 @@ const OCviewItems = ({ items }) => {
                 <tr key={item.id_item || idx} className="border-b">
                   <td className="py-3 px-4">
                     {item.articulo?.codigo_interno && (
-                      <span className="me-1">
-                        {item.articulo.codigo_interno} -
+                      <span className="me-1 text-muted-foreground">
+                        [{item.articulo.codigo_interno}] -
                       </span>
                     )}
                     {item.articulo?.nombre}
@@ -66,7 +66,11 @@ const OCviewItems = ({ items }) => {
                     {item.valor_descuento}
                   </td>
                   <td className="text-right py-3 px-4 font-medium">
-                    {formatCurrency(item.subtotal)}
+                    {formatCurrency(
+                      Number(item.subtotal || 0) +
+                        Number(item.subtotal || 0) *
+                          (Number(item.iva || 0) / 100)
+                    )}{" "}
                   </td>
                 </tr>
               ))}
@@ -79,10 +83,11 @@ const OCviewItems = ({ items }) => {
                 </td>
                 <td className="text-right py-3 px-4 font-bold">
                   {formatCurrency(
-                    (items ?? []).reduce(
-                      (acc, item) => acc + Number(item.subtotal || 0),
-                      0
-                    )
+                    (items ?? []).reduce((acc, item) => {
+                      const base = Number(item.subtotal || 0);
+                      const iva = base * (Number(item.iva || 0) / 100);
+                      return acc + base + iva;
+                    }, 0)
                   )}
                 </td>
               </tr>

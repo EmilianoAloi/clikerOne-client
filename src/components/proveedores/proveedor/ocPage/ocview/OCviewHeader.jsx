@@ -31,8 +31,9 @@ const OCviewHeader = ({ orden }) => {
               <h3 className="font-semibold text-md text-muted-foreground ">
                 Proveedor
               </h3>
-              <p className="font-semibold">{orden.proveedor?.nombre}</p>{" "}
-              <p className="text-sm">CUIT: {orden.proveedor?.cuit}</p>{" "}
+              <p className="font-semibold">{orden.proveedor?.nombre}</p>
+              <p className="text-sm">CUIT: {orden.proveedor?.cuit}</p>
+
               <Link
                 to={`/proveedores/${orden.id_proveedor}`}
                 className="hidden md:block text-primary text-sm font-medium  mt-2"
@@ -72,12 +73,12 @@ const OCviewHeader = ({ orden }) => {
                   </h3>
                   <p className="text-md">{orden.lugar_entrega}</p>
                 </div>
-                <div>
+                {/* <div>
                   <h3 className="font-semibold text-md text-muted-foreground ">
                     Fecha contable
                   </h3>
                   <p>{formatDate(orden.fecha_contable)}</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
