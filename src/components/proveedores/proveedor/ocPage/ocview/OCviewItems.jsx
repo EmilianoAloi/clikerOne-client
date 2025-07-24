@@ -47,7 +47,15 @@ const OCviewItems = ({ items }) => {
             <tbody>
               {(items ?? []).map((item, idx) => (
                 <tr key={item.id_item || idx} className="border-b">
-                  <td className="py-3 px-4">{item.nombre_articulo}</td>
+                  <td className="py-3 px-4">
+                    {item.articulo?.codigo_interno && (
+                      <span className="me-1">
+                        {item.articulo.codigo_interno} -
+                      </span>
+                    )}
+                    {item.articulo?.nombre}
+                  </td>
+
                   <td className="text-right py-3 px-4">{item.cantidad}</td>
                   <td className="text-right py-3 px-4">{item.unidad_medida}</td>
                   <td className="text-right py-3 px-4">
@@ -58,7 +66,7 @@ const OCviewItems = ({ items }) => {
                     {item.valor_descuento}
                   </td>
                   <td className="text-right py-3 px-4 font-medium">
-                    {formatCurrency(item.subtotal_con_iva)}
+                    {formatCurrency(item.subtotal)}
                   </td>
                 </tr>
               ))}
@@ -72,7 +80,7 @@ const OCviewItems = ({ items }) => {
                 <td className="text-right py-3 px-4 font-bold">
                   {formatCurrency(
                     (items ?? []).reduce(
-                      (acc, item) => acc + Number(item.subtotal_con_iva || 0),
+                      (acc, item) => acc + Number(item.subtotal || 0),
                       0
                     )
                   )}

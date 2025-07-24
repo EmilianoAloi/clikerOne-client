@@ -1,5 +1,4 @@
 import { useState } from "react";
-import BackButton from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import OCviewObs from "./OCviewObs";
@@ -22,11 +21,9 @@ const OCviewContainer = ({ orden }) => {
   return (
     <div
       id="orden-compra-comprobante"
-      className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-0 print:pt-0"
+      className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-4 print:pt-0"
     >
-      <div className="flex justify-end gap-2 md:mt-[-20px] mb-2 me-3 !print:hidden">
-        <BackButton />
-        {/* <OCviewDownloadButton orden={orden} /> */}
+      <div className="flex justify-end gap-2 mb-2 me-3 !print:hidden">
         <Button
           onClick={handlePrint}
           disabled={isPrinting}

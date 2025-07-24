@@ -31,11 +31,11 @@ const OCviewHeader = ({ orden }) => {
               <h3 className="font-semibold text-md text-muted-foreground ">
                 Proveedor
               </h3>
-              <p className="font-semibold">{orden.proveedor_nombre}</p>
-              <p className="text-sm">CUIT: {orden.proveedor_cuit}</p>
+              <p className="font-semibold">{orden.proveedor?.nombre}</p>{" "}
+              <p className="text-sm">CUIT: {orden.proveedor?.cuit}</p>{" "}
               <Link
                 to={`/proveedores/${orden.id_proveedor}`}
-                className="text-primary text-sm font-medium inline-block mt-2"
+                className="hidden md:block text-primary text-sm font-medium  mt-2"
               >
                 Ver detalles del proveedor →
               </Link>
@@ -85,7 +85,7 @@ const OCviewHeader = ({ orden }) => {
       </Card>
 
       {/* Resumen de montos */}
-      <Card className="hidden md:block border-none shadow-none md:border md:shadow-md">
+      <Card className="hidden md:block md:border md:shadow-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
             <FileText className="w-5 h-5" />

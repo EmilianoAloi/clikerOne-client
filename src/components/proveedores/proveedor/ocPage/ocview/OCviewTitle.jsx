@@ -22,7 +22,7 @@ const OCviewTitle = ({ orden }) => {
             Orden de Compra #{orden.id_orden_compra}
           </div>
           <p className="text-md text-muted-foreground">
-            Fecha contable: {formatDate(orden.fecha_contable)}
+            Fecha emisión: {formatDate(orden.fecha_emision)}
           </p>
         </div>
 

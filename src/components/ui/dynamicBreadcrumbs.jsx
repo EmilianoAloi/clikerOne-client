@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { useProveedores } from "@/queries/proveedores/useProveedores";
+import BackButton from "./back-button";
 
 const breadcrumbNames = {
   home: "Inicio",
@@ -45,55 +46,55 @@ const breadcrumbNames = {
 export default function DynamicBreadcrumbs() {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
-
   const { data: proveedores = [] } = useProveedores();
 
   let accumulatedPath = "";
 
   return (
-    <Breadcrumb className="print:hidden">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/proveedores">Inicio</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
+    <div className="flex justify-between items-center !w-full print:hidden">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/proveedores">Inicio</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
 
-        {pathSegments.map((segment, index) => {
-          accumulatedPath = "/" + pathSegments.slice(0, index + 1).join("/");
-          const isLast = index === pathSegments.length - 1;
+          {pathSegments.map((segment, index) => {
+            accumulatedPath = "/" + pathSegments.slice(0, index + 1).join("/");
+            const isLast = index === pathSegments.length - 1;
+            let label = breadcrumbNames[segment] || segment;
 
-          // Etiqueta amigable por default
-          let label = breadcrumbNames[segment] || segment;
+            if (
+              pathSegments[0] === "proveedores" &&
+              index === 1 &&
+              proveedores.length > 0
+            ) {
+              const foundProveedores = proveedores.find(
+                (s) => s.id_proveedor.toString() === segment
+              );
+              if (foundProveedores) label = foundProveedores.nombre;
+            }
 
-          // Mostrar nombre del proveedor si estamos en /proveedores/:id
-          if (
-            pathSegments[0] === "proveedores" &&
-            index === 1 &&
-            proveedores.length > 0
-          ) {
-            const foundProveedores = proveedores.find(
-              (s) => s.id_proveedor.toString() === segment
+            return (
+              <React.Fragment key={accumulatedPath}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {isLast ? (
+                    <BreadcrumbPage>{label}</BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink asChild>
+                      <Link to={accumulatedPath}>{label}</Link>
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+              </React.Fragment>
             );
-            if (foundProveedores) label = foundProveedores.nombre;
-          }
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
 
-          return (
-            <React.Fragment key={accumulatedPath}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{label}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={accumulatedPath}>{label}</Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </React.Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
+      <BackButton />
+    </div>
   );
 }
