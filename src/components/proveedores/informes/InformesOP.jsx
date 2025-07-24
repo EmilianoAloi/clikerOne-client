@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import BadgeEstado from "@/components/ui/badge-custom";
+import { useExportInforme } from "@/queries/proveedores/informes/useExportInforme";
 
 const inputStyle =
   "bg-white border border-gray-300 rounded-md shadow-sm !focus:outline-none !focus-visible:ring-1 !focus-visible:ring-gray-400";
@@ -116,6 +117,45 @@ export default function InformesOP({ pagos }) {
   const getEstadoBadge = (estado) => (
     <BadgeEstado estado={estado} className="w-full" />
   );
+
+  // 1. Hook para OP
+  const exportOP = useExportInforme("op");
+
+  // 2. Handler de exportación
+  const handleExportOP = () => {
+    const filtros = { fechaDesde, fechaHasta };
+
+    // resumen
+    const totalOps = ordenesFiltradas.length;
+    const ejecutadasArr = ordenesFiltradas.filter(
+      (o) => o.estado === "ejecutada"
+    );
+    const pendientesArr = ordenesFiltradas.filter(
+      (o) => o.estado === "pendiente"
+    );
+    const canceladasArr = ordenesFiltradas.filter(
+      (o) => o.estado === "cancelada"
+    );
+
+    const resumen = {
+      totalOps,
+      ejecutadasCount: ejecutadasArr.length,
+      totalEjecutadas: ejecutadasArr.reduce((sum, o) => sum + o.totalOP, 0),
+      pendientesCount: pendientesArr.length,
+      totalPendientes: pendientesArr.reduce((sum, o) => sum + o.totalOP, 0),
+      canceladasCount: canceladasArr.length,
+      totalCanceladas: canceladasArr.reduce((sum, o) => sum + o.totalOP, 0),
+    };
+
+    const payload = {
+      filtros,
+      resumen,
+      ops: ordenesFiltradas,
+    };
+
+    console.log("Payload OP → backend:", payload);
+    exportOP.mutate(payload);
+  };
 
   return (
     <div className=" py-2 px-2 bg-slate-50 ">
@@ -322,9 +362,16 @@ export default function InformesOP({ pagos }) {
             </div>
           )}
 
-          <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold py-5">
-            <Upload className="h-4 w-4" />
+          {/* <Button className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold py-5">
             Exportar — Informe OP
+          </Button> */}
+          <Button
+            className="w-full mt-6 gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold py-5"
+            onClick={handleExportOP}
+            disabled={exportOP.isLoading}
+          >
+            <Upload className="h-4 w-4" />
+            {exportOP.isLoading ? "Generando..." : "Exportar — Informe OP"}
           </Button>
         </CardContent>
       </Card>

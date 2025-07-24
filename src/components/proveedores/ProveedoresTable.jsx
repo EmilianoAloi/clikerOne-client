@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import { Plus, LineChart, PieChart, FileText } from "lucide-react";
+import {
+  Plus,
+  LineChart,
+  // PieChart,
+  FileText,
+} from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ProveedoresTableSkeleton } from "./ProveedorTableSkeleton";
 import { SupppliersColumns } from "./ProveedorColumns";
@@ -112,13 +117,13 @@ export default function ProveedoresTable() {
             Ver Informes
           </Button>
 
-          <Button
+          {/* <Button
             onClick={() => navigate("/proveedores/estadisticas")}
             className="gap-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-sm py-5"
           >
             <PieChart className="h-4 w-4" />
             Ver Estadísticas
-          </Button>
+          </Button> */}
         </div>
       </div>
 

@@ -117,6 +117,7 @@ export default function InformesFacturas({ facturas }) {
 
   // 2. Adaptación del handler
   const handleExportFacturas = () => {
+    // eslint-disable-next-line no-unused-vars
     const { valorSinImpuestos, iva, otrosImpuestos, total } = totales;
     const payload = {
       filtros: { fechaDesde, fechaHasta },

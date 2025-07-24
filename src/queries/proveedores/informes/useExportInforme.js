@@ -32,7 +32,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { mutationFetchWithAuth } from "@/lib/utils";
-import { toast } from "sonner"; // o el que uses
+import { toast } from "sonner";
 
 export const useExportInforme = (tipo) => {
   return useMutation({
@@ -43,29 +43,34 @@ export const useExportInforme = (tipo) => {
         }/api/proveedores/informe/export/${tipo}`,
         method: "POST",
         body: payload,
-        raw: true, // necesario para recibir un archivo (no JSON)
+        raw: true,
       });
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
+
       const fecha = new Date();
       const fechaStr = fecha
         .toLocaleDateString("es-AR")
         .split("/")
         .reverse()
         .join("-");
+
+      // elegir sufijo según tipo
+      const sufijos = {
+        oc: "OC",
+        facturas: "Facturas",
+        op: "OP",
+      };
+      const sufijo = sufijos[tipo] || tipo;
+
       a.href = url;
-      a.download = `${fechaStr}-InformeOC.xlsx`;
+      a.download = `${fechaStr}-Informe${sufijo}.xlsx`;
       a.click();
       window.URL.revokeObjectURL(url);
     },
-    onSuccess: () => {
-      toast.success("Informe exportado exitosamente");
-    },
-    onError: (error) => {
-      toast.error("Error al exportar informe");
-      console.error(error);
-    },
+    onSuccess: () => toast.success("Informe exportado exitosamente"),
+    onError: () => toast.error("Error al exportar informe"),
   });
 };
