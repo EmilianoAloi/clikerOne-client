@@ -107,9 +107,15 @@ const ProveedoresDetailAccordionArticulos = ({
                 </TableHead>
                 <TableHead className="text-slate-700 font-semibold text-right">
                   <span className="inline-flex items-center gap-1">
-                    <User className="w-4 h-4" /> Usuario
+                    <User className="w-4 h-4" /> Creador
                   </span>
                 </TableHead>
+                <TableHead className="text-slate-700 font-semibold text-right">
+                  <span className="inline-flex items-center gap-1">
+                    <Pencil className="w-4 h-4" /> Modificó
+                  </span>
+                </TableHead>
+
                 <TableHead className="text-slate-700 font-semibold text-center w-32">
                   Editar
                 </TableHead>
@@ -163,9 +169,11 @@ const ProveedoresDetailAccordionArticulos = ({
                       })}
                     </TableCell>
                     <TableCell className="py-3 text-right">
-                      {articulo.modificador?.nombre ||
-                        articulo.creador?.nombre ||
-                        "-"}
+                      {articulo.creador?.nombre || "-"}
+                    </TableCell>
+
+                    <TableCell className="py-3 text-right">
+                      {articulo.modificador?.nombre || "-"}
                     </TableCell>
                     <TableCell className="  text-center flex gap-2 justify-center">
                       {/* <Link
