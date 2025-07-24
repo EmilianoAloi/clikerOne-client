@@ -140,15 +140,10 @@ export default function ProveedorInvoiceForm({
 
   const iibb = subtotal * (iibbPorcentaje / 100);
 
-  const otrosImpuestos = impuestos.reduce((acc, imp) => {
-    const monto =
-      imp.monto !== undefined
-        ? Number(imp.monto) || 0
-        : ((parseFloat(imp.base_imponible) || 0) *
-            (parseFloat(imp.alicuota) || 0)) /
-          100;
-    return acc + monto;
-  }, 0);
+  const otrosImpuestos = impuestos.reduce(
+    (acc, imp) => acc + (parseFloat(imp.importe) || 0),
+    0
+  );
 
   const totalFinal = subtotal + iva + iibb + otrosImpuestos;
 
