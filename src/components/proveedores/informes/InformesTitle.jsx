@@ -1,4 +1,3 @@
-import BackButton from "@/components/ui/back-button";
 import React from "react";
 
 const InformesTitle = () => {
@@ -14,7 +13,6 @@ const InformesTitle = () => {
           de pago. Exportacion a Excel incluida.
         </div>
       </div>
-      <BackButton />
     </div>
   );
 };

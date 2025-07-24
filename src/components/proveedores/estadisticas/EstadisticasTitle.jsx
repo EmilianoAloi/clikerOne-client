@@ -1,4 +1,3 @@
-import BackButton from "@/components/ui/back-button";
 import React from "react";
 
 const EstadisticasTitle = () => {
@@ -13,7 +12,6 @@ const EstadisticasTitle = () => {
           Panel de control y análisis de Proveedores
         </div>
       </div>
-      <BackButton />
     </div>
   );
 };

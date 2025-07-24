@@ -1,5 +1,3 @@
-import BackButton from "@/components/ui/back-button";
-
 const HistorialPreciosGlobalTitle = () => (
   <div className="mx-7 my-4 flex justify-between items-start">
     <div>
@@ -13,7 +11,6 @@ const HistorialPreciosGlobalTitle = () => (
         Gestión de cambios de precios de todos los proveedores y artículos
       </div>
     </div>
-    <BackButton />
   </div>
 );
 

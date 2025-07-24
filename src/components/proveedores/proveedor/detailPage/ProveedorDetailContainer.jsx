@@ -1,5 +1,4 @@
 import ProveedorDetailInfo from "./ProveedorDetailInfo";
-import BackButton from "@/components/ui/back-button";
 import ProveedorCurrentAccount from "@/components/proveedores/proveedor/detailPage/ProveedorCurrentAccount";
 import ProveedorAccordionContainer from "../ProveedorAccordionContainer";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,6 @@ const ProveedorDetailContainer = ({
             </p>
           </div>
           <div className="w-full md:w-fit flex justify-between md:justify-start md:items-center gap-2 mb-2">
-            <BackButton />
             <Button
               className="gap-2 bg-slate-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-sm cursor-pointer py-5"
               onClick={() =>

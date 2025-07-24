@@ -1,5 +1,3 @@
-import BackButton from "@/components/ui/back-button";
-
 const HistorialPreciosTitle = ({ nombre, cuit, id, estado, razonSocial }) => {
   // Mapea el estado numérico a un texto legible
   const estadoTexto = estado === 1 ? "Activo" : "Inactivo";
@@ -32,7 +30,6 @@ const HistorialPreciosTitle = ({ nombre, cuit, id, estado, razonSocial }) => {
             </span>
           </div>
         </div>
-        <BackButton />
       </div>
     </>
   );

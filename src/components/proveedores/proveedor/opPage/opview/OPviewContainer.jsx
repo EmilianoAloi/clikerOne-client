@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import BackButton from "@/components/ui/back-button";
+
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import OPviewTitle from "./OPviewTitle";
@@ -135,7 +135,6 @@ export default function OPviewContainer({ pago }) {
   return (
     <div className="lg:container mx-auto lg:px-8 print:px-0 print:mx-0 print:max-w-full print:mt-0 print:pt-0">
       <div className="flex justify-end gap-2 mb-2 !print:hidden">
-        <BackButton />
         <Button onClick={handlePrint} disabled={isPrinting} variant="outline">
           <Printer className="mr-1 h-4 w-4" />
           {isPrinting ? "Imprimiendo..." : "Imprimir OP"}
