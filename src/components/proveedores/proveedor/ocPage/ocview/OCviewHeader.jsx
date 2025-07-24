@@ -17,7 +17,7 @@ const OCviewHeader = ({ orden }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 ">
       {/* Información general OC */}
-      <Card className="col-span-2  shadow md:border md:shadow-md px-0 md:px-4">
+      <Card className="col-span-2  shadow md:border md:shadow-md px-4 md:px-4">
         <CardHeader className="px-0 ">
           <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-none px-0">
             <BadgeInfo className="w-5 h-5" />

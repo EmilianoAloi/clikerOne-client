@@ -15,6 +15,15 @@ export const formatCurrency = (valor) => {
   });
 };
 
+export function formatDate(dateInput) {
+  if (!dateInput) return "-";
+  // Si es Date, la pasamos a ISO; si es string ISO, la usamos tal cual
+  const iso = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
+  // iso === "2025-07-24T00:00:00.000Z"
+  const [year, month, day] = iso.split("T")[0].split("-");
+  return `${day}/${month}/${year}`; // "24/07/2025"
+}
+
 export const queryFetchWithAuth = async ({ queryKey }) => {
   const token = localStorage.getItem("token");
   const url = queryKey[0];
