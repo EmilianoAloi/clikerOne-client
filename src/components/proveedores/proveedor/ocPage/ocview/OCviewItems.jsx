@@ -16,7 +16,7 @@ const formatCurrency = (amount) =>
 
 const OCviewItems = ({ items }) => {
   return (
-    <Card className="mt-3 rounded-xs shadow-none md:border  px-0 md:px-4 mx-2">
+    <Card className="mt-3 rounded-xs shadow-none md:border  px-2 md:px-4 md:mx-2">
       <CardHeader className="px-0">
         <CardTitle className="flex items-center gap-2 text-lg md:text-xl !mb-0 px-0">
           <Boxes className="w-5 h-5" />
@@ -26,7 +26,7 @@ const OCviewItems = ({ items }) => {
           Listado de artículos incluidos en la orden de compra
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-0">
+      <CardContent className="px-0 mt-[-15px]">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
@@ -48,11 +48,11 @@ const OCviewItems = ({ items }) => {
               {(items ?? []).map((item, idx) => (
                 <tr key={item.id_item || idx} className="border-b">
                   <td className="py-3 px-4">
-                    {item.articulo?.codigo_interno && (
+                    {/* {item.articulo?.codigo_interno && (
                       <span className="me-1 text-muted-foreground">
                         [{item.articulo.codigo_interno}] -
                       </span>
-                    )}
+                    )} */}
                     {item.articulo?.nombre}
                   </td>
 

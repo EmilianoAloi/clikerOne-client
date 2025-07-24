@@ -179,12 +179,12 @@ function formatDate(dateInput) {
 
 export default function OrderCompraView({ orden }) {
   return (
-    <div className="md:container mx-auto md:px-2">
+    <div className="md:container mx-auto md:px-2 mt-">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* — Columna principal (span 2) — */}
         <div className="lg:col-span-2 space-y-3">
           {/* Proveedor destacado */}
-          <Card className="rounded-xs shadow-none border-solid py-6">
+          <Card className="rounded-xs shadow-none md:border-solid py-6 ">
             <CardContent>
               <div className="flex items-end justify-between">
                 <div>
@@ -214,9 +214,9 @@ export default function OrderCompraView({ orden }) {
           </Card>
 
           {/* Información de Orden de Compra */}
-          <Card className="py-4 rounded-xs shadow-none">
+          <Card className="py-4 rounded-xs shadow-none gap-2">
             <CardHeader className="">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-2 text-lg !font-semibold">
                 <Info className="h-4 w-4" />
                 Información de Orden de compra
               </CardTitle>

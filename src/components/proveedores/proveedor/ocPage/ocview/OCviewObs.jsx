@@ -59,7 +59,7 @@ const OCviewObs = ({ orden }) => {
   return (
     <div className="flex gap-2 mt-5 mb-5">
       {/* Observaciones */}
-      <Card className="w-1/2 md:w-full  shadow-none md:border rounded-xs shadow-none mx-2">
+      <Card className="w-1/2 md:w-full  shadow-none md:border rounded-xs shadow-none md:mx-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2  text-xl">
             <FileText className="w-5 h-5" />
