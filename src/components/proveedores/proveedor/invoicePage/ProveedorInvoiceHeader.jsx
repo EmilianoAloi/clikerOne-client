@@ -36,6 +36,7 @@ import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function ProveedorInvoiceHeader({
   proveedores,
@@ -58,6 +59,14 @@ export default function ProveedorInvoiceHeader({
   const fecha_vencimiento = watch("fecha_vencimiento");
   const fecha_contable = watch("fecha_contable");
   const percepcion_iibb = watch("percepcion_iibb");
+
+  useEffect(() => {
+    const hoy = format(new Date(), "yyyy-MM-dd");
+    if (!fecha_emision)
+      setValue("fecha_emision", hoy, { shouldValidate: true });
+    if (!fecha_contable)
+      setValue("fecha_contable", hoy, { shouldValidate: true });
+  }, []); // sólo al montar
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
