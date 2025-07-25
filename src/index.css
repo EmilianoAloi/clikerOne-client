@@ -240,8 +240,21 @@
   }
 }
 
-html,
-body,
-* {
-  forced-color-adjust: none;
+@media (forced-colors: active) {
+  html,
+  body {
+    forced-color-adjust: none;
+    color: CanvasText;
+    background-color: Canvas;
+  }
+  /* 
+  button,
+  input,
+  select,
+  textarea {
+    forced-color-adjust: none;
+    color: ButtonText;
+    background-color: ButtonFace;
+    border: 1px solid ButtonText;
+  } */
 }
