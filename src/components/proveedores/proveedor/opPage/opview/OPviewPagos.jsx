@@ -44,11 +44,13 @@ export default function OPviewPagos({ pagos }) {
                       <TableCell className="pl-2  ">Cheque</TableCell>
                       <TableCell className="">{cheque.numero}</TableCell>
                       <TableCell className="">
-                        {cheque.fecha_pago
-                          ? format(new Date(cheque.fecha_pago), "dd/MM/yyyy", {
-                              locale: es,
-                            })
-                          : "-"}
+                        {format(
+                          new Date(
+                            cheque.fecha_pago ?? pago.fecha_acreditacion
+                          ),
+                          "dd/MM/yyyy",
+                          { locale: es }
+                        )}
                       </TableCell>
                       <TableCell className="text-right  font-medium">
                         {formatCurrency(parseFloat(cheque.valor || "0"))}

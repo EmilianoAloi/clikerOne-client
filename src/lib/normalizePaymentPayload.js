@@ -47,6 +47,7 @@ export default function normalizePaymentPayload({
       it.fecha instanceof Date ? it.fecha.toISOString().slice(0, 10) : it.fecha,
     observaciones: it.observaciones,
     monto_aplicado: Number(it.monto_aplicado) || 0,
+    cheques: it.cheques || [],
   }));
 
   // 5) Facturas a cancelar (si las usás para lógica extra)
