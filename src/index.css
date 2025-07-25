@@ -239,3 +239,9 @@
     background-color: #eff6ff !important;
   }
 }
+
+html,
+body,
+* {
+  forced-color-adjust: none;
+}
