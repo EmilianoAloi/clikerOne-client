@@ -12,7 +12,14 @@ import {
 } from "@/components/ui/table";
 
 export default function OPviewPagos({ pagos }) {
-  const totalValores = pagos.reduce(
+  // 1) Filtrar para no mostrar ítems de monto 0 sin cheques
+  const pagosVisibles = pagos.filter((p) => {
+    if (Array.isArray(p.cheques) && p.cheques.length > 0) return true;
+    return parseFloat(p.monto_aplicado || "0") > 0;
+  });
+
+  // 2) Sumar los montos visibles
+  const totalValores = pagosVisibles.reduce(
     (acc, p) => acc + parseFloat(p.monto_aplicado || "0"),
     0
   );
@@ -34,16 +41,16 @@ export default function OPviewPagos({ pagos }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {pagos.map((pago, pagoIdx) => {
+              {pagosVisibles.map((pago, pagoIdx) => {
                 if (Array.isArray(pago.cheques) && pago.cheques.length > 0) {
-                  return pago.cheques.map((cheque, chequeIdx) => (
+                  return pago.cheques.map((cheque) => (
                     <TableRow
-                      key={`pago-${pago.id}-cheque-${cheque.id_cheque}-${chequeIdx}`}
+                      key={`pago-${pago.id}-cheque-${cheque.id_cheque}`}
                       className="bg-slate-50"
                     >
-                      <TableCell className="pl-2  ">Cheque</TableCell>
-                      <TableCell className="">{cheque.numero}</TableCell>
-                      <TableCell className="">
+                      <TableCell>Cheque</TableCell>
+                      <TableCell>{cheque.numero}</TableCell>
+                      <TableCell>
                         {format(
                           new Date(
                             cheque.fecha_pago ?? pago.fecha_acreditacion
@@ -52,7 +59,7 @@ export default function OPviewPagos({ pagos }) {
                           { locale: es }
                         )}
                       </TableCell>
-                      <TableCell className="text-right  font-medium">
+                      <TableCell className="text-right font-medium">
                         {formatCurrency(parseFloat(cheque.valor || "0"))}
                       </TableCell>
                     </TableRow>
@@ -62,9 +69,9 @@ export default function OPviewPagos({ pagos }) {
                   <TableRow key={`pago-${pago.id}-${pagoIdx}`}>
                     <TableCell>{pago.medio || "—"}</TableCell>
                     <TableCell>
-                      {pago.retencion
-                        ? `Nro. Certif. ${pago.numero || "—"}`
-                        : pago.numero || "Numero"}
+                      {pago.numero_comprobante
+                        ? pago.numero_comprobante
+                        : pago.numero || "—"}
                     </TableCell>
                     <TableCell>
                       {pago.fecha_acreditacion
@@ -75,7 +82,7 @@ export default function OPviewPagos({ pagos }) {
                           )
                         : "-"}
                     </TableCell>
-                    <TableCell className="text-right  font-medium">
+                    <TableCell className="text-right font-medium">
                       {formatCurrency(parseFloat(pago.monto_aplicado || "0"))}
                     </TableCell>
                   </TableRow>

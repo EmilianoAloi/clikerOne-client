@@ -211,13 +211,18 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
     setIsSubmitting(true);
 
     try {
-      // 1) Normalizar facturas
-      const facturasNorm = facturasSeleccionadas.map((f) => ({
-        id_factura: f.id_factura,
-        monto_a_saldar: montoSeguro(f.monto),
-      }));
+      // 1) Normalizar facturas con monto_pagado y estado_factura
+      const facturasNorm = facturasSeleccionadas.map((f) => {
+        const pago = montoSeguro(f.monto);
+        const saldoPrevio = montoSeguro(f.monto_a_saldar);
+        return {
+          id_factura: f.id_factura,
+          monto_pagado: pago,
+          estado_factura: pago >= saldoPrevio ? "total" : "parcial",
+        };
+      });
 
-      // 2) Normalizar items, asignando id_factura si viene vacío
+      // 2) Normalizar items
       const itemsNorm = items.map((it) => ({
         ...it,
         id_factura: it.id_factura || facturasNorm[0].id_factura,
@@ -229,12 +234,13 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
             : it.fecha,
         observaciones: it.observaciones,
         monto_aplicado: montoSeguro(it.monto_aplicado),
+        cheques: it.cheques || [],
       }));
 
       // 3) Validar montos
       if (
         itemsNorm.some((it) => isNaN(it.monto_aplicado)) ||
-        facturasNorm.some((f) => isNaN(f.monto_a_saldar))
+        facturasNorm.some((f) => isNaN(f.monto_pagado))
       ) {
         toast.error("Todos los montos deben ser válidos.");
         setIsSubmitting(false);
@@ -263,20 +269,15 @@ export default function ProveedorOPform({ modo, proveedor, pagoData }) {
       // 5) Construir payload
       const payload = normalizePaymentPayload({
         items: itemsNorm,
-        facturas: facturasNorm,
+        facturasSeleccionadas: facturasNorm,
         idProveedor: proveedor.id_proveedor,
         observaciones: formData.observaciones,
         archivos,
       });
 
-      console.log("OP al backend Payload:", JSON.stringify(payload, null, 2));
-
       // 6) Ejecutar mutation
       if (modo === "editar") {
-        await mutation.mutateAsync({
-          idPago: pagoData.id_pago,
-          data: payload,
-        });
+        await mutation.mutateAsync({ idPago: pagoData.id_pago, data: payload });
       } else {
         await mutation.mutateAsync(payload);
       }

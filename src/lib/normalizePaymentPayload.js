@@ -1,6 +1,6 @@
 export default function normalizePaymentPayload({
   items,
-  facturas,
+  facturasSeleccionadas,
   idProveedor,
   observaciones,
   archivos,
@@ -11,16 +11,14 @@ export default function normalizePaymentPayload({
     items[0]?.fecha_acreditacion || items[0]?.fecha || new Date();
   const fechaISO = new Date(fechaBase).toISOString().slice(0, 10);
 
-  // 2) Suma total de subpagos
+  // 2) Header de la OP
   const totalMonto = items.reduce(
-    (acc, item) => acc + (Number(item.monto_aplicado) || 0),
+    (acc, it) => acc + (Number(it.monto_aplicado) || 0),
     0
   );
-
-  // 3) Header para proveedor_pago
   const header = {
     id_proveedor: idProveedor,
-    id_factura: facturas[0]?.id_factura || null,
+    id_factura: facturasSeleccionadas[0]?.id_factura || null,
     numero_comprobante: "",
     fecha: fechaISO,
     fecha_pago: fechaISO,
@@ -29,7 +27,7 @@ export default function normalizePaymentPayload({
     banco: "",
     monto: totalMonto,
     estado_pago: "ejecutada",
-    estado_factura: facturas.length === 1 ? "total" : "parcial",
+    estado_factura: facturasSeleccionadas.length === 1 ? "total" : "parcial",
     observaciones,
     sync_origen: "manual",
     estado_logico: 1,
@@ -38,28 +36,46 @@ export default function normalizePaymentPayload({
     tipo_documento: "orden_pago",
   };
 
-  // 4) Items para proveedor_pago_item
-  const pagosItems = items.map((it) => ({
-    id_factura: it.id_factura,
-    numero_comprobante: it.numero_comprobante,
-    medio: it.medio,
-    fecha_acreditacion:
-      it.fecha instanceof Date ? it.fecha.toISOString().slice(0, 10) : it.fecha,
-    observaciones: it.observaciones,
-    monto_aplicado: Number(it.monto_aplicado) || 0,
-    cheques: it.cheques || [],
-  }));
+  // 3) Agrupar items reales por factura
+  const mapItems = items.reduce((m, it) => {
+    (m[it.id_factura] = m[it.id_factura] || []).push(it);
+    return m;
+  }, {});
 
-  // 5) Facturas a cancelar (si las usás para lógica extra)
-  const facturasNorm = facturas.map((f) => ({
+  // 4) Generar items, pero sólo con monto_aplicado > 0
+  const pagosItems = facturasSeleccionadas.flatMap((f) => {
+    const reales = mapItems[f.id_factura] || [];
+    if (reales.length) {
+      return reales
+        .map((it) => ({
+          id_factura: it.id_factura,
+          numero_comprobante: it.numero_comprobante,
+          medio: it.medio,
+          fecha_acreditacion:
+            it.fecha instanceof Date
+              ? it.fecha.toISOString().slice(0, 10)
+              : it.fecha,
+          observaciones: it.observaciones,
+          monto_aplicado: Number(it.monto_aplicado) || 0,
+          cheques: it.cheques || [],
+        }))
+        .filter((it) => it.monto_aplicado > 0);
+    }
+    // si no hay ítems reales no creamos sintéticos
+    return [];
+  });
+
+  // 5) Payload de facturas
+  const facturas = facturasSeleccionadas.map((f) => ({
     id_factura: f.id_factura,
-    monto_a_saldar: Number(f.monto_a_saldar) || 0,
+    monto_pagado: Number(f.monto) || 0,
+    estado_factura: f.estado_factura,
   }));
 
   return {
     ...header,
-    adjuntos: archivos, // proveedor_pago_archivo
-    items: pagosItems, // proveedor_pago_item
-    facturas: facturasNorm,
+    adjuntos: archivos,
+    items: pagosItems,
+    facturas,
   };
 }
