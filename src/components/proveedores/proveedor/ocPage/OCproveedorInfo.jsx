@@ -30,8 +30,8 @@ import {
   UserRound,
   Fingerprint,
 } from "lucide-react";
-import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { formatDate } from "@/lib/utils";
 
 export default function OCproveedorInfo({ form, proveedor }) {
   const { control } = form;
@@ -232,7 +232,7 @@ export default function OCproveedorInfo({ form, proveedor }) {
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value
-                          ? format(field.value, "dd/MM/yyyy", { locale: es })
+                          ? formatDate(field.value)
                           : "dd / mm / aaaa"}
                       </Button>
                     </PopoverTrigger>
