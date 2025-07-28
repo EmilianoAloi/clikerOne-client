@@ -371,7 +371,6 @@ export default function OCarticle({
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="27">27%</SelectItem>
-
                               <SelectItem value="21">21%</SelectItem>
                               <SelectItem value="10.5">10.5%</SelectItem>
                               <SelectItem value="0">Exento</SelectItem>
