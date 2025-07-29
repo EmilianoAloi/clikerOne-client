@@ -3,7 +3,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeInfo, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import BadgeEstado from "@/components/ui/badge-custom";
 
 function formatDate(dateInput) {
   if (!dateInput) return "-";
@@ -77,11 +76,12 @@ export default function ProveedorInvoiceViewHeader({ factura }) {
                   </Link>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-medium text-gray-700">Estado:</p>
-                  <BadgeEstado
-                    estado={(factura.estado_saldo || "").toLowerCase().trim()}
-                    className="mt-1"
-                  />
+                  <p className="text-lg text-left font-medium text-gray-700">
+                    Cliente:
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    Mundo Plastic SRL
+                  </p>
                 </div>
               </div>
             </CardContent>
