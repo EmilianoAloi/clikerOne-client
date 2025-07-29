@@ -1,162 +1,180 @@
-import BadgeEstado from "@/components/ui/badge-custom";
+import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeInfo, FileText } from "lucide-react";
-import { Link } from "react-router-dom"; // Usá react-router-dom
+import { Link } from "react-router-dom";
+import BadgeEstado from "@/components/ui/badge-custom";
+
+function formatDate(dateInput) {
+  if (!dateInput) return "-";
+  const iso = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
+  const [year, month, day] = iso.split("T")[0].split("-");
+  return `${day}/${month}/${year}`;
+}
 
 export default function ProveedorInvoiceViewHeader({ factura }) {
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  // Formateador de moneda
+  const fmt = (n) =>
+    n.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
 
-  const totalIVA =
-    factura.items?.reduce((acc, item) => {
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      const iva = item.iva || 0;
-      return acc + (Number(cantidad) * Number(precio) * iva) / 100;
-    }, 0) ?? 0;
-
+  // Cálculos de totales
   const subtotal =
-    factura.items?.reduce((acc, item) => {
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      return acc + Number(cantidad) * Number(precio);
-    }, 0) ?? 0;
+    factura.items?.reduce(
+      (acc, { cantidad = 0, precio_unitario = 0 }) =>
+        acc + cantidad * precio_unitario,
+      0
+    ) ?? 0;
 
   const descuentoTotal =
-    factura.items?.reduce((acc, item) => {
-      const descuento = item.valor_descuento || 0;
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      const bruto = Number(cantidad) * Number(precio);
-      return acc + (bruto * Number(descuento)) / 100;
-    }, 0) ?? 0;
+    factura.items?.reduce(
+      (acc, { cantidad = 0, precio_unitario = 0, valor_descuento = 0 }) => {
+        const bruto = cantidad * precio_unitario;
+        return acc + (bruto * valor_descuento) / 100;
+      },
+      0
+    ) ?? 0;
+
+  const totalIVA =
+    factura.items?.reduce(
+      (
+        acc,
+        { cantidad = 0, precio_unitario = 0, iva = 0, valor_descuento = 0 }
+      ) => {
+        const bruto = cantidad * precio_unitario;
+        const neto = bruto * (1 - valor_descuento / 100);
+        return acc + (neto * iva) / 100;
+      },
+      0
+    ) ?? 0;
+
+  const iibb = Number(factura.percepcion_iibb || 0);
+  const otrosImpuestos = Number(factura.otros_impuestos || 0);
+
+  const totalReal =
+    subtotal - descuentoTotal + totalIVA + iibb + otrosImpuestos;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 ">
-      {/* Información del proveedor y factura */}
-      <Card className="col-span-2  md:border md:shadow-md px-0 md:px-4">
-        <CardHeader className="px-0 ">
-          <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-none px-0  ">
-            <BadgeInfo className="w-5 h-5" />
-            Información de la factura
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="px-0 md:px-2">
-          <div className="grid grid-cols-2 md:gap-8 max-w-full">
-            <div className="flex flex-col ">
-              <h3 className="font-semibold text-md text-muted-foreground ">
-                Proveedor
-              </h3>
-              <p className="font-semibold">{factura.proveedor_contacto}</p>
-              <p className="text-sm">CUIT: {factura.cuit_proveedor}</p>
-              <p className="text-sm">
-                {factura.direccion_proveedor}, {factura.proveedor_provincia}
-              </p>
-              <Link
-                to={`/proveedores/${factura.id_proveedor}`}
-                className="text-primary text-sm font-medium inline-block mt-2"
-              >
-                Ver detalles del proveedor →
-              </Link>
-            </div>
-            <div>
-              <div className="grid grid-cols-2 gap-4 md:gap-8">
+    <div className="md:container mx-auto md:px-2 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* — Columna principal (span 2) — */}
+        <div className="lg:col-span-2 space-y-3">
+          {/* Proveedor + Estado */}
+          <Card className="rounded-xs shadow-none md:border-solid py-6">
+            <CardContent>
+              <div className="flex items-end justify-between">
                 <div>
-                  <h3 className="font-semibold text-md text-muted-foreground ">
-                    Número de factura
-                  </h3>
-                  <p>#{factura.numero_factura}</p>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    {factura.proveedor_contacto}
+                  </h2>
+                  <p className="text-xl font-medium text-gray-700">
+                    CUIT: {factura.cuit_proveedor}
+                  </p>
+                  <Link
+                    to={`/proveedores/${factura.id_proveedor}`}
+                    className="hidden md:block mt-2 text-slate-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    Ver detalles del proveedor →
+                  </Link>
                 </div>
-                {factura.condicion_venta && (
-                  <div className="block md:hidden">
-                    <h3 className="font-semibold text-md text-muted-foreground ">
-                      Condición de venta
-                    </h3>
-                    <p className="text-md">{factura.condicion_venta}</p>
-                  </div>
-                )}
-                <div className="hidden md:block">
-                  <h3 className="font-semibold text-md text-muted-foreground ">
-                    Estado
-                  </h3>
+                <div className="text-right">
+                  <p className="text-lg font-medium text-gray-700">Estado:</p>
                   <BadgeEstado
                     estado={(factura.estado_saldo || "").toLowerCase().trim()}
                     className="mt-1"
                   />
                 </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                <div>
-                  <h3 className="font-semibold text-md text-muted-foreground ">
-                    Fecha de emisión
-                  </h3>
-                  <p>{formatDate(factura.fecha_emision ?? "")}</p>
+          {/* Información de la factura */}
+          <Card className="py-4 rounded-xs shadow-none gap-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg !font-semibold">
+                <BadgeInfo className="h-4 w-4" />
+                Información de la factura
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-4 gap-x-6 text-md font-semibold">
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wide">
+                    Condición de venta
+                  </span>
+                  <span className="text-gray-900 mt-1">
+                    {factura.condicion_venta || "-"}
+                  </span>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-md text-muted-foreground ">
-                    Fecha de vencimiento
-                  </h3>
-                  <p>{formatDate(factura.fecha_vencimiento ?? "")}</p>
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wide">
+                    Fecha emisión
+                  </span>
+                  <span className="text-gray-900 font-semibold mt-1">
+                    {formatDate(factura.fecha_emision)}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wide">
+                    Fecha vencimiento
+                  </span>
+                  <span className="text-gray-900 font-semibold mt-1">
+                    {formatDate(factura.fecha_vencimiento)}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-500 text-xs uppercase tracking-wide">
+                    Fecha contable
+                  </span>
+                  <span className="text-gray-900 font-semibold mt-1">
+                    {formatDate(factura.fecha_contable)}
+                  </span>
                 </div>
               </div>
-              {factura.condicion_venta && (
-                <div className="mt-4 hidden md:block">
-                  <h3 className="font-semibold text-md text-muted-foreground ">
-                    Condición de venta
-                  </h3>
-                  <p className="text-md">{factura.condicion_venta}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Resumen de montos */}
-      <Card className="hidden md:block  md:border md:shadow-md">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            <FileText className="w-5 h-5" />
-            Resumen
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Subtotal:</span>
-              <span>${subtotal}</span>
+        {/* — Columna de Resumen — */}
+        <Card className="hidden md:block rounded-xs shadow-none">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <FileText className="w-5 h-5" />
+              Resumen
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>{fmt(subtotal)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Descuento aplicado:</span>
+                <span>{fmt(descuentoTotal)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>IVA:</span>
+                <span>{fmt(totalIVA)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>IIBB:</span>
+                <span>{fmt(iibb)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Otros impuestos:</span>
+                <span>{fmt(otrosImpuestos)}</span>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Descuento aplicado:</span>
-              <span className="">{descuentoTotal}</span>
+
+            <Separator className="my-4" />
+
+            <div className="flex justify-between font-bold text-base">
+              <span>Total:</span>
+              <span>{fmt(totalReal)}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">IVA:</span>
-              <span>${totalIVA.toFixed(2)}</span>{" "}
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">IIBB:</span>
-              <span>{factura.percepcion_iibb}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Forma de pago:</span>
-              <span>{factura.condicion_venta}</span>
-            </div>
-          </div>
-          <Separator className="mt-2 mb-2" />
-          <div className="flex justify-between font-bold  text-base">
-            <span>Total:</span>
-            <span>{factura.monto_total}</span>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,6 @@ import OCviewObs from "./OCviewObs";
 import OCviewItems from "./OCviewItems";
 import OCviewTitle from "./OCviewTitle";
 import OCviewHeader from "./OCviewHeader";
-// import OCviewDownloadButton from "./OCviewDownloadButton";
 
 const OCviewContainer = ({ orden }) => {
   const [isPrinting, setIsPrinting] = useState(false);

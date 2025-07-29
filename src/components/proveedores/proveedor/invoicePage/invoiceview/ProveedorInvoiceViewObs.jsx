@@ -1,43 +1,162 @@
+// import {
+//   Card,
+//   CardHeader,
+//   CardTitle,
+//   CardContent,
+//   CardDescription,
+// } from "@/components/ui/card";
+// import { Separator } from "@/components/ui/separator";
+// import { Calculator, FileText } from "lucide-react";
+
+// export default function ProveedorInvoiceViewObs({ factura }) {
+//   const totalIVA =
+//     factura.items?.reduce((acc, item) => {
+//       const cantidad = item.cantidad || 0;
+//       const precio = item.precio_unitario || 0;
+//       const iva = item.iva || 0;
+//       return acc + (Number(cantidad) * Number(precio) * iva) / 100;
+//     }, 0) ?? 0;
+
+//   const subtotal =
+//     factura.items?.reduce((acc, item) => {
+//       const cantidad = item.cantidad || 0;
+//       const precio = item.precio_unitario || 0;
+//       return acc + Number(cantidad) * Number(precio);
+//     }, 0) ?? 0;
+
+//   const descuentoTotal =
+//     factura.items?.reduce((acc, item) => {
+//       const descuento = item.valor_descuento || 0;
+//       const cantidad = item.cantidad || 0;
+//       const precio = item.precio_unitario || 0;
+//       const bruto = Number(cantidad) * Number(precio);
+//       return acc + (bruto * Number(descuento)) / 100;
+//     }, 0) ?? 0;
+
+//   return (
+//     <div className="flex gap-2 mt-5 mb-20">
+//       <Card className="w-1/2 md:w-full  md:border md:shadow-md ">
+//         <CardHeader>
+//           <CardTitle className="flex items-center gap-2  text-xl">
+//             <FileText className="w-5 h-5" />
+//             Observaciones
+//           </CardTitle>
+//           <CardDescription className="hidden md:block">
+//             Notas o comentarios adicionales sobre la factura
+//           </CardDescription>
+//         </CardHeader>
+//         <CardContent>
+//           <p className="text-sm">
+//             {factura.observaciones?.trim()
+//               ? factura.observaciones
+//               : "No hay observaciones en la factura."}
+//           </p>
+//         </CardContent>
+//       </Card>
+
+//       {/* Resumen de montos SOLO EN MOBILE */}
+//       <Card className="w-1/2 md:hidden">
+//         <CardHeader>
+//           <CardTitle className="flex items-center gap-2 text-xl">
+//             <Calculator className="w-5 h-5" />
+//             Resumen
+//           </CardTitle>
+//         </CardHeader>
+//         <CardContent>
+//           <div className="space-y-2 text-sm">
+//             <div className="flex justify-between">
+//               <span className="text-muted-foreground">Subtotal:</span>
+//               <span>${subtotal}</span>
+//             </div>
+//             <div className="flex justify-between">
+//               <span className="text-muted-foreground">Descuento aplicado:</span>
+//               <span className="">{descuentoTotal}</span>
+//             </div>
+//             <div className="flex justify-between">
+//               <span className="text-muted-foreground">IVA:</span>
+//               <span>${totalIVA.toFixed(2)}</span>{" "}
+//             </div>
+//             <div className="flex justify-between">
+//               <span className="text-muted-foreground">IIBB:</span>
+//               <span>{factura.percepcion_iibb}</span>
+//             </div>
+//             <div className="flex justify-between">
+//               <span className="text-muted-foreground">Forma de pago:</span>
+//               <span>{factura.condicion_venta}</span>
+//             </div>
+//           </div>
+//           <Separator className="mt-2 mb-2" />
+//           <div className="flex justify-between font-bold  text-base">
+//             <span>Total:</span>
+//             <span>${factura.monto_total}</span>
+//           </div>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
+
+import React from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent,
   CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Calculator, FileText } from "lucide-react";
 
-export default function ProveedorInvoiceViewObs({ factura }) {
-  const totalIVA =
-    factura.items?.reduce((acc, item) => {
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      const iva = item.iva || 0;
-      return acc + (Number(cantidad) * Number(precio) * iva) / 100;
-    }, 0) ?? 0;
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    minimumFractionDigits: 2,
+  }).format(Number(amount));
 
+export default function ProveedorInvoiceViewObs({ factura }) {
+  // Cálculos de montos
   const subtotal =
-    factura.items?.reduce((acc, item) => {
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      return acc + Number(cantidad) * Number(precio);
-    }, 0) ?? 0;
+    factura.items?.reduce(
+      (sum, { cantidad = 0, precio_unitario = 0 }) =>
+        sum + cantidad * precio_unitario,
+      0
+    ) ?? 0;
 
   const descuentoTotal =
-    factura.items?.reduce((acc, item) => {
-      const descuento = item.valor_descuento || 0;
-      const cantidad = item.cantidad || 0;
-      const precio = item.precio_unitario || 0;
-      const bruto = Number(cantidad) * Number(precio);
-      return acc + (bruto * Number(descuento)) / 100;
-    }, 0) ?? 0;
+    factura.items?.reduce(
+      (sum, { cantidad = 0, precio_unitario = 0, valor_descuento = 0 }) => {
+        const bruto = cantidad * precio_unitario;
+        return sum + (bruto * valor_descuento) / 100;
+      },
+      0
+    ) ?? 0;
+
+  const totalIVA =
+    factura.items?.reduce(
+      (
+        sum,
+        { cantidad = 0, precio_unitario = 0, iva = 0, valor_descuento = 0 }
+      ) => {
+        const bruto = cantidad * precio_unitario;
+        const neto = bruto * (1 - valor_descuento / 100);
+        return sum + (neto * iva) / 100;
+      },
+      0
+    ) ?? 0;
+
+  const iibb = Number(factura.percepcion_iibb || 0);
+
+  const otrosImpuestos = Number(factura.otros_impuestos || 0);
+
+  const total = subtotal - descuentoTotal + totalIVA + iibb + otrosImpuestos;
 
   return (
-    <div className="flex gap-2 mt-5 mb-20">
-      <Card className="w-1/2 md:w-full  md:border md:shadow-md ">
+    <div className="flex gap-2 mt-5 mb-5">
+      {/* Observaciones */}
+      <Card className="w-1/2 md:w-full shadow-none md:border rounded-xs md:mx-2">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2  text-xl">
+          <CardTitle className="flex items-center gap-2 text-xl">
             <FileText className="w-5 h-5" />
             Observaciones
           </CardTitle>
@@ -54,8 +173,8 @@ export default function ProveedorInvoiceViewObs({ factura }) {
         </CardContent>
       </Card>
 
-      {/* Resumen de montos SOLO EN MOBILE */}
-      <Card className="w-1/2 md:hidden">
+      {/* Resumen montos (solo mobile) */}
+      <Card className="w-1/2 md:hidden rounded-xs shadow-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
             <Calculator className="w-5 h-5" />
@@ -66,29 +185,35 @@ export default function ProveedorInvoiceViewObs({ factura }) {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Subtotal:</span>
-              <span>${subtotal}</span>
+              <span>{formatCurrency(subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Descuento aplicado:</span>
-              <span className="">{descuentoTotal}</span>
+              <span>{formatCurrency(descuentoTotal)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">IVA:</span>
-              <span>${totalIVA.toFixed(2)}</span>{" "}
+              <span>{formatCurrency(totalIVA)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">IIBB:</span>
-              <span>{factura.percepcion_iibb}</span>
+              <span>{formatCurrency(iibb)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Otros impuestos:</span>
+              <span>{formatCurrency(otrosImpuestos)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Forma de pago:</span>
               <span>{factura.condicion_venta}</span>
             </div>
           </div>
+
           <Separator className="mt-2 mb-2" />
-          <div className="flex justify-between font-bold  text-base">
+
+          <div className="flex justify-between font-bold text-base">
             <span>Total:</span>
-            <span>${factura.monto_total}</span>
+            <span>{formatCurrency(total)}</span>
           </div>
         </CardContent>
       </Card>

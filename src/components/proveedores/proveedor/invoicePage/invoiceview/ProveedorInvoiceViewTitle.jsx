@@ -9,15 +9,14 @@ const formatCurrency = (amount) =>
   }).format(amount);
 
 export default function ProveedorInvoiceViewTitle({ factura }) {
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  function formatDate(dateInput) {
+    if (!dateInput) return "-";
+    // Si es Date, la pasamos a ISO; si es string ISO, la usamos tal cual
+    const iso = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
+    // iso === "2025-07-24T00:00:00.000Z"
+    const [year, month, day] = iso.split("T")[0].split("-");
+    return `${day}/${month}/${year}`; // "24/07/2025"
+  }
 
   // Normalizar estado
   const estadoKey = (factura.estado_saldo || "").toLowerCase().trim();
@@ -31,7 +30,7 @@ export default function ProveedorInvoiceViewTitle({ factura }) {
             Factura #{factura.numero_factura}
           </div>
           <p className="text-md text-muted-foreground">
-            Fecha contable: {formatDate(factura.fecha_contable ?? "")}
+            Fecha emisión: {formatDate(factura.fecha_emision ?? "")}
           </p>
         </div>
 
@@ -40,7 +39,10 @@ export default function ProveedorInvoiceViewTitle({ factura }) {
           <div className="text-4xl font-bold mb-2">
             {formatCurrency(factura.monto_total || 0)}
           </div>
-          <BadgeEstado estado={estadoKey} className="mt-1" />
+          <BadgeEstado
+            estado={estadoKey}
+            className="text-md px-2 py-4 px-3 font-semibold"
+          />
         </div>
       </div>
     </CardHeader>
