@@ -7,10 +7,10 @@ import {
   Lock,
   CheckCircle,
   AlertCircle,
-  BarChart3,
   TrendingUp,
   Users,
   FileText,
+  GalleryVerticalEnd,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -63,15 +63,15 @@ export default function LoginSplitScreen() {
           <div className="mb-12">
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mr-4 shadow-lg">
-                <BarChart3 className="w-7 h-7" />
+                <GalleryVerticalEnd className="w-7 h-7" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold">ClikerOne</h1>
                 <p className="text-slate-300 text-sm">v0.2</p>
               </div>
             </div>
-            <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-              Administra proveedores, facturas y reportes desde esta plataforma
+            <p className="text-xl text-slate-300 mb-4 pt-2 leading-relaxed">
+              Administra proveedores, facturas e informes desde esta plataforma
               integrada.
             </p>
           </div>
@@ -112,11 +112,11 @@ export default function LoginSplitScreen() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-1">
-                  Estadísticas y Exportación
+                  Informes y Exportación
                 </h3>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Visualiza estadísticas, exportá datos de proveedores y
-                  facturación a Excel.
+                  Accedé a informes completos de órdenes de compra, facturas y
+                  pagos. <br /> Exportá la información a Excel.
                 </p>
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function LoginSplitScreen() {
               </p>
             </div>
             {/* Demo Credentials Info */}
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            {/* <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
               <h4 className="text-sm font-semibold text-blue-900 mb-2">
                 Credenciales de Prueba:
               </h4>
@@ -183,13 +183,13 @@ export default function LoginSplitScreen() {
                   <span className="text-blue-600 text-xs">(Usuario Demo)</span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <form onSubmit={handleSubmit} className=" ">
               <div>
                 <Label
                   htmlFor="usuario"
-                  className="text-sm font-medium text-slate-700"
+                  className="text-sm font-medium text-slate-700 mb-1"
                 >
                   Usuario
                 </Label>
@@ -209,7 +209,7 @@ export default function LoginSplitScreen() {
               <div>
                 <Label
                   htmlFor="password"
-                  className="text-sm font-medium text-slate-700"
+                  className="text-sm font-medium text-slate-700 mb-1 mt-4"
                 >
                   Contraseña
                 </Label>

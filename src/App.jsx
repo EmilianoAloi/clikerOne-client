@@ -39,6 +39,8 @@ import HistorialPreciosGlobalContainer from "./page/Proveedores/Historialprecios
 import EstadisticasPage from "./page/Proveedores/estadisticas/EstadisticasPage";
 import InformesPage from "./page/Proveedores/informes/InformesPage";
 
+const basename = import.meta.env.VITE_BASENAME || "";
+
 // Función para redirigir
 function RedirectToProveedor() {
   const { id } = useParams();
@@ -51,11 +53,8 @@ function App() {
   const isAuthenticated = Boolean(user);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <ScrollToTop />
-
-      {/* Catch-all para rutas no definidas */}
-      {/* <Route path="*" element={<Navigate to="/proveedores" replace />} /> */}
 
       <Routes>
         {/* Auth: Login y redirección */}
@@ -210,6 +209,9 @@ function App() {
             element={<RedirectToProveedor />}
           />
         </Route>
+
+        {/* catch‑all por si algo no matchea: */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
