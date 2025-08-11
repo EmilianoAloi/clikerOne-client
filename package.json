@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:vercel": "vite build --mode vercel",
+    "build:ftp": "vite build --mode ftp",
     "lint": "eslint .",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
