@@ -67,7 +67,7 @@ export default function LoginSplitScreen() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold">ClikerOne</h1>
-                <p className="text-slate-300 text-sm">v0.2</p>
+                <p className="text-slate-300 text-sm">v0.3</p>
               </div>
             </div>
             <p className="text-xl text-slate-300 mb-4 pt-2 leading-relaxed">
