@@ -24,38 +24,8 @@ dist-ssr
 *.sw?
 
 
+# Variables de entorno
 .env
 .env.ftp
 .env.vercel
 
-
-
-Necesito que en el cPanel crees una base de datos MySQL para el backend.
-Cuando la crees, pasame por favor estos datos para poder conectarme:
-
- Nombre de la base de datos
- Usuario MySQL asignado
- Contraseña del usuario
- Host / Servidor (suele ser algo como localhost o una URL específica que aparece en cPanel)
- Puerto (generalmente 3306)
-
-Si podés, activá también el acceso remoto para que pueda conectarme desde mi PC.
-
-
-
-
-Crear base de datos MySQL
-
-    Ingresar al cPanel.
-
-    Ir a MySQL Databases.
-
-    Crear una nueva base de datos (ej: clikeronedb).
-
-    Crear un usuario MySQL y asignarle contraseña.
-
-    Asignar ese usuario a la base con All Privileges.
-
-    Guardar: nombre de db, usuario, contraseña, host y puerto. 
-
-    Pasarme esos datos para conectarme.
